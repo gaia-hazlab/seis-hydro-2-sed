@@ -1,0 +1,14 @@
+name: seis-hydro-2-sed
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.9
+  - obspy>=1.4.2
+  - matplotlib>=3.8.0
+  - numpy>=1.24.0
+  - scipy>=1.11.0
+  - ipykernel>=6.25.0
+  - pip
+  - pip:
+    # Add any pip-only dependencies here if needed

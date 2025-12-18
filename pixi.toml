@@ -1,0 +1,17 @@
+[workspace]
+authors = ["GAIA Hazlab"]
+channels = ["conda-forge"]
+name = "seis-hydro-2-sed"
+platforms = ["osx-arm64", "linux-64", "win-64"]
+version = "0.1.0"
+description = "Turn river discharge and seismic power to predict dynamic bedload transport"
+
+[tasks]
+
+[dependencies]
+obspy = ">=1.4.2,<2"
+matplotlib = ">=3.8.0,<4"
+numpy = ">=1.24.0,<2"
+scipy = ">=1.11.0,<2"
+python = ">=3.9,<3.13"
+ipykernel = ">=6.25.0,<7"
