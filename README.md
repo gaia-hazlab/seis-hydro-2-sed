@@ -107,6 +107,11 @@ pip install -e ".[dev]"
 # With pixi, the ipykernel is already included
 ```
 
+
+## Literature review
+* Cook et al, 2020 https://onlinelibrary.wiley.com/doi/full/10.1002/esp.4993
+* Cook et al, 2028: https://www.science.org/doi/full/10.1126/science.aat4981
+
 ## License
 
 MIT License
