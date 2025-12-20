@@ -13,11 +13,72 @@ import requests
 from obspy import UTCDateTime
 from obspy.core.stream import Stream
 from obspy.signal.filter import bandpass
+from obspy.signal.trigger import classic_sta_lta, trigger_onset
 
 
 GAIA_USGS_STREAM_GAGE_BASE_URL = (
     "https://raw.githubusercontent.com/gaia-hazlab/gaia-data-downloaders/main/USGS_Stream_Gage"
 )
+
+
+def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Great-circle distance (km) between two WGS84 lat/lon points."""
+    r_km = 6371.0088
+    p1 = np.deg2rad(lat1)
+    p2 = np.deg2rad(lat2)
+    dp = np.deg2rad(lat2 - lat1)
+    dl = np.deg2rad(lon2 - lon1)
+    a = np.sin(dp / 2) ** 2 + np.cos(p1) * np.cos(p2) * np.sin(dl / 2) ** 2
+    return float(2 * r_km * np.arcsin(np.sqrt(a)))
+
+
+def fetch_usgs_site_metadata(
+    site: str,
+    data_dir: Path,
+    *,
+    use_cache: bool = True,
+) -> dict[str, object]:
+    """Fetch basic USGS site metadata (lat/lon/name).
+
+    Uses the NWIS "site" service (RDB) and caches results under
+    `<data_dir>/usgs_site_meta/`.
+    """
+    site = str(site).strip()
+    cache_dir = data_dir / "usgs_site_meta"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cache_file = cache_dir / f"{site}.csv"
+
+    if use_cache and cache_file.exists():
+        df = pd.read_csv(cache_file)
+    else:
+        url = "https://waterservices.usgs.gov/nwis/site/"
+        params = {"format": "rdb", "sites": site, "siteStatus": "all"}
+        r = requests.get(url, params=params, timeout=60)
+        r.raise_for_status()
+
+        lines = [ln for ln in r.text.splitlines() if ln and not ln.startswith("#")]
+        if len(lines) < 3:
+            raise RuntimeError(f"USGS site service returned no data for site={site}")
+
+        header = lines[0].split("\t")
+        data = lines[2].split("\t")  # first data row
+        row = dict(zip(header, data, strict=False))
+        df = pd.DataFrame([row])
+        df.to_csv(cache_file, index=False)
+
+    # The canonical columns here are `dec_lat_va`, `dec_long_va`, `station_nm`.
+    lat = pd.to_numeric(df.loc[0, "dec_lat_va"], errors="coerce") if "dec_lat_va" in df.columns else np.nan
+    lon = (
+        pd.to_numeric(df.loc[0, "dec_long_va"], errors="coerce") if "dec_long_va" in df.columns else np.nan
+    )
+    name = df.loc[0, "station_nm"] if "station_nm" in df.columns else None
+
+    return {
+        "site": site,
+        "latitude": None if pd.isna(lat) else float(lat),
+        "longitude": None if pd.isna(lon) else float(lon),
+        "name": None if pd.isna(name) else str(name),
+    }
 
 
 def _repair_split_datetime_lines(text: str) -> str:
@@ -121,8 +182,15 @@ def load_station_gage_pairs(
     basin_filter: Iterable[str] | None = None,
     max_pairs: int | None = None,
     use_cache: bool = True,
+    choose_closest_gage: bool = True,
 ) -> pd.DataFrame:
-    """Load GAIA station↔USGS gage pairs from a CSV URL (cached locally)."""
+    """Load GAIA station↔USGS gage pairs from a CSV URL (cached locally).
+
+    Note: the GAIA table can list multiple gages per seismic station.
+    If `choose_closest_gage=True` (default), this function queries USGS site
+    metadata to get each gage's lat/lon, computes station↔gage distance, and
+    keeps the closest gage for each station.
+    """
     data_dir.mkdir(parents=True, exist_ok=True)
     cache_file = data_dir / "stations_by_basin_with_gages.csv"
 
@@ -157,8 +225,59 @@ def load_station_gage_pairs(
     # Add convenient keys
     pairs["seis_key"] = pairs["network"] + "." + pairs["station"]
 
-    # De-duplicate to unique station keys (keep first gage per station)
-    pairs = pairs.drop_duplicates(subset=["seis_key"], keep="first")
+    if choose_closest_gage:
+        # Best-effort compute distance to each candidate gage.
+        pairs["latitude"] = pd.to_numeric(pairs.get("latitude"), errors="coerce")
+        pairs["longitude"] = pd.to_numeric(pairs.get("longitude"), errors="coerce")
+
+        gage_ids = sorted(pairs["gage_id"].dropna().astype(str).unique().tolist())
+        gage_meta: dict[str, dict[str, object]] = {}
+        for gid in gage_ids:
+            try:
+                gage_meta[gid] = fetch_usgs_site_metadata(gid, data_dir=data_dir, use_cache=True)
+            except Exception as e:
+                # Keep going; distance will be NaN for this gage.
+                gage_meta[gid] = {"site": gid, "latitude": None, "longitude": None, "name": None}
+                print(f"  Warning: failed to fetch gage metadata for {gid}: {e}")
+
+        def _dist_row_km(row: pd.Series) -> float:
+            try:
+                s_lat = float(row["latitude"])
+                s_lon = float(row["longitude"])
+            except Exception:
+                return float("nan")
+
+            gid = str(row["gage_id"])
+            gm = gage_meta.get(gid) or {}
+            g_lat = gm.get("latitude")
+            g_lon = gm.get("longitude")
+            if g_lat is None or g_lon is None:
+                return float("nan")
+            return _haversine_km(s_lat, s_lon, float(g_lat), float(g_lon))
+
+        pairs["gage_distance_km"] = pairs.apply(_dist_row_km, axis=1)
+        pairs["gage_latitude"] = pairs["gage_id"].astype(str).map(
+            lambda gid: (gage_meta.get(gid) or {}).get("latitude")
+        )
+        pairs["gage_longitude"] = pairs["gage_id"].astype(str).map(
+            lambda gid: (gage_meta.get(gid) or {}).get("longitude")
+        )
+        pairs["gage_name"] = pairs["gage_id"].astype(str).map(lambda gid: (gage_meta.get(gid) or {}).get("name"))
+
+        # Choose closest gage for each station; if all NaN, keep the first row.
+        def _pick_closest(group: pd.DataFrame) -> pd.DataFrame:
+            if group["gage_distance_km"].notna().any():
+                return group.loc[[group["gage_distance_km"].idxmin()]]
+            return group.iloc[[0]]
+
+        pairs = (
+            pairs.groupby("seis_key", as_index=False, sort=False)
+            .apply(_pick_closest)
+            .reset_index(drop=True)
+        )
+    else:
+        # De-duplicate to unique station keys (keep first gage per station)
+        pairs = pairs.drop_duplicates(subset=["seis_key"], keep="first")
 
     if max_pairs is not None:
         pairs = pairs.head(int(max_pairs))
@@ -349,6 +468,14 @@ def quick_proxy(
     step_s: int = 600,
     event_times_utc: pd.DatetimeIndex | None = None,
     event_buffer_s: float = 0,
+    *,
+    clip_impulsive_days: bool = False,
+    sta_seconds: float = 1.0,
+    lta_seconds: float = 20.0,
+    trigger_on: float = 3.5,
+    trigger_off: float = 1.0,
+    clip_sigma: float = 2.0,
+    clip_mode: str = "symmetric",
 ) -> pd.Series:
     """Compute a minimal band-limited RMS proxy from a single trace."""
     tr = None
@@ -360,6 +487,18 @@ def quick_proxy(
         tr = st[0]
 
     tr = tr.copy()
+
+    if clip_impulsive_days:
+        tr = clip_trace_days_on_stalta_impulses(
+            tr,
+            sta_seconds=sta_seconds,
+            lta_seconds=lta_seconds,
+            trigger_on=trigger_on,
+            trigger_off=trigger_off,
+            clip_sigma=clip_sigma,
+            clip_mode=clip_mode,
+        )
+
     tr.detrend("demean")
     tr.taper(0.01)
 
@@ -400,6 +539,14 @@ def stream_to_proxy_timeseries(
     output: str = "velocity",
     event_times_utc: pd.DatetimeIndex | None = None,
     event_buffer_s: float = 0,
+    *,
+    clip_impulsive_days: bool = False,
+    sta_seconds: float = 1.0,
+    lta_seconds: float = 20.0,
+    trigger_on: float = 3.5,
+    trigger_off: float = 1.0,
+    clip_sigma: float = 2.0,
+    clip_mode: str = "symmetric",
 ) -> pd.Series:
     """Notebook-friendly proxy wrapper.
 
@@ -414,7 +561,95 @@ def stream_to_proxy_timeseries(
         step_s=step_seconds,
         event_times_utc=event_times_utc,
         event_buffer_s=event_buffer_s,
+        clip_impulsive_days=clip_impulsive_days,
+        sta_seconds=sta_seconds,
+        lta_seconds=lta_seconds,
+        trigger_on=trigger_on,
+        trigger_off=trigger_off,
+        clip_sigma=clip_sigma,
+        clip_mode=clip_mode,
     )
+
+
+def clip_trace_days_on_stalta_impulses(
+    tr,
+    *,
+    sta_seconds: float = 1.0,
+    lta_seconds: float = 20.0,
+    trigger_on: float = 3.5,
+    trigger_off: float = 1.0,
+    clip_sigma: float = 2.0,
+    clip_mode: str = "symmetric",
+):
+    """Detect impulsive behavior with STA/LTA per UTC day, then clip that day's data.
+
+    Rule: if any STA/LTA trigger occurs within a UTC day, clip *all* samples
+    in that day to a threshold derived from the day's standard deviation.
+
+    `clip_mode`:
+      - "symmetric": clip to ±(clip_sigma * std)
+      - "upper": clip only positive excursions to +(clip_sigma * std)
+      - "abs": clip based on absolute value to (clip_sigma * std)
+    """
+    tr2 = tr.copy()
+    sr = float(tr2.stats.sampling_rate)
+    if sr <= 0:
+        return tr2
+
+    x = tr2.data.astype("float64", copy=True)
+    n = len(x)
+    if n == 0:
+        return tr2
+
+    nsta = max(1, int(round(sta_seconds * sr)))
+    nlta = max(nsta + 1, int(round(lta_seconds * sr)))
+
+    start = tr2.stats.starttime
+    end = tr2.stats.endtime
+
+    # Build UTC-day boundaries covering the trace.
+    day0 = UTCDateTime(start.year, start.month, start.day)
+    day_end = UTCDateTime(end.year, end.month, end.day) + 24 * 3600
+
+    t = day0
+    while t < day_end:
+        t0 = t
+        t1 = min(t + 24 * 3600, end)
+
+        i0 = int(max(0, np.floor((t0.timestamp - start.timestamp) * sr)))
+        i1 = int(min(n, np.ceil((t1.timestamp - start.timestamp) * sr)))
+        if i1 - i0 < nlta + 1:
+            t += 24 * 3600
+            continue
+
+        seg = x[i0:i1]
+        # STA/LTA is sensitive to offsets; remove median to stabilize.
+        seg0 = seg - np.nanmedian(seg)
+
+        try:
+            cft = classic_sta_lta(seg0, nsta, nlta)
+            on_off = trigger_onset(cft, trigger_on, trigger_off)
+            has_impulse = len(on_off) > 0
+        except Exception:
+            has_impulse = False
+
+        if has_impulse:
+            std = float(np.nanstd(seg0))
+            if std > 0 and np.isfinite(std):
+                thr = clip_sigma * std
+                mode = clip_mode.lower().strip()
+                if mode == "upper":
+                    seg = np.minimum(seg, thr)
+                elif mode == "abs":
+                    seg = np.clip(seg, -thr, thr)
+                else:  # "symmetric"
+                    seg = np.clip(seg, -thr, thr)
+                x[i0:i1] = seg
+
+        t += 24 * 3600
+
+    tr2.data = x
+    return tr2
 
 
 def plot_proxy_and_gauge(proxy: pd.Series, gauge_df: pd.DataFrame, title: str = "") -> None:
