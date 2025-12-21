@@ -12,6 +12,7 @@ import pandas as pd
 import requests
 from obspy import UTCDateTime
 from obspy.core.stream import Stream
+from obspy.core.trace import Trace
 from obspy.signal.filter import bandpass
 from obspy.signal.trigger import classic_sta_lta, trigger_onset
 
@@ -469,6 +470,11 @@ def quick_proxy(
     event_times_utc: pd.DatetimeIndex | None = None,
     event_buffer_s: float = 0,
     *,
+    method: str = "rms",
+    remove_response: bool = True,
+    output: str = "velocity",
+    pre_filt: tuple[float, float, float, float] | None = None,
+    water_level: float = 60.0,
     clip_impulsive_days: bool = False,
     sta_seconds: float = 1.0,
     lta_seconds: float = 20.0,
@@ -477,15 +483,13 @@ def quick_proxy(
     clip_sigma: float = 2.0,
     clip_mode: str = "symmetric",
 ) -> pd.Series:
-    """Compute a minimal band-limited RMS proxy from a single trace."""
-    tr = None
-    for t in st:
-        if t.stats.channel.upper().endswith("Z"):
-            tr = t
-            break
-    if tr is None:
-        tr = st[0]
+    """Compute a proxy from a single preferred trace.
 
+    method:
+      - "rms": bandpass then windowed RMS
+      - "bandpower": Welch PSD per window integrated over [fmin, fmax]
+    """
+    tr = _select_preferred_trace(st)
     tr = tr.copy()
 
     if clip_impulsive_days:
@@ -502,24 +506,50 @@ def quick_proxy(
     tr.detrend("demean")
     tr.taper(0.01)
 
+    if remove_response:
+        tr = _remove_instrument_response(
+            tr,
+            fmin=fmin,
+            fmax=fmax,
+            output=output,
+            pre_filt=pre_filt,
+            water_level=water_level,
+        )
+
     sr = tr.stats.sampling_rate
     x = tr.data.astype("float64")
 
-    x = bandpass(x, fmin, fmax, df=sr, corners=4, zerophase=True)
+    if method.lower().strip() == "bandpower":
+        s = _bandpower_timeseries(
+            x,
+            starttime=tr.stats.starttime,
+            sr=float(sr),
+            fmin=float(fmin),
+            fmax=float(fmax),
+            win_s=int(win_s),
+            step_s=int(step_s),
+        )
+    else:
+        # RMS proxy
+        nyq = 0.5 * float(sr)
+        fmax_eff = min(float(fmax), 0.99 * nyq)
+        if fmax_eff <= float(fmin):
+            raise ValueError(f"Invalid band for sr={sr}: fmin={fmin}, fmax={fmax} (nyq={nyq})")
+        x = bandpass(x, float(fmin), fmax_eff, df=float(sr), corners=4, zerophase=True)
 
-    win = int(win_s * sr)
-    step = int(step_s * sr)
+        win = int(win_s * sr)
+        step = int(step_s * sr)
 
-    vals: list[float] = []
-    times: list[pd.Timestamp] = []
-    t0 = tr.stats.starttime.timestamp
+        vals: list[float] = []
+        times: list[pd.Timestamp] = []
+        t0 = tr.stats.starttime.timestamp
 
-    for i in range(0, len(x) - win + 1, step):
-        seg = x[i : i + win]
-        vals.append(float(np.sqrt(np.mean(seg**2))))
-        times.append(pd.to_datetime(t0 + (i + win / 2) / sr, unit="s", utc=True))
+        for i in range(0, len(x) - win + 1, step):
+            seg = x[i : i + win]
+            vals.append(float(np.sqrt(np.mean(seg**2))))
+            times.append(pd.to_datetime(t0 + (i + win / 2) / sr, unit="s", utc=True))
 
-    s = pd.Series(vals, index=pd.DatetimeIndex(times, name="time_utc"))
+        s = pd.Series(vals, index=pd.DatetimeIndex(times, name="time_utc"))
 
     if event_buffer_s and event_buffer_s > 0 and event_times_utc is not None:
         keep = mask_times_near_events(s.index, event_times_utc, event_buffer_s)
@@ -540,6 +570,12 @@ def stream_to_proxy_timeseries(
     event_times_utc: pd.DatetimeIndex | None = None,
     event_buffer_s: float = 0,
     *,
+    method: str = "rms",
+    remove_response: bool = True,
+    pre_filt: tuple[float, float, float, float] | None = None,
+    water_level: float = 60.0,
+    combine: str = "z",
+    components: tuple[str, ...] = ("Z", "N", "E"),
     clip_impulsive_days: bool = False,
     sta_seconds: float = 1.0,
     lta_seconds: float = 20.0,
@@ -549,10 +585,32 @@ def stream_to_proxy_timeseries(
     clip_mode: str = "symmetric",
 ) -> pd.Series:
     """Notebook-friendly proxy wrapper.
-
-    NOTE: this intentionally does not remove instrument response yet.
     """
-    _ = (start, end, output)  # reserved for future use
+    _ = (start, end)  # reserved for future use
+    if combine.lower().strip() == "rss":
+        return stream_to_proxy_timeseries_rss(
+            st,
+            fmin=fmin,
+            fmax=fmax,
+            win_seconds=win_seconds,
+            step_seconds=step_seconds,
+            output=output,
+            event_times_utc=event_times_utc,
+            event_buffer_s=event_buffer_s,
+            method=method,
+            remove_response=remove_response,
+            pre_filt=pre_filt,
+            water_level=water_level,
+            components=components,
+            clip_impulsive_days=clip_impulsive_days,
+            sta_seconds=sta_seconds,
+            lta_seconds=lta_seconds,
+            trigger_on=trigger_on,
+            trigger_off=trigger_off,
+            clip_sigma=clip_sigma,
+            clip_mode=clip_mode,
+        )
+
     return quick_proxy(
         st,
         fmin=fmin,
@@ -561,6 +619,11 @@ def stream_to_proxy_timeseries(
         step_s=step_seconds,
         event_times_utc=event_times_utc,
         event_buffer_s=event_buffer_s,
+        method=method,
+        remove_response=remove_response,
+        output=output,
+        pre_filt=pre_filt,
+        water_level=water_level,
         clip_impulsive_days=clip_impulsive_days,
         sta_seconds=sta_seconds,
         lta_seconds=lta_seconds,
@@ -569,6 +632,305 @@ def stream_to_proxy_timeseries(
         clip_sigma=clip_sigma,
         clip_mode=clip_mode,
     )
+
+
+def _select_preferred_trace(st: Stream) -> Trace:
+    """Pick a single preferred trace (Z if available, else first)."""
+    for t in st:
+        try:
+            if str(t.stats.channel).upper().endswith("Z"):
+                return t
+        except Exception:
+            continue
+    return st[0]
+
+
+def _select_trace_by_component(
+    st: Stream,
+    component: str,
+    *,
+    prefer_prefixes: tuple[str, ...] = ("HH", "HN", "EH", "BH", "BN"),
+) -> Trace | None:
+    """Select a single trace for a component (Z/N/E), preferring higher-rate data."""
+    comp = component.upper().strip()
+    candidates: list[Trace] = []
+    for tr in st:
+        ch = str(getattr(tr.stats, "channel", "")).upper()
+        if ch.endswith(comp):
+            candidates.append(tr)
+
+    if not candidates:
+        return None
+
+    def _rank(tr: Trace) -> tuple[int, float]:
+        ch = str(getattr(tr.stats, "channel", "")).upper()
+        prefix = ch[:2]
+        try:
+            p = prefer_prefixes.index(prefix)
+        except ValueError:
+            p = len(prefer_prefixes) + 1
+        sr = float(getattr(tr.stats, "sampling_rate", 0.0) or 0.0)
+        # smaller tuple sorts first: best prefix, then highest sampling rate
+        return (p, -sr)
+
+    return sorted(candidates, key=_rank)[0]
+
+
+def stream_to_proxy_timeseries_rss(
+    st: Stream,
+    *,
+    fmin: float,
+    fmax: float,
+    win_seconds: int,
+    step_seconds: int,
+    output: str = "velocity",
+    event_times_utc: pd.DatetimeIndex | None = None,
+    event_buffer_s: float = 0,
+    method: str = "bandpower",
+    remove_response: bool = True,
+    pre_filt: tuple[float, float, float, float] | None = None,
+    water_level: float = 60.0,
+    components: tuple[str, ...] = ("Z", "N", "E"),
+    clip_impulsive_days: bool = False,
+    sta_seconds: float = 1.0,
+    lta_seconds: float = 20.0,
+    trigger_on: float = 3.5,
+    trigger_off: float = 1.0,
+    clip_sigma: float = 2.0,
+    clip_mode: str = "symmetric",
+) -> pd.Series:
+    """Compute proxy per component then combine as RSS: sqrt(sum(proxy_i^2))."""
+
+    def _proxy_from_trace(tr: Trace) -> pd.Series:
+        tr2 = tr.copy()
+
+        if clip_impulsive_days:
+            tr2 = clip_trace_days_on_stalta_impulses(
+                tr2,
+                sta_seconds=sta_seconds,
+                lta_seconds=lta_seconds,
+                trigger_on=trigger_on,
+                trigger_off=trigger_off,
+                clip_sigma=clip_sigma,
+                clip_mode=clip_mode,
+            )
+
+        tr2.detrend("demean")
+        tr2.taper(0.01)
+
+        if remove_response:
+            tr2 = _remove_instrument_response(
+                tr2,
+                fmin=fmin,
+                fmax=fmax,
+                output=output,
+                pre_filt=pre_filt,
+                water_level=water_level,
+            )
+
+        sr = float(tr2.stats.sampling_rate)
+        x = tr2.data.astype("float64")
+        m = method.lower().strip()
+
+        if m == "bandpower":
+            return _bandpower_timeseries(
+                x,
+                starttime=tr2.stats.starttime,
+                sr=sr,
+                fmin=float(fmin),
+                fmax=float(fmax),
+                win_s=int(win_seconds),
+                step_s=int(step_seconds),
+            )
+
+        # RMS proxy
+        nyq = 0.5 * float(sr)
+        fmax_eff = min(float(fmax), 0.99 * nyq)
+        if fmax_eff <= float(fmin):
+            raise ValueError(f"Invalid band for sr={sr}: fmin={fmin}, fmax={fmax} (nyq={nyq})")
+        y = bandpass(x, float(fmin), fmax_eff, df=float(sr), corners=4, zerophase=True)
+
+        win = int(win_seconds * sr)
+        step = int(step_seconds * sr)
+        vals: list[float] = []
+        times: list[pd.Timestamp] = []
+        t0 = tr2.stats.starttime.timestamp
+        for i in range(0, len(y) - win + 1, step):
+            seg = y[i : i + win]
+            vals.append(float(np.sqrt(np.mean(seg**2))))
+            times.append(pd.to_datetime(t0 + (i + win / 2) / sr, unit="s", utc=True))
+        return pd.Series(vals, index=pd.DatetimeIndex(times, name="time_utc")).dropna()
+
+    series_by_comp: list[pd.Series] = []
+    for comp in components:
+        tr = _select_trace_by_component(st, comp)
+        if tr is None:
+            continue
+        s = _proxy_from_trace(tr).rename(comp)
+        if not s.empty:
+            series_by_comp.append(s)
+
+    if not series_by_comp:
+        raise RuntimeError("No usable component traces for RSS proxy")
+
+    df = pd.concat(series_by_comp, axis=1).dropna(how="any")
+    rss = np.sqrt(np.sum(np.square(df.values), axis=1))
+    out = pd.Series(rss, index=df.index, name="proxy_rss")
+
+    if event_buffer_s and event_buffer_s > 0 and event_times_utc is not None:
+        keep = mask_times_near_events(out.index, event_times_utc, event_buffer_s)
+        out = out.loc[keep]
+
+    return out
+
+
+def estimate_constant_lag_seconds(
+    proxy: pd.Series,
+    gauge_df: pd.DataFrame,
+    *,
+    gauge_col: str = "discharge_cfs",
+    max_lag_hours: float = 24.0,
+    step_minutes: int = 10,
+    resample_minutes: int | None = None,
+    transform: str = "log10",
+    min_pairs: int = 50,
+) -> tuple[float, pd.DataFrame]:
+    """Scan constant lags and return the best lag (seconds) + a results table.
+
+    Convention: choose tau maximizing corr(proxy(t), gauge(t - tau)).
+    Implemented by shifting gauge timestamps forward by +tau before alignment.
+    """
+    if gauge_col not in gauge_df.columns:
+        raise KeyError(f"Gauge dataframe missing {gauge_col}")
+
+    p = proxy.dropna().sort_index()
+    g = gauge_df[gauge_col].dropna().sort_index()
+    if p.empty or g.empty:
+        raise ValueError("Empty proxy or gauge series")
+
+    if resample_minutes is None:
+        resample_minutes = step_minutes
+    freq = f"{int(resample_minutes)}min"
+    p = p.resample(freq).median().dropna()
+    g = g.resample(freq).median().dropna()
+
+    if transform.lower().strip() == "log10":
+        tiny = np.finfo(float).tiny
+        p = np.log10(p.clip(lower=tiny))
+        g = np.log10(g.clip(lower=tiny))
+
+    step_s = int(step_minutes * 60)
+    max_s = int(max_lag_hours * 3600)
+    lags = np.arange(-max_s, max_s + step_s, step_s, dtype=int)
+
+    best_tau = 0
+    best_corr = -np.inf
+    rows: list[dict[str, float]] = []
+
+    for tau in lags:
+        gs = g.copy()
+        gs.index = gs.index + pd.Timedelta(seconds=int(tau))
+        joined = pd.concat([p.rename("proxy"), gs.rename("gauge")], axis=1).dropna()
+        n = int(len(joined))
+        if n < int(min_pairs):
+            rows.append({"lag_seconds": float(tau), "corr": float("nan"), "n": float(n)})
+            continue
+        corr = float(joined["proxy"].corr(joined["gauge"]))
+        rows.append({"lag_seconds": float(tau), "corr": corr, "n": float(n)})
+        if np.isfinite(corr) and corr > best_corr:
+            best_corr = corr
+            best_tau = int(tau)
+
+    results = pd.DataFrame(rows)
+    return float(best_tau), results
+
+
+def _remove_instrument_response(
+    tr: Trace,
+    *,
+    fmin: float,
+    fmax: float,
+    output: str = "velocity",
+    pre_filt: tuple[float, float, float, float] | None = None,
+    water_level: float = 60.0,
+) -> Trace:
+    """Remove instrument response to velocity or acceleration.
+
+    If response removal fails (missing metadata), returns the original trace.
+    """
+    tr2 = tr.copy()
+    out = output.lower().strip()
+    out_code = "VEL" if out.startswith("vel") else "ACC"
+
+    sr = float(tr2.stats.sampling_rate)
+    nyq = 0.5 * sr if sr > 0 else None
+
+    if pre_filt is None:
+        # A conservative pre-filter based on the band of interest.
+        f1 = max(0.001, 0.5 * float(fmin))
+        f2 = max(f1 * 1.5, 0.8 * float(fmin))
+        f3 = max(f2 * 1.2, 1.2 * float(fmax))
+        f4 = max(f3 * 1.2, 1.5 * float(fmax))
+        if nyq is not None:
+            f4 = min(f4, 0.99 * nyq)
+            f3 = min(f3, 0.95 * f4)
+        pre_filt = (f1, f2, f3, f4)
+
+    try:
+        tr2.remove_response(output=out_code, pre_filt=pre_filt, water_level=water_level)
+        return tr2
+    except Exception:
+        return tr
+
+
+def _bandpower_timeseries(
+    x: np.ndarray,
+    *,
+    starttime: UTCDateTime,
+    sr: float,
+    fmin: float,
+    fmax: float,
+    win_s: int,
+    step_s: int,
+) -> pd.Series:
+    """Welch PSD per window, integrated band power."""
+    try:
+        from scipy.signal import welch
+    except Exception as e:  # pragma: no cover
+        raise ImportError("scipy is required for method='bandpower'") from e
+
+    sr = float(sr)
+    if sr <= 0:
+        raise ValueError("Invalid sampling rate")
+
+    nyq = 0.5 * sr
+    fmax_eff = min(float(fmax), 0.99 * nyq)
+    if fmax_eff <= float(fmin):
+        raise ValueError(f"Invalid band for sr={sr}: fmin={fmin}, fmax={fmax} (nyq={nyq})")
+
+    win = int(win_s * sr)
+    step = int(step_s * sr)
+    if win < 8 or step < 1:
+        raise ValueError("Window/step too small")
+
+    vals: list[float] = []
+    times: list[pd.Timestamp] = []
+    t0 = starttime.timestamp
+
+    for i in range(0, len(x) - win + 1, step):
+        seg = x[i : i + win]
+        # Welch: use a Hann window; nperseg capped for stability
+        nperseg = min(win, int(10 * sr))  # ~10 s segments inside Welch
+        f, pxx = welch(seg, fs=sr, nperseg=nperseg, detrend="constant", scaling="density")
+        mask = (f >= float(fmin)) & (f <= fmax_eff)
+        if not np.any(mask):
+            vals.append(float("nan"))
+        else:
+            vals.append(float(np.trapz(pxx[mask], f[mask])))
+        times.append(pd.to_datetime(t0 + (i + win / 2) / sr, unit="s", utc=True))
+
+    s = pd.Series(vals, index=pd.DatetimeIndex(times, name="time_utc")).dropna()
+    return s
 
 
 def clip_trace_days_on_stalta_impulses(
@@ -658,8 +1020,8 @@ def plot_proxy_and_gauge(proxy: pd.Series, gauge_df: pd.DataFrame, title: str = 
     g = gauge_df.copy().sort_index()
 
     fig, ax1 = plt.subplots(figsize=(10, 4))
-    ax1.plot(proxy.index, proxy.values, linewidth=1, label="Seismic proxy (band RMS)")
-    ax1.set_ylabel("Proxy (RMS)")
+    ax1.plot(proxy.index, proxy.values, linewidth=1, label="Seismic proxy")
+    ax1.set_ylabel("Proxy")
     ax1.set_title(title)
 
     stage_col = (
@@ -706,7 +1068,7 @@ def hysteresis_plot(
     plt.figure(figsize=(5.2, 5.0))
     plt.scatter(df[stage_col], df["proxy"], s=6)
     plt.xlabel(stage_col)
-    plt.ylabel("Seismic proxy (RMS)")
+    plt.ylabel("Seismic proxy")
     plt.title(title)
     plt.tight_layout()
     plt.show()
@@ -724,6 +1086,10 @@ def band_sweep(
     output: str = "velocity",
     event_times_utc: pd.DatetimeIndex | None = None,
     event_buffer_s: float = 0,
+    method: str = "rms",
+    remove_response: bool = True,
+    combine: str = "z",
+    components: tuple[str, ...] = ("Z", "N", "E"),
 ) -> None:
     if start is None or end is None:
         raise ValueError("band_sweep requires start and end")
@@ -740,5 +1106,9 @@ def band_sweep(
             output=output,
             event_times_utc=event_times_utc,
             event_buffer_s=event_buffer_s,
+            method=method,
+            remove_response=remove_response,
+            combine=combine,
+            components=components,
         )
         plot_proxy_and_gauge(proxy, gauge_df, title=f"{station_name}: band {fmin}-{fmax} Hz")
