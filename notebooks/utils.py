@@ -13,6 +13,7 @@ import requests
 from obspy import UTCDateTime
 from obspy.core.stream import Stream
 from obspy.core.trace import Trace
+from obspy import read as obspy_read
 from obspy.signal.filter import bandpass
 from obspy.signal.trigger import classic_sta_lta, trigger_onset
 
@@ -398,6 +399,180 @@ def download_streams(
     return streams
 
 
+def compute_proxy_from_fdsn(
+    net: str,
+    sta: str,
+    start_utc: UTCDateTime,
+    end_utc: UTCDateTime,
+    *,
+    fmin: float,
+    fmax: float,
+    win_seconds: int,
+    step_seconds: int,
+    output: str = "velocity",
+    method: str = "bandpower",
+    remove_response: bool = True,
+    combine: str = "rss",
+    components: tuple[str, ...] = ("Z", "N", "E"),
+    event_times_utc: pd.DatetimeIndex | None = None,
+    event_buffer_s: float = 0,
+    clip_impulsive_days: bool = False,
+    sta_seconds: float = 1.0,
+    lta_seconds: float = 20.0,
+    trigger_on: float = 3.5,
+    trigger_off: float = 1.0,
+    clip_sigma: float = 2.0,
+    clip_mode: str = "symmetric",
+    # Download parameters
+    client_name: str = "IRIS",
+    location: str = "*",
+    channel: str = "HH?,HN?,BH?,EH?",
+    attach_response: bool = True,
+    pad_seconds: float | None = None,
+    cache_dir: Path | None = None,
+    use_cache: bool = True,
+    # Proxy despiking (post-processing)
+    despike_proxy: bool = False,
+    despike_window: str | pd.Timedelta = "6H",
+    despike_z: float = 8.0,
+    despike_min_periods: int = 10,
+    despike_fill: str = "none",
+) -> pd.Series:
+    """Compute a proxy by downloading waveforms in whole UTC-day blocks from FDSN.
+
+    Rationale: multi-week, multi-channel waveform downloads can be huge and
+    slow/unreliable. Downloading one UTC day at a time tends to be robust
+    while still keeping request counts low.
+    """
+    from obspy.clients.fdsn import Client
+
+    net = str(net).strip()
+    sta = str(sta).strip()
+
+    if pad_seconds is None:
+        pad_seconds = float(win_seconds)
+
+    if cache_dir is not None:
+        cache_dir = Path(cache_dir)
+        cache_dir.mkdir(parents=True, exist_ok=True)
+
+    # Explicit timeout helps avoid hanging reads on large responses.
+    client = Client(client_name, timeout=120)
+
+    out_parts: list[pd.Series] = []
+    t0 = start_utc
+
+    while t0 < end_utc:
+        # Advance to next UTC midnight boundary (whole-day blocks)
+        next_midnight = UTCDateTime(t0.year, t0.month, t0.day) + 24 * 3600
+        t1 = min(next_midnight, end_utc)
+        dl0 = t0 - float(pad_seconds)
+        dl1 = t1 + float(pad_seconds)
+
+        cache_file: Path | None = None
+        if cache_dir is not None:
+            day = f"{t0.year:04d}{t0.month:02d}{t0.day:02d}"
+            safe_loc = (location or "").replace("*", "STAR")
+            safe_chan = (channel or "").replace("*", "STAR").replace("?", "Q")
+            pad_i = int(round(float(pad_seconds)))
+            cache_file = (
+                cache_dir
+                / f"{net}.{sta}.{safe_loc}.{safe_chan}.{day}.pad{pad_i}s.mseed"
+            )
+
+        st: Stream | None = None
+        if (
+            use_cache
+            and cache_file is not None
+            and cache_file.exists()
+            and cache_file.stat().st_size > 0
+        ):
+            try:
+                print(f"  Using cached MSEED {cache_file.name}")
+                st = obspy_read(str(cache_file))
+            except Exception as e:
+                print(f"  Cache read failed ({cache_file}): {e}; re-downloading")
+                try:
+                    cache_file.unlink(missing_ok=True)
+                except Exception:
+                    pass
+                st = None
+
+        if st is None:
+            try:
+                print(f"  Downloading {net}.{sta} {dl0}–{dl1} ({channel}, loc={location})")
+                st = client.get_waveforms(
+                    net,
+                    sta,
+                    location,
+                    channel,
+                    dl0,
+                    dl1,
+                    attach_response=attach_response,
+                )
+                if cache_file is not None:
+                    try:
+                        st.write(str(cache_file), format="MSEED")
+                    except Exception as e:
+                        print(f"  Warning: failed to write cache {cache_file}: {e}")
+            except Exception as e:
+                print(f"  Failed day {net}.{sta} {dl0}–{dl1}: {e}")
+                t0 = t1
+                continue
+
+        try:
+            st.merge(method=1, fill_value="interpolate")
+            st.trim(dl0, dl1)
+
+            s = stream_to_proxy_timeseries(
+                st,
+                start=t0,
+                end=t1,
+                fmin=fmin,
+                fmax=fmax,
+                win_seconds=win_seconds,
+                step_seconds=step_seconds,
+                output=output,
+                event_times_utc=event_times_utc,
+                event_buffer_s=event_buffer_s,
+                method=method,
+                remove_response=remove_response,
+                combine=combine,
+                components=components,
+                clip_impulsive_days=clip_impulsive_days,
+                sta_seconds=sta_seconds,
+                lta_seconds=lta_seconds,
+                trigger_on=trigger_on,
+                trigger_off=trigger_off,
+                clip_sigma=clip_sigma,
+                clip_mode=clip_mode,
+                despike_proxy=despike_proxy,
+                despike_window=despike_window,
+                despike_z=despike_z,
+                despike_min_periods=despike_min_periods,
+                despike_fill=despike_fill,
+            )
+
+            # Keep only proxy timestamps within the chunk (avoid edge duplicates)
+            t0_ts = pd.to_datetime(t0.datetime, utc=True)
+            t1_ts = pd.to_datetime(t1.datetime, utc=True)
+            s = s.loc[(s.index >= t0_ts) & (s.index < t1_ts)]
+            if not s.empty:
+                out_parts.append(s)
+        finally:
+            # help GC in notebooks
+            del st
+
+        t0 = t1
+
+    if not out_parts:
+        return pd.Series([], dtype="float64", name="proxy", index=pd.DatetimeIndex([], tz="UTC"))
+
+    out = pd.concat(out_parts).sort_index()
+    out = out[~out.index.duplicated(keep="first")]
+    return out
+
+
 def fetch_usgs_event_times(
     start_utc: UTCDateTime,
     end_utc: UTCDateTime,
@@ -418,7 +593,7 @@ def fetch_usgs_event_times(
         "minmagnitude": min_magnitude,
         "orderby": "time-asc",
     }
-    r = requests.get(base, params=params, timeout=60)
+    r = requests.get(base, params=params, timeout=20)
     r.raise_for_status()
     js = r.json()
     feats = js.get("features", [])
@@ -461,6 +636,57 @@ def mask_times_near_events(
     return keep
 
 
+def despike_timeseries(
+    s: pd.Series,
+    *,
+    window: str | pd.Timedelta = "6H",
+    z: float = 8.0,
+    min_periods: int = 10,
+    center: bool = True,
+    fill: str = "none",
+) -> pd.Series:
+    """Remove isolated outliers from a time-indexed series.
+
+    Uses a rolling median + MAD (median absolute deviation) to flag points where
+    |x - median| > z * (1.4826 * MAD). Flagged points are set to NaN.
+
+    Parameters
+    - window: rolling window (e.g., "2H", "6H").
+    - z: robust z-score threshold.
+    - fill: "none" (default) leaves NaNs; "interpolate" fills with time interpolation.
+    """
+    if s is None:
+        raise ValueError("s is None")
+    if len(s) == 0:
+        return s
+    if not isinstance(s.index, pd.DatetimeIndex):
+        raise TypeError("despike_timeseries expects a DatetimeIndex")
+
+    x = s.astype("float64").sort_index()
+    w = pd.to_timedelta(str(window).strip().lower()) if isinstance(window, str) else window
+
+    roll = x.rolling(window=w, center=center, min_periods=int(min_periods))
+    med = roll.median()
+
+    def _mad(arr: np.ndarray) -> float:
+        m = float(np.nanmedian(arr))
+        return float(np.nanmedian(np.abs(arr - m)))
+
+    mad = roll.apply(_mad, raw=True)
+    robust_sigma = 1.4826 * mad
+    with np.errstate(invalid="ignore", divide="ignore"):
+        is_outlier = (np.abs(x - med) > float(z) * robust_sigma) & (robust_sigma > 0)
+
+    y = x.mask(is_outlier)
+
+    if str(fill).lower().strip() == "interpolate":
+        # Keep it simple; this is mainly for single-sample spikes.
+        y = y.interpolate(method="time", limit_direction="both")
+
+    y.name = s.name
+    return y
+
+
 def quick_proxy(
     st: Stream,
     fmin: float = 5,
@@ -482,6 +708,11 @@ def quick_proxy(
     trigger_off: float = 1.0,
     clip_sigma: float = 2.0,
     clip_mode: str = "symmetric",
+    despike_proxy: bool = False,
+    despike_window: str | pd.Timedelta = "6H",
+    despike_z: float = 8.0,
+    despike_min_periods: int = 10,
+    despike_fill: str = "none",
 ) -> pd.Series:
     """Compute a proxy from a single preferred trace.
 
@@ -555,6 +786,15 @@ def quick_proxy(
         keep = mask_times_near_events(s.index, event_times_utc, event_buffer_s)
         s = s.loc[keep]
 
+    if despike_proxy:
+        s = despike_timeseries(
+            s,
+            window=despike_window,
+            z=float(despike_z),
+            min_periods=int(despike_min_periods),
+            fill=despike_fill,
+        )
+
     return s
 
 
@@ -583,6 +823,11 @@ def stream_to_proxy_timeseries(
     trigger_off: float = 1.0,
     clip_sigma: float = 2.0,
     clip_mode: str = "symmetric",
+    despike_proxy: bool = False,
+    despike_window: str | pd.Timedelta = "6H",
+    despike_z: float = 8.0,
+    despike_min_periods: int = 10,
+    despike_fill: str = "none",
 ) -> pd.Series:
     """Notebook-friendly proxy wrapper.
     """
@@ -609,6 +854,11 @@ def stream_to_proxy_timeseries(
             trigger_off=trigger_off,
             clip_sigma=clip_sigma,
             clip_mode=clip_mode,
+            despike_proxy=despike_proxy,
+            despike_window=despike_window,
+            despike_z=despike_z,
+            despike_min_periods=despike_min_periods,
+            despike_fill=despike_fill,
         )
 
     return quick_proxy(
@@ -631,6 +881,11 @@ def stream_to_proxy_timeseries(
         trigger_off=trigger_off,
         clip_sigma=clip_sigma,
         clip_mode=clip_mode,
+        despike_proxy=despike_proxy,
+        despike_window=despike_window,
+        despike_z=despike_z,
+        despike_min_periods=despike_min_periods,
+        despike_fill=despike_fill,
     )
 
 
@@ -698,6 +953,11 @@ def stream_to_proxy_timeseries_rss(
     trigger_off: float = 1.0,
     clip_sigma: float = 2.0,
     clip_mode: str = "symmetric",
+    despike_proxy: bool = False,
+    despike_window: str | pd.Timedelta = "6H",
+    despike_z: float = 8.0,
+    despike_min_periods: int = 10,
+    despike_fill: str = "none",
 ) -> pd.Series:
     """Compute proxy per component then combine as RSS: sqrt(sum(proxy_i^2))."""
 
@@ -780,6 +1040,15 @@ def stream_to_proxy_timeseries_rss(
     if event_buffer_s and event_buffer_s > 0 and event_times_utc is not None:
         keep = mask_times_near_events(out.index, event_times_utc, event_buffer_s)
         out = out.loc[keep]
+
+    if despike_proxy:
+        out = despike_timeseries(
+            out,
+            window=despike_window,
+            z=float(despike_z),
+            min_periods=int(despike_min_periods),
+            fill=despike_fill,
+        )
 
     return out
 

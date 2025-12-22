@@ -60,5 +60,14 @@ Thumbs.db
 *.h5
 *.hdf5
 data/
+notebooks/data/
+notebooks/**/data/
 output/
 cache/
+
+# Seismic / notebook caches
+*.mseed
+*.miniseed
+*.pkl
+*.pickle
+*.npz
