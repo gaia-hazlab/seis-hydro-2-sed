@@ -459,6 +459,24 @@ def compute_proxy_from_fdsn(
     # Explicit timeout helps avoid hanging reads on large responses.
     client = Client(client_name, timeout=120)
 
+    # Cached MiniSEED files do not store instrument response. If we later try to
+    # remove response on cached data without re-attaching metadata, we silently
+    # fall back to raw counts and proxies can change scale by orders of magnitude.
+    inventory = None
+    if remove_response and attach_response:
+        try:
+            inventory = client.get_stations(
+                network=net,
+                station=sta,
+                location=location,
+                channel=channel,
+                starttime=start_utc,
+                endtime=end_utc,
+                level="response",
+            )
+        except Exception:
+            inventory = None
+
     out_parts: list[pd.Series] = []
     t0 = start_utc
 
@@ -523,6 +541,12 @@ def compute_proxy_from_fdsn(
         try:
             st.merge(method=1, fill_value="interpolate")
             st.trim(dl0, dl1)
+
+            if inventory is not None:
+                try:
+                    st.attach_response(inventory)
+                except Exception:
+                    pass
 
             s = stream_to_proxy_timeseries(
                 st,
@@ -1283,23 +1307,51 @@ def clip_trace_days_on_stalta_impulses(
     return tr2
 
 
-def plot_proxy_and_gauge(proxy: pd.Series, gauge_df: pd.DataFrame, title: str = "") -> None:
+def plot_proxy_and_gauge(
+    proxy: pd.Series | pd.DataFrame,
+    gauge_df: pd.DataFrame | pd.Series,
+    title: str = "",
+    save_dir: str | Path | None = None,
+    filename: str | None = None,
+    dpi: int = 200,
+    gauge_col: str | None = None,
+) -> None:
     import matplotlib.pyplot as plt
+    from pathlib import Path
 
-    g = gauge_df.copy().sort_index()
+    def _safe(s: str) -> str:
+        s = (s or "plot").strip()
+        s = re.sub(r"[^A-Za-z0-9._-]+", "_", s)
+        return s.strip("._-") or "plot"
+
+    if isinstance(proxy, pd.DataFrame):
+        if proxy.shape[1] < 1:
+            raise ValueError("proxy DataFrame has no columns")
+        proxy_s = proxy.iloc[:, 0]
+    else:
+        proxy_s = proxy
+
+    if isinstance(gauge_df, pd.Series):
+        g = gauge_df.to_frame(name=gauge_df.name or "gauge").copy().sort_index()
+    else:
+        g = gauge_df.copy().sort_index()
 
     fig, ax1 = plt.subplots(figsize=(10, 4))
-    ax1.plot(proxy.index, proxy.values, linewidth=1, label="Seismic proxy")
+    ax1.plot(proxy_s.index, proxy_s.values, linewidth=1, label="Seismic proxy")
     ax1.set_ylabel("Proxy")
     ax1.set_title(title)
 
-    stage_col = (
-        "gage_height_ft"
-        if "gage_height_ft" in g.columns
-        else ("discharge_cfs" if "discharge_cfs" in g.columns else None)
-    )
+    stage_col = gauge_col
     if stage_col is None:
-        raise KeyError("Gauge dataframe missing gage_height_ft and discharge_cfs")
+        stage_col = (
+            "gage_height_ft"
+            if "gage_height_ft" in g.columns
+            else ("discharge_cfs" if "discharge_cfs" in g.columns else None)
+        )
+    if stage_col is None or stage_col not in g.columns:
+        raise KeyError(
+            "Gauge input missing expected column; provide gauge_col=... or pass a Series"
+        )
 
     ax2 = ax1.twinx()
     ax2.plot(g.index, g[stage_col].values, linestyle="--", linewidth=1, label=stage_col)
@@ -1308,6 +1360,15 @@ def plot_proxy_and_gauge(proxy: pd.Series, gauge_df: pd.DataFrame, title: str = 
     ax1.legend(loc="upper left")
     ax2.legend(loc="upper right")
     plt.tight_layout()
+
+    if save_dir is not None:
+        out_dir = Path(save_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        fname = filename or f"{_safe(title)}.png"
+        if not fname.lower().endswith(".png"):
+            fname += ".png"
+        fig.savefig(out_dir / fname, dpi=int(dpi), bbox_inches="tight")
+
     plt.show()
 
 
@@ -1316,8 +1377,18 @@ def hysteresis_plot(
     gauge_df: pd.DataFrame,
     title: str = "",
     tolerance: str = "10min",
+    *,
+    save_dir: str | Path | None = None,
+    filename: str | None = None,
+    dpi: int = 200,
 ) -> None:
     import matplotlib.pyplot as plt
+    from pathlib import Path
+
+    def _safe(s: str) -> str:
+        s = (s or "plot").strip()
+        s = re.sub(r"[^A-Za-z0-9._-]+", "_", s)
+        return s.strip("._-") or "plot"
 
     g = gauge_df.copy().sort_index()
     stage_col = (
@@ -1334,12 +1405,23 @@ def hysteresis_plot(
     )
     df = df.dropna()
 
-    plt.figure(figsize=(5.2, 5.0))
+    fig = plt.figure(figsize=(5.2, 5.0))
     plt.scatter(df[stage_col], df["proxy"], s=6)
     plt.xlabel(stage_col)
     plt.ylabel("Seismic proxy")
     plt.title(title)
     plt.tight_layout()
+
+    # Optional saving
+    # Note: kept as keyword-only for symmetry with plot_proxy_and_gauge.
+    if save_dir is not None:
+        out_dir = Path(save_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        fname = filename or f"{_safe(title)}.png"
+        if not fname.lower().endswith(".png"):
+            fname += ".png"
+        fig.savefig(out_dir / fname, dpi=int(dpi), bbox_inches="tight")
+
     plt.show()
 
 
@@ -1359,6 +1441,9 @@ def band_sweep(
     remove_response: bool = True,
     combine: str = "z",
     components: tuple[str, ...] = ("Z", "N", "E"),
+    *,
+    save_dir: str | Path | None = None,
+    filename_prefix: str | None = None,
 ) -> None:
     if start is None or end is None:
         raise ValueError("band_sweep requires start and end")
@@ -1380,4 +1465,14 @@ def band_sweep(
             combine=combine,
             components=components,
         )
-        plot_proxy_and_gauge(proxy, gauge_df, title=f"{station_name}: band {fmin}-{fmax} Hz")
+        title = f"{station_name}: band {fmin}-{fmax} Hz"
+        fname = None
+        if filename_prefix is not None:
+            fname = f"{filename_prefix}_band_{fmin:g}-{fmax:g}Hz.png"
+        plot_proxy_and_gauge(
+            proxy,
+            gauge_df,
+            title=title,
+            save_dir=save_dir,
+            filename=fname,
+        )
