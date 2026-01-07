@@ -96,6 +96,28 @@ import numpy as np
 import scipy
 ```
 
+## Batch workflow (generate plots + CSVs for all stations)
+
+The notebook workflow in `notebooks/uw_river_rumble_dec2025.ipynb` can be run in batch mode over **all seismic stations that have an associated USGS gage** in the GAIA metadata table.
+
+Run from the repo root:
+
+```bash
+pixi run python scripts/run_river_rumble_batch.py \
+	--start 2025-12-01T00:00:00 \
+	--end   2025-12-24T00:00:00 \
+	--network-filter CC \
+	--use-rss \
+	--exclude-earthquakes \
+	--clip-impulses \
+	--despike-proxy
+```
+
+Outputs:
+- Time series CSVs and `fit_parameters.csv` are written under `notebooks/data/results/`.
+- Figures are written under `notebooks/figures/`.
+
+
 ## Development
 
 To install development dependencies:
