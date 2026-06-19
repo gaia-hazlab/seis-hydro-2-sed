@@ -22,6 +22,24 @@ GAIA_USGS_STREAM_GAGE_BASE_URL = (
     "https://raw.githubusercontent.com/gaia-hazlab/gaia-data-downloaders/main/USGS_Stream_Gage"
 )
 
+# Unit conversions to SI. USGS NWIS reports discharge in cubic feet per second
+# (param 00060) and gage height in feet (00065); we convert to SI at ingestion so
+# the rest of the pipeline is metric.
+CFS_TO_CMS = 0.028316846592   # cubic feet/s -> cubic metres/s (m^3/s)
+FT_TO_M = 0.3048              # feet -> metres
+
+
+def _augment_si(df: pd.DataFrame) -> pd.DataFrame:
+    """Add SI columns (discharge_cms [m^3/s], gage_height_m [m]) from imperial ones.
+
+    Keeps the original imperial columns for provenance; SI columns are canonical.
+    """
+    if "discharge_cfs" in df.columns and "discharge_cms" not in df.columns:
+        df["discharge_cms"] = pd.to_numeric(df["discharge_cfs"], errors="coerce") * CFS_TO_CMS
+    if "gage_height_ft" in df.columns and "gage_height_m" not in df.columns:
+        df["gage_height_m"] = pd.to_numeric(df["gage_height_ft"], errors="coerce") * FT_TO_M
+    return df
+
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """Great-circle distance (km) between two WGS84 lat/lon points."""
@@ -166,6 +184,7 @@ def fetch_usgs_gage_timeseries(
             df["site"] = site
             df.to_csv(parsed_cache)
 
+        df = _augment_si(df)
         start_ts = pd.to_datetime(start_utc.datetime, utc=True)
         end_ts = pd.to_datetime(end_utc.datetime, utc=True)
         df = df.loc[(df.index >= start_ts) & (df.index <= end_ts)]
@@ -308,7 +327,7 @@ def fetch_usgs_nwis_iv(
     if use_cache and cache_file.exists():
         df = pd.read_csv(cache_file, parse_dates=["time_utc"], index_col="time_utc")
         df.index = pd.to_datetime(df.index, utc=True)
-        return df.sort_index()
+        return _augment_si(df.sort_index())
 
     base = "https://waterservices.usgs.gov/nwis/iv/"
     params = {
@@ -360,7 +379,7 @@ def fetch_usgs_nwis_iv(
     out = out.sort_index()
     out["site"] = site
     out.to_csv(cache_file)
-    return out
+    return _augment_si(out)
 
 
 def download_streams(
@@ -583,6 +602,11 @@ def compute_proxy_from_fdsn(
             s = s.loc[(s.index >= t0_ts) & (s.index < t1_ts)]
             if not s.empty:
                 out_parts.append(s)
+        except Exception as e:
+            # Tier-1 fix: with strict response removal a day with missing/broken
+            # metadata now raises instead of silently producing counts. Skip that
+            # day (loudly) rather than crashing the station or mixing units.
+            print(f"  Skipping day {net}.{sta} {t0}–{t1}: {e}")
         finally:
             # help GC in notebooks
             del st
@@ -1087,11 +1111,26 @@ def estimate_constant_lag_seconds(
     resample_minutes: int | None = None,
     transform: str = "log10",
     min_pairs: int = 50,
+    detrend_hours: float | None = 6.0,
+    lag_sign: str = "any",
 ) -> tuple[float, pd.DataFrame]:
     """Scan constant lags and return the best lag (seconds) + a results table.
 
     Convention: choose tau maximizing corr(proxy(t), gauge(t - tau)).
     Implemented by shifting gauge timestamps forward by +tau before alignment.
+
+    Tier-1 fix (2026 review): correlating raw log *levels* over a multi-day storm
+    let the slow hydrograph trend dominate, so the scan locked onto large,
+    unphysical lags (the saved fit table had tau = -18 h, i.e. the proxy
+    *leading* discharge). We now high-pass both series with a rolling-median of
+    width ``detrend_hours`` before correlating, so the lag is set by event-scale
+    co-variability rather than the trend. ``detrend_hours=None`` restores the old
+    level-correlation behaviour.
+
+    ``lag_sign`` constrains the search to physically plausible lags:
+      - "any"     : scan -max..+max (default)
+      - "nonneg"  : tau >= 0 (proxy lags discharge; downstream gage)
+      - "nonpos"  : tau <= 0 (proxy leads discharge; upstream gage)
     """
     if gauge_col not in gauge_df.columns:
         raise KeyError(f"Gauge dataframe missing {gauge_col}")
@@ -1112,9 +1151,22 @@ def estimate_constant_lag_seconds(
         p = np.log10(p.clip(lower=tiny))
         g = np.log10(g.clip(lower=tiny))
 
+    # High-pass (remove slow trend) so the lag reflects event-scale timing.
+    if detrend_hours is not None and float(detrend_hours) > 0:
+        win = pd.to_timedelta(f"{float(detrend_hours)}h")
+        p = (p - p.rolling(win, center=True, min_periods=3).median()).dropna()
+        g = (g - g.rolling(win, center=True, min_periods=3).median()).dropna()
+        if p.empty or g.empty:
+            raise ValueError("Empty series after detrending; reduce detrend_hours")
+
     step_s = int(step_minutes * 60)
     max_s = int(max_lag_hours * 3600)
     lags = np.arange(-max_s, max_s + step_s, step_s, dtype=int)
+    sign = str(lag_sign).lower().strip()
+    if sign == "nonneg":
+        lags = lags[lags >= 0]
+    elif sign == "nonpos":
+        lags = lags[lags <= 0]
 
     best_tau = 0
     best_corr = -np.inf
@@ -1146,10 +1198,19 @@ def _remove_instrument_response(
     output: str = "velocity",
     pre_filt: tuple[float, float, float, float] | None = None,
     water_level: float = 60.0,
+    strict: bool = True,
 ) -> Trace:
     """Remove instrument response to velocity or acceleration.
 
-    If response removal fails (missing metadata), returns the original trace.
+    Tier-1 fix (2026 review): the previous behaviour silently returned the raw
+    (counts) trace when response removal failed. Because band power was then
+    integrated on counts for that segment while neighbouring segments were in
+    m/s, the proxy scale jumped by many orders of magnitude (the saved CSVs
+    showed dynamic ranges up to ~1e26 from exactly this bug).
+
+    Now, when ``strict=True`` (default) a missing response or a failed removal
+    raises ``RuntimeError`` so the caller can drop/skip that segment instead of
+    mixing units. Set ``strict=False`` to restore the old lenient behaviour.
     """
     tr2 = tr.copy()
     out = output.lower().strip()
@@ -1169,10 +1230,21 @@ def _remove_instrument_response(
             f3 = min(f3, 0.95 * f4)
         pre_filt = (f1, f2, f3, f4)
 
+    # Verify a response is actually attached before trying; otherwise
+    # remove_response() can fail in ways that previously fell through to counts.
+    has_resp = getattr(tr2.stats, "response", None) is not None
+    if not has_resp and strict:
+        raise RuntimeError(
+            f"No instrument response attached for {tr2.id}; refusing to integrate "
+            "band power on raw counts (set strict=False to override)."
+        )
+
     try:
         tr2.remove_response(output=out_code, pre_filt=pre_filt, water_level=water_level)
         return tr2
-    except Exception:
+    except Exception as e:
+        if strict:
+            raise RuntimeError(f"Response removal failed for {tr2.id}: {e}") from e
         return tr
 
 
@@ -1235,11 +1307,20 @@ def clip_trace_days_on_stalta_impulses(
     trigger_off: float = 1.0,
     clip_sigma: float = 2.0,
     clip_mode: str = "symmetric",
+    clip_scope: str = "windows",
+    clip_pad_seconds: float = 5.0,
 ):
-    """Detect impulsive behavior with STA/LTA per UTC day, then clip that day's data.
+    """Detect impulsive behavior with STA/LTA per UTC day, then clip the impulses.
 
-    Rule: if any STA/LTA trigger occurs within a UTC day, clip *all* samples
-    in that day to a threshold derived from the day's standard deviation.
+    Tier-1 fix (2026 review): the previous rule clipped *all* samples in a UTC
+    day whenever any STA/LTA trigger fired that day. A single teleseism or local
+    quake therefore destroyed a whole day of legitimate river signal and biased
+    the band power (hence the slope) low. The default is now ``clip_scope=
+    "windows"``, which clips only the triggered windows (padded by
+    ``clip_pad_seconds``). ``clip_scope="day"`` restores the legacy behaviour.
+
+    The clip threshold is still derived from the day's standard deviation so the
+    amplitude reference is stable across the day.
 
     `clip_mode`:
       - "symmetric": clip to ±(clip_sigma * std)
@@ -1258,6 +1339,15 @@ def clip_trace_days_on_stalta_impulses(
 
     nsta = max(1, int(round(sta_seconds * sr)))
     nlta = max(nsta + 1, int(round(lta_seconds * sr)))
+    npad = max(0, int(round(float(clip_pad_seconds) * sr)))
+    scope = str(clip_scope).lower().strip()
+    mode = clip_mode.lower().strip()
+
+    def _clip_inplace(lo: int, hi: int, thr: float) -> None:
+        if mode == "upper":
+            x[lo:hi] = np.minimum(x[lo:hi], thr)
+        else:  # "symmetric" or "abs" both clamp to ±thr
+            x[lo:hi] = np.clip(x[lo:hi], -thr, thr)
 
     start = tr2.stats.starttime
     end = tr2.stats.endtime
@@ -1284,22 +1374,20 @@ def clip_trace_days_on_stalta_impulses(
         try:
             cft = classic_sta_lta(seg0, nsta, nlta)
             on_off = trigger_onset(cft, trigger_on, trigger_off)
-            has_impulse = len(on_off) > 0
         except Exception:
-            has_impulse = False
+            on_off = []
 
-        if has_impulse:
+        if len(on_off) > 0:
             std = float(np.nanstd(seg0))
             if std > 0 and np.isfinite(std):
                 thr = clip_sigma * std
-                mode = clip_mode.lower().strip()
-                if mode == "upper":
-                    seg = np.minimum(seg, thr)
-                elif mode == "abs":
-                    seg = np.clip(seg, -thr, thr)
-                else:  # "symmetric"
-                    seg = np.clip(seg, -thr, thr)
-                x[i0:i1] = seg
+                if scope == "day":
+                    _clip_inplace(i0, i1, thr)
+                else:  # "windows": clip only padded trigger windows
+                    for on, off in on_off:
+                        lo = i0 + max(0, int(on) - npad)
+                        hi = i0 + min(i1 - i0, int(off) + npad)
+                        _clip_inplace(lo, hi, thr)
 
         t += 24 * 3600
 
@@ -1343,11 +1431,10 @@ def plot_proxy_and_gauge(
 
     stage_col = gauge_col
     if stage_col is None:
-        stage_col = (
-            "gage_height_ft"
-            if "gage_height_ft" in g.columns
-            else ("discharge_cfs" if "discharge_cfs" in g.columns else None)
-        )
+        for cand in ("discharge_cms", "gage_height_m", "discharge_cfs", "gage_height_ft"):
+            if cand in g.columns:
+                stage_col = cand
+                break
     if stage_col is None or stage_col not in g.columns:
         raise KeyError(
             "Gauge input missing expected column; provide gauge_col=... or pass a Series"
@@ -1391,13 +1478,13 @@ def hysteresis_plot(
         return s.strip("._-") or "plot"
 
     g = gauge_df.copy().sort_index()
-    stage_col = (
-        "gage_height_ft"
-        if "gage_height_ft" in g.columns
-        else ("discharge_cfs" if "discharge_cfs" in g.columns else None)
+    stage_col = next(
+        (c for c in ("discharge_cms", "gage_height_m", "discharge_cfs", "gage_height_ft")
+         if c in g.columns),
+        None,
     )
     if stage_col is None:
-        raise KeyError("Gauge dataframe missing gage_height_ft and discharge_cfs")
+        raise KeyError("Gauge dataframe missing discharge_cms/gage_height_m (or imperial)")
 
     df = pd.DataFrame({"proxy": proxy}).sort_index()
     df[stage_col] = g[stage_col].reindex(

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Pre-commit hook: render the Quarto book to catch broken renders before commit.
+#
+# Install (one-time, per clone):   git config core.hooksPath .githooks
+# Bypass for a single commit:      git commit --no-verify
+#
+# Notes:
+# - _book/ is git-ignored (GitHub Pages publishes from source via CI), so this
+#   hook is a *render check*, not a way to commit built output.
+# - It only renders when book inputs are staged, so unrelated commits stay fast.
+set -euo pipefail
+
+# Which staged paths should trigger a render?
+if ! git diff --cached --name-only \
+     | grep -qE '^(index\.qmd|_quarto\.yml|REVIEW_2026\.md|paper/|workflows/README\.md)'; then
+  exit 0   # no book inputs staged; nothing to check
+fi
+
+if ! command -v pixi >/dev/null 2>&1; then
+  echo "pre-commit: pixi not found on PATH; skipping book render." >&2
+  exit 0
+fi
+
+echo "pre-commit: book inputs changed — rendering (pixi run make paper)…"
+if ! pixi run make paper; then
+  echo "pre-commit: ✗ Quarto render FAILED. Fix the error above," >&2
+  echo "            or bypass with: git commit --no-verify" >&2
+  exit 1
+fi
+echo "pre-commit: ✓ book rendered OK (_book/)."
+exit 0

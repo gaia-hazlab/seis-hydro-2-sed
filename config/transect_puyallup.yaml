@@ -1,0 +1,60 @@
+# Mountain-to-sea seismic transect — Puyallup River system, Mt. Rainier, WA
+# Generated from FDSN (IRIS) + USGS NWIS discovery (workflows/00_discover_stations.py).
+# river_km = approximate distance downstream from Puyallup R nr Electron (RM ~41 ⇒ km 0 here).
+#
+# NOTE ON FEASIBILITY (honest caveat for the paper):
+#   Broadband / short-period (BH/EH/HH) stations suitable for ambient river-noise
+#   bedload analysis exist ONLY in the upper ~20 km (glacial source reaches).
+#   The lower ~30 km toward Puget Sound (Puyallup, Tacoma, Commencement Bay) is
+#   covered only by URBAN STRONG-MOTION accelerometers (HN/EN) — usable but noisy.
+#   Treat downstream results as exploratory; lead the science with the upper transect.
+
+event:
+  name: "December 2025 Pacific Northwest atmospheric-river floods"
+  start_utc: "2025-12-01T00:00:00"
+  end_utc:   "2025-12-24T00:00:00"
+  peak_utc:  "2025-12-09T03:30:00"   # Puyallup nr Electron discharge peak (recomputed)
+
+bands:
+  # turbulence-dominated (water) baseline bands.
+  # NOTE: 0.5-2 Hz is the OCEANIC SECONDARY MICROSEISM band, NOT river turbulence —
+  # at PR01 it came out anti-correlated with discharge (b=-0.29, r=-0.36). It is
+  # retained only to *display* the contamination in beta(f); the water baseline
+  # must be defined from 1-5 / 2-8 Hz. Do not auto-select 0.5-2 as the flow band.
+  flow:            [[1.0, 5.0], [2.0, 8.0]]
+  flow_microseism: [[0.5, 2.0]]   # diagnostic only — exclude from baseline
+  # bedload-sensitive bands (Tsai 2012; Bakker 2020 optimal 30-80 Hz where SR allows)
+  bedload: [[5.0, 15.0], [10.0, 30.0], [30.0, 60.0]]
+
+# ---- segment 1: glacial source (broadband, high quality) ----
+upper_transect:
+  - {seis: CC.PR03, river_km: 0.0,  gage: "12092000", chan: BH, role: anchor}      # strongest signal, full cache
+  - {seis: CC.PR01, river_km: 0.0,  gage: "12092000", chan: BH}
+  - {seis: CC.PR02, river_km: 0.0,  gage: "12092000", chan: BH}
+  - {seis: CC.PR04, river_km: 0.0,  gage: "12092000", chan: BH}
+  - {seis: CC.STYX, river_km: 3.0,  gage: "12092000", chan: BH}
+  - {seis: CC.VOIT, river_km: 4.0,  gage: "12094000", chan: BH, river: Carbon}      # Voight Cr / Carbon
+  - {seis: CC.TRON, river_km: 19.9, gage: "12093500", chan: BH, site: "Electron Hydro"}
+  - {seis: PB.B941, river_km: 19.9, gage: "12093500", chan: EH, site: "Kapowsin borehole"}
+
+# ---- segment 2: lowland to Puget Sound (urban accelerometers; exploratory) ----
+lower_transect:
+  - {seis: UW.QDNP, river_km: 36.3, gage: "12096500", chan: HN, quality: urban_smo}
+  - {seis: UW.PAYL, river_km: 44.0, gage: "12101500", chan: HN, quality: urban_smo} # Puyallup
+  - {seis: GS.TFD,  river_km: 53.9, gage: "12101500", chan: HN, quality: urban_array}# Tacoma
+  - {seis: UW.UPS,  river_km: 53.9, gage: "12101500", chan: HN, quality: urban_smo} # U Puget Sound
+  - {seis: UW.BRPT, river_km: 53.9, gage: "12101500", chan: HN, quality: coast}      # Browns Point / Sound
+
+# ---- control / comparison ----
+controls:
+  - {seis: UW.BHW,  gage: "12150800", river: Snohomish, role: negative_control,
+     note: "lowland river, far from bedload source; bedload band r~0 — confirms high-f is not a generic flow artifact"}
+
+# Longitudinal gage transect (mountain -> sea) for the discharge profile
+gages:
+  "12092000": {name: "Puyallup R nr Electron",  river_km: 0.0,  type: glacial_source}
+  "12094000": {name: "Carbon R nr Fairfax",     river_km: 0.0,  type: glacial_tributary}
+  "12093500": {name: "Puyallup R nr Orting",    river_km: 19.9}
+  "12096500": {name: "Puyallup R at Alderton",  river_km: 36.3}
+  "12101500": {name: "Puyallup R at Puyallup",  river_km: 44.0, type: near_mouth}
+  "12082500": {name: "Nisqually R nr National", river_km: null, type: glacial_source_separate}

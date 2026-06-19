@@ -1,0 +1,40 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Seismic Bedload Transport on Mt. Rainier's Glacial Rivers"
+  subtitle: "The December 2025 atmospheric-river floods — analysis, review, and reproducible workflow"
+  author: "Marine Denolle and collaborators"
+  date: last-modified
+  search: true
+  repo-url: https://github.com/gaia-hazlab/seis-hydro-2-sed
+  repo-actions: [edit, source, issue]
+  sidebar:
+    style: docked
+  chapters:
+    - index.qmd
+    - paper/paper.qmd
+    - REVIEW_2026.md
+    - paper/LITERATURE.md
+    - part: "Reproducibility"
+      chapters:
+        - workflows/README.md
+
+bibliography: paper/references.bib
+csl: https://www.zotero.org/styles/american-geophysical-union
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+    fig-cap-location: bottom
+    code-fold: true
+  # PDF intentionally omitted: it needs a LaTeX toolchain (tinytex) that would
+  # make the Pages build fail. Re-add a `pdf:` format + tinytex step in CI later.
+
+execute:
+  freeze: auto
+  warning: false
+  echo: false

@@ -71,3 +71,16 @@ cache/
 *.pkl
 *.pickle
 *.npz
+
+# Quarto
+_book/
+.quarto/
+paper/_freeze/
+/_freeze/
+*_files/
+
+/.quarto/
+**/*.quarto_ipynb
+
+# Claude Code session dir
+.claude/

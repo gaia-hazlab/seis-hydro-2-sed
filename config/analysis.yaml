@@ -1,0 +1,31 @@
+# Analysis parameters for the Puyallup bedload-seismology workflow.
+proxy:
+  method: bandpower        # Welch PSD integrated over band (m/s)^2
+  output: velocity         # remove response to ground velocity
+  combine: rss             # sqrt(sum_i proxy_i^2) over components
+  components: [Z, N, E]
+  win_seconds: 600
+  step_seconds: 300
+  remove_response: true    # strict: skip days with missing/failed response (no raw counts)
+
+cleaning:
+  exclude_earthquakes: true
+  eq_min_mag: 3.5
+  eq_maxradius_km: 500
+  eq_buffer_seconds: 1200
+  clip_impulses: true
+  clip_scope: windows      # Tier-1 fix: clip only triggered windows, not whole day
+  despike_proxy: true
+  despike_window: "6H"
+  despike_z: 8.0
+
+lag:
+  detrend_hours: 6.0       # Tier-1 fix: high-pass before lag scan (kills trend lock)
+  max_lag_hours: 24
+  step_minutes: 10
+  lag_sign: any            # set nonneg/nonpos per gage geometry when known
+
+fit:
+  n_mad: 6.0               # robust outlier rejection in log P
+  n_boot: 500              # bootstrap CI on slope
+  water_baseline: [0.9, 1.4]   # Gimbert 2014 turbulence exponent range

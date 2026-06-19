@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Batch runner for the uw_river_rumble_dec2025 notebook workflow.
+"""Batch runner for the river-rumble (seismic bedload) workflow.
 
 Loops over all seismic stations that have an associated USGS gage in the
 GAIA metadata CSV and generates:
@@ -78,11 +78,11 @@ def _parse_bands_csv(s: str) -> list[tuple[float, float]]:
 
 
 def _pick_gauge_col(gauge_df: pd.DataFrame) -> str:
-    if "discharge_cfs" in gauge_df.columns:
-        return "discharge_cfs"
-    if "gage_height_ft" in gauge_df.columns:
-        return "gage_height_ft"
-    raise KeyError("Gauge dataframe missing discharge_cfs and gage_height_ft")
+    # Prefer SI columns (m^3/s, m); fall back to imperial for legacy caches.
+    for cand in ("discharge_cms", "gage_height_m", "discharge_cfs", "gage_height_ft"):
+        if cand in gauge_df.columns:
+            return cand
+    raise KeyError("Gauge dataframe missing discharge_cms/gage_height_m (or imperial)")
 
 
 def _corr_at_tau(

@@ -1,0 +1,273 @@
+{
+  "stations": [
+    {
+      "net": "CC",
+      "sta": "PR03",
+      "lat": 46.9034,
+      "lon": -122.0327,
+      "dist_river_km": 0.19,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Puyallup River 03"
+    },
+    {
+      "net": "CC",
+      "sta": "PR01",
+      "lat": 46.9101,
+      "lon": -122.0376,
+      "dist_river_km": 0.71,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Puyallup River 01"
+    },
+    {
+      "net": "CC",
+      "sta": "PR02",
+      "lat": 46.9183,
+      "lon": -122.0487,
+      "dist_river_km": 1.9,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Puyallup River 02"
+    },
+    {
+      "net": "CC",
+      "sta": "PR04",
+      "lat": 46.9298,
+      "lon": -121.9886,
+      "dist_river_km": 4.54,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Puyallup River 04"
+    },
+    {
+      "net": "CC",
+      "sta": "RUSH",
+      "lat": 46.9031,
+      "lon": -121.9442,
+      "dist_river_km": 6.9,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Rushingwater Creek"
+    },
+    {
+      "net": "CC",
+      "sta": "SIFT",
+      "lat": 46.8668,
+      "lon": -121.9533,
+      "dist_river_km": 7.46,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Swift Creek"
+    },
+    {
+      "net": "CC",
+      "sta": "STYX",
+      "lat": 46.9637,
+      "lon": -122.0805,
+      "dist_river_km": 7.49,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "STYX, Puyallup River, WA, USA"
+    },
+    {
+      "net": "CC",
+      "sta": "VOIT",
+      "lat": 46.9664,
+      "lon": -121.9833,
+      "dist_river_km": 7.97,
+      "river_km": 0.0,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Voight Creek"
+    },
+    {
+      "net": "UW",
+      "sta": "GHW",
+      "lat": 47.0415,
+      "lon": -122.2737,
+      "dist_river_km": 4.99,
+      "river_km": 19.9,
+      "chan": "EN",
+      "broadband": false,
+      "site": "Garrison Hill WA, Graham area, WA, USA"
+    },
+    {
+      "net": "CC",
+      "sta": "TRON",
+      "lat": 46.9977,
+      "lon": -122.1753,
+      "dist_river_km": 5.22,
+      "river_km": 19.9,
+      "chan": "BH",
+      "broadband": true,
+      "site": "Electron Hydro, WA, USA"
+    },
+    {
+      "net": "PB",
+      "sta": "B941",
+      "lat": 46.9868,
+      "lon": -122.219,
+      "dist_river_km": 5.86,
+      "river_km": 19.9,
+      "chan": "EH",
+      "broadband": true,
+      "site": "kapows941bwa2008, Kapowsin, WA, USA"
+    },
+    {
+      "net": "UW",
+      "sta": "TEHA",
+      "lat": 47.1279,
+      "lon": -122.1963,
+      "dist_river_km": 3.59,
+      "river_km": 26.8,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Tehaleh Heights Elementary School, Bonne"
+    },
+    {
+      "net": "UW",
+      "sta": "QDNP",
+      "lat": 47.1658,
+      "lon": -122.2704,
+      "dist_river_km": 3.73,
+      "river_km": 36.3,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Puyallup, WA, USA"
+    },
+    {
+      "net": "UW",
+      "sta": "PAYL",
+      "lat": 47.1928,
+      "lon": -122.313,
+      "dist_river_km": 1.99,
+      "river_km": 44.0,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Puyallup School ANSS-SMO"
+    },
+    {
+      "net": "UW",
+      "sta": "HAWK",
+      "lat": 47.1821,
+      "lon": -122.4055,
+      "dist_river_km": 6.59,
+      "river_km": 44.0,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Harvard Elementary School, Tacoma, WA, U"
+    },
+    {
+      "net": "GS",
+      "sta": "TFD",
+      "lat": 47.2534,
+      "lon": -122.399,
+      "dist_river_km": 2.43,
+      "river_km": 53.9,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Tacoma urban array"
+    },
+    {
+      "net": "UW",
+      "sta": "BRPT",
+      "lat": 47.301,
+      "lon": -122.4363,
+      "dist_river_km": 3.66,
+      "river_km": 53.9,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Browns Point Fire Department, Browns Poi"
+    },
+    {
+      "net": "UW",
+      "sta": "TBPA",
+      "lat": 47.2579,
+      "lon": -122.3682,
+      "dist_river_km": 4.14,
+      "river_km": 53.9,
+      "chan": "EN",
+      "broadband": false,
+      "site": "Tacoma BPA, WA, USA"
+    },
+    {
+      "net": "UW",
+      "sta": "QKSO",
+      "lat": 47.2699,
+      "lon": -122.4791,
+      "dist_river_km": 4.46,
+      "river_km": 53.9,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Tacoma, WA, USA"
+    },
+    {
+      "net": "UW",
+      "sta": "UPS",
+      "lat": 47.2639,
+      "lon": -122.4836,
+      "dist_river_km": 4.85,
+      "river_km": 53.9,
+      "chan": "HN",
+      "broadband": false,
+      "site": "U. Puget Sound, WA, USA"
+    },
+    {
+      "net": "UW",
+      "sta": "QTKM",
+      "lat": 47.2286,
+      "lon": -122.4482,
+      "dist_river_km": 5.07,
+      "river_km": 53.9,
+      "chan": "HN",
+      "broadband": false,
+      "site": "Tacoma, WA, USA"
+    }
+  ],
+  "gages": {
+    "12092000": {
+      "name": "Puyallup R nr Electron",
+      "lat": 46.9037,
+      "lon": -122.0351,
+      "river_km": 0.0
+    },
+    "12093500": {
+      "name": "Puyallup R nr Orting",
+      "lat": 47.0392,
+      "lon": -122.2079,
+      "river_km": 19.9
+    },
+    "12094000": {
+      "name": "Carbon R nr Fairfax",
+      "lat": 47.0279,
+      "lon": -122.0326,
+      "river_km": 19.9
+    },
+    "12096500": {
+      "name": "Puyallup R at Alderton",
+      "lat": 47.1851,
+      "lon": -122.2296,
+      "river_km": 36.3
+    },
+    "12101500": {
+      "name": "Puyallup R at Puyallup",
+      "lat": 47.2084,
+      "lon": -122.3271,
+      "river_km": 44.0
+    },
+    "12082500": {
+      "name": "Nisqually R nr National",
+      "lat": 46.7558,
+      "lon": -122.0828,
+      "river_km": 0.0
+    }
+  }
+}

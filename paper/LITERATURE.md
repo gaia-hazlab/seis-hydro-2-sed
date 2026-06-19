@@ -1,0 +1,84 @@
+# Annotated Literature & Positioning
+*Seismic bedload transport on Mt. Rainier glacial rivers during the December 2025 atmospheric-river floods*
+
+Compiled June 2026. DOIs marked *(unverified)* must be confirmed before submission.
+
+---
+
+## 1. Foundational physics (forward models)
+
+- **Burtin et al. (2008)**, *JGR Solid Earth* 113, B05301, doi:10.1029/2007JB005034 — first showed >1 Hz ambient noise along the Trisuli (Himalaya) tracks river hydrology and bedload.
+- **Tsai, Minchew, Lamb & Ampuero (2012)**, *GRL* 39, L02404, doi:10.1029/2011GL050255 — **bedload forward model.** PSD ∝ (impact rate)·f³·m²w², i.e. **linear in flux q_b, ∝ D³ in grain size** (coarse tail / D₉₄ dominates). Our high-frequency band rests on this.
+- **Schmandt et al. (2013)**, *GRL* 40, 4858, doi:10.1002/grl.50953 — Grand Canyon controlled flood: bedload 15–45 Hz, fluid tractions <1 Hz, air–fluid waves ~6–7 Hz are spectrally separable.
+- **Gimbert, Tsai & Lamb (2014)**, *JGR-ES* 119, 2209, doi:10.1002/2014JF003201 — **turbulent-flow forward model.** P_water ∝ H^(7/3) S^(7/3) ∝ u\*^(14/3); turbulence occupies a lower band than bedload. Through hydraulic geometry → **P ∝ Q^(0.9–1.4)**, i.e. the ~linear "water baseline." *No analytic 5/4 exponent exists in this paper.*
+
+## 2. Inversion / quantification (the standard toolchain)
+
+- **Roth et al. (2016)**, *JGR-ES* 121, 725, doi:10.1002/2015JF003782 — Erlenbach; linear spectral inversion separates turbulence/rain from bedload, validated against impact-plate geophones.
+- **Dietze (2018)**, *ESurf* 6, 669, doi:10.5194/esurf-6-669-2018 — **`eseis` R package**, de-facto environmental-seismology toolbox (implements Tsai/Gimbert models). Consider porting/benchmarking against it.
+- **Dietze et al. (2019)**, *WRR* 55, doi:10.1029/2019WR026072 — joint inversion of bedload flux **and** flow depth from spectra.
+- **Bakker et al. (2020)**, *JGR-ES* 125, doi:10.1029/2019JF005416 — **the key prior result for our diagnostic.** Low f (~10 Hz) → exponent ~1.5 (matches turbulence ~1.4); >30 Hz → strongly nonlinear with Q but ~linear with sediment flux. **Establishes "exponent rises with frequency above the turbulence baseline ⇒ bedload."** Power governed by ~D₉₅, ∝ D³.
+- **Lagarde et al. (2021)**, *WRR* 57, doi:10.1029/2020WR028700 — quantifies Green's-function and coarse-tail GSD uncertainty in inversion.
+- **Nasr et al. (2024)**, *ESurf* 12, 117, doi:10.5194/esurf-12-117-2024 — hydroacoustic analogue; distributed-source inversion.
+
+## 3. Recent advances (2022–2026)
+
+- **Cook & Dietze (2022)**, *Annu. Rev. Earth Planet. Sci.* 50, 183, doi:10.1146/annurev-earth-032320-085133 — authoritative review; best single entry point.
+- **Antoniazza et al. (2023)**, *JGR-ES* 128, e2022JF007000, doi:10.1029/2022JF007000 — **24-station watershed-scale network**, maps where/when coarse sediment mobilizes; resolves multiple discrete pulses. Closest "array/network" precedent.
+- **"Sounding out the river" / Chmiel et al. (2023/24)**, *ESPL*, doi:10.1002/esp.5940 — joint seismic + hydroacoustic bedload in a lowland alluvial river.
+- **Luong et al. (2024)**, *JGR-ES* 129, doi:10.1029/2024JF007761 — modifies Tsai model for inelastic impacts + rolling/sliding; **30–80 Hz optimal bedload band**; Tsai model under-predicts flux 1–2 orders at shallow flow.
+- **Luong et al. (2026)**, *WRR*, doi:10.1029/2025WR040371 *(recent)* — **hybrid empirical model: seismic power + shear stress jointly predict bedload flux.** Directly relevant to our empirical-scaling approach.
+- **Roth et al. (2025)**, *Seismica* (DAS, "A River on Fiber") — distributed acoustic sensing for spatially-continuous fluvial monitoring; the emerging successor to point sensors.
+- **Rickenmann et al. (2025)**, *ESPL* 50(5), doi:10.1002/esp.70059 — long-term multi-site impact-plate bedload synthesis (calibration backbone).
+- **Nicoletti et al. (2026)**, arXiv:2604.17913 — full numerical waveform synthesis from grain-scale dynamics + turbulence.
+
+## 4. Sediment pulses & hysteresis (the "tracking" theme)
+
+- **Roth et al. (2014)**, *EPSL* 404, 144, doi:10.1016/j.epsl.2014.07.019 *(unverified)* — **THE blocking citation.** Multi-station array along Chijiawan R. (Taiwan), hysteresis metric Ψ tracks a **downstream-migrating coarse sediment pulse** after dam removal. Must distinguish our work from this.
+- **Roth et al. (2017)**, *JGR-ES* 122, doi:10.1002/2016JF004062 — **critical caveat:** hysteresis arises from bedload **and** boundary-roughness change; seismic power often tracks stage more than measured bedload. Must defend against.
+- **Schmandt et al. (2017)**, *Geology* 45, 299, doi:10.1130/G38639.1 — 76-sensor array, 700 m reach, reach-scale bedload during augmentation flood.
+- **Hassan et al. (2023)**, *WRR*, doi:10.1029/2023WR035406 — flume: supply timing controls bedload hysteresis sense.
+- **Nativ et al. (2025)**, *GRL*, doi:10.1029/2024GL113784 — **"Stationary boulders increase river seismic frequency via turbulence."** Direct counter-mechanism: high-f power need not be bedload. Must address explicitly.
+- Hysteresis sense conventions: clockwise ⇒ supply exhaustion / proximal / armor break-up on rising limb; counter-clockwise ⇒ delayed/distal delivery, pulse arrival on falling limb (Reid 1985; Kuhnle 1992; Mao 2014).
+
+## 5. Sediment-pulse physics (translation vs dispersion)
+
+- **Lisle et al. (2001)**, *ESPL* 26, 1409 — bed-material waves evolve dominantly by **dispersion**, not translation.
+- **Cui et al. (2003a,b)**, *WRR* 39(9), doi:10.1029/2002WR001803 / 10.1029/2002WR001805 — sediment pulses in mountain rivers; dispersion dominates at Fr > ~0.4.
+- **Sklar et al. (2009)**, *WRR* 45, W08439, doi:10.1029/2008WR007346 — translation/dispersion partitioning for gravel augmentation.
+- **Czuba & Foufoula-Georgiou** — network structure controls pulse aggregation/dispersion en route to the sink.
+
+## 6. Mt. Rainier / Puyallup / Puget Sound context
+
+- **Czuba et al. (2011)**, USGS FS 2011-3083, doi:10.3133/fs20113083 — ~6.5 Mt/yr sediment to Puget Sound.
+- **Czuba et al. (2012)**, USGS OFR 2012-1242 — **aggradation 1984–2009 up to 2.3 m (Puyallup), 0.6 m (Carbon); Nisqually nr National 0.13 m/yr.** Median-pulse transit times: Nisqually ~70 yr, Puyallup ~80 yr, Carbon ~300 yr, White ~60 yr. Aggradation concentrates at the confined→lowland slope break.
+- **Magirl et al. (2010)**, USGS SIR 2010-5240 — lower Puyallup/White/Carbon conveyance loss from deposition.
+- **Anderson (2025)**, USGS (Pierce Co.), data DOI 10.5066/P149MBYG — channel change & sediment transport through 2022 (lidar differencing); most recent aggradation update.
+- **Beason et al. (2022)**, *ESPL*, doi:10.1002/esp.5274 — proglacial erosion rates, four Rainier basins, 1960–2017.
+- **Hoblitt et al. (1998)**, USGS OFR 98-428 — Rainier lahar hazards (Osceola, Electron mudflows down the Puyallup).
+- USGS/PNSN **debris-flow seismic detection** at Rainier (Tahoma Creek) — *detection* of mass flows, **not** continuous bedload quantification (our distinction).
+- **December 2025 AR floods (confirmed):** two back-to-back atmospheric rivers ~Dec 8–12 2025; statewide emergency (Gov. Ferguson, ~Dec 10); Carbon R. nr Fairfax highest in 19 yrs; Puyallup record flooding; Mt Rainier NP closed indefinitely (debris flows, washouts). Sources: WA Mil. Dept; WA State Standard 2025-12-10; NASA SVS #5596; NPS MORA news. *(News/agency only — no peer-reviewed post-event analysis yet.)*
+
+---
+
+## 7. Novelty matrix (what to claim, what to defend)
+
+| Claim | Strength | Blocking prior work | Framing |
+|---|---|---|---|
+| Mountain-to-sea longitudinal transect tracking a pulse | **Moderate** | Roth 2014; Schmandt 2017; Antoniazza 2023 | Claim novelty in **catchment-length scale (tens of km, glacial source → lowland)**, not "first multi-station pulse tracking." |
+| Named **atmospheric-river** flood + debris-flow event | **Strong** | typhoon/GLOF/windstorm studies (different storm type) | First **Pacific AR-tied** bedload seismology; argue AR hydrology (rain-on-snow, glacial melt, sustained Q) gives a distinct signature. |
+| **Cascades glacial-river** bedload seismology | **Strong** | Rainier debris-flow *detection* (USGS/PNSN) | Distinguish continuous **bedload quantification** from catastrophic mass-flow *detection*. |
+| Frequency-dependent scaling-exponent diagnostic | **Weak** | Bakker 2020; Gimbert 2014; Tagliamento 2026 preprint | Frame as **field-validation/application at transect scale**, not invention. |
+
+**Lead framing:** *first transect-scale bedload seismology on Cascades glacial rivers during a named atmospheric-river flood.* Combination (b)+(c)+scale is the contribution.
+
+**Three reviewer objections to pre-empt:**
+1. *"Just Gimbert 2014 + Bakker 2020."* → We add the transect, the AR/Rainier system, and a multi-station β(f) map; we field-calibrate the water baseline per station rather than assuming it.
+2. *"Nativ 2025: high-f can be boulder-driven turbulence, not bedload."* → Use hysteresis + temporal evolution + the negative control (lowland Snohomish, r≈0) to argue against a static-roughness origin.
+3. *"Roth 2017: roughness change, not bedload, makes hysteresis."* → Report hysteresis sense per event and tie to the debris-flow supply chronology, not stage alone.
+
+**Reconcile:** our water baseline came out ~1 (or the measured low band), Gimbert predicts ~1.4 — state which baseline we adopt and why (empirical per-station calibration).
+
+**Methodological caveat discovered in re-analysis (2026):** the **0.5–2 Hz band is the oceanic secondary microseism**, not river turbulence — at PR01 it is *anti-correlated* with discharge (b=−0.29, r=−0.36). The turbulence baseline must be drawn from **1–5 / 2–8 Hz**; 0.5–2 Hz should never be auto-selected as the flow band. Also note **spatial decay**: PR01 (0.71 km from channel) gives a shallower bedload exponent (b≈1.2) than PR03 (0.19 km, b≈1.66) — consistent with distance attenuation of the high-frequency bedload signal, a transect-scale prediction worth testing explicitly.
+
+**Target journal:** **JGR: Earth Surface** (field flagship; Gimbert/Roth/Bakker/Antoniazza live there) or **ESurf** (open, public review, same audience). **GRL** if compressed to a first-detection letter; **Seismica** for an open methods/detection framing.
