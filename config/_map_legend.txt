@@ -1,0 +1,7 @@
+G 0.05c
+S 0.25c t 0.42c red 1p,black 0.7c broadband station (BH/EH)
+S 0.25c s 0.34c gray60 0.4p,black 0.7c strong-motion (HN/EN)
+S 0.25c d 0.34c cyan 0.7p,black 0.7c USGS discharge gage
+S 0.25c kvolcano 0.5c firebrick 0.8p,black 0.7c Mt. Rainier
+S 0.25c r 0.4c 30/110/230@35 - 0.7c flood/water (OPERA DSWx, 10 Dec 2025)
+G 0.05c

@@ -58,9 +58,11 @@ def _color(station: str) -> str:
 
 FNAME_RE = re.compile(r"^(?P<net>[A-Z0-9]+)\.(?P<sta>[A-Z0-9]+)(?:_(?P<f1>[\d.]+)-(?P<f2>[\d.]+)Hz)?_timeseries\.csv$")
 
-# Stations excluded from the analysis. UW.BHW (lowland Snohomish) is too far from
-# any bedload source to be informative; dropped per the 2026 review.
-EXCLUDE_STATIONS = {"UW.BHW"}
+# Stations excluded from the analysis:
+#  - UW.BHW: lowland Snohomish, too far from any bedload source.
+#  - UW.TEHA: heavily traffic-polluted (traffic_index≈59, weekday/weekend≈21;
+#    r≈0 with discharge) — see workflows/04_traffic_noise.py.
+EXCLUDE_STATIONS = {"UW.BHW", "UW.TEHA"}
 
 # Fixed log10(power) y-range for the per-station panels (fig 3, fig 4) so they
 # are not vertically squeezed.
@@ -196,80 +198,104 @@ def fig_hysteresis(items: list[dict]) -> None:
 
 
 def fig_event_timeseries(items: list[dict]) -> None:
-    """Offset (ridgeline) plot of seismic power vs discharge through the event.
+    """Ridgeline of seismic power through the event, positioned and colored by
+    distance downstream from the Mt. Rainier summit (the sediment source).
 
-    Each station occupies its own vertical lane (offset, so traces never
-    overlap), ordered source→downstream by river-km. One color per station;
-    within a lane the low-frequency (flow) band is semi-transparent (alpha 0.5)
-    and the high-frequency (bedload) band opaque. Each lane shows
-    log10(power / its median), so the gridline is the station's median level and
-    one lane-unit = one decade. Discharge (dashed) is drawn behind for context.
+    The vertical axis is distance-from-summit (km), source at top; each station's
+    trace (log10 power / its median, scaled) is centered at its distance and
+    colored by that distance. Within a lane the low-frequency (flow) band is
+    faint and the high-frequency (bedload) band opaque. Discharge is placed at
+    its gage's distance from the summit, scaled the same way. Co-located stations
+    are gently de-clustered for legibility (true distance shown by color).
     """
     from collections import defaultdict
+    from math import asin, cos, radians, sin, sqrt
+    import matplotlib as mpl
     from matplotlib.lines import Line2D
 
     banded = [it for it in items if it["band"] is not None]
     if not banded:
         return
 
-    # station -> river-km, for source→sea ordering
-    rkm: dict[str, float] = {}
+    SUMMIT = (-121.7603, 46.8523)           # Mt. Rainier (lon, lat)
+    GAGE_Q = (-122.0351, 46.9037)           # Puyallup nr Electron 12092000
+    AMP = 0.8                               # km per decade of power
+    CLIP = (-1.5, 2.0)                      # decades shown
+
+    def hav(lon1, lat1, lon2, lat2):
+        p1, p2 = radians(lat1), radians(lat2)
+        dp, dl = radians(lat2 - lat1), radians(lon2 - lon1)
+        return 2 * 6371.0 * asin(sqrt(sin(dp / 2) ** 2 + cos(p1) * cos(p2) * sin(dl / 2) ** 2))
+
+    coords: dict[str, tuple] = {}
     disc = ROOT / "config" / "_transect_discovery.json"
     if disc.exists():
         for v in json.loads(disc.read_text()).get("stations", []):
-            rkm[f'{v["net"]}.{v["sta"]}'] = v.get("river_km", 999)
+            coords[f'{v["net"]}.{v["sta"]}'] = (v["lon"], v["lat"])
 
     by_sta: dict[str, list] = defaultdict(list)
     for it in banded:
         fc = (it["band"][0] * it["band"][1]) ** 0.5
         by_sta[it["station"]].append((fc, it))
-    stations = sorted(by_sta, key=lambda s: (rkm.get(s, 999), s))
 
-    STEP = 4.0          # vertical lane spacing, in decades
-    FLOOR = 1e-3        # clip for log10
-    fig, ax1 = plt.subplots(figsize=(8.8, 1.15 * len(stations) + 1.8))
-    ax2 = ax1.twinx()
-    ax2.grid(False)
+    # true distance-from-summit per station
+    dist = {s: hav(*SUMMIT, *coords[s]) for s in by_sta if s in coords}
+    stations = sorted(dist, key=dist.get)
+    if not stations:
+        return
+    dgage = hav(*SUMMIT, *GAGE_Q)
+
+    # de-cluster: spread stations that fall within 1.6 km of each other
+    lane = {}
+    prev = None
+    for s in stations:
+        y = dist[s]
+        if prev is not None and y - prev < 1.6:
+            y = prev + 1.6
+        lane[s] = y
+        prev = y
+
+    dmin, dmax = min(dist.values()), max(dist.values())
+    norm = mpl.colors.Normalize(vmin=dmin, vmax=dmax)
+    cmap = mpl.cm.viridis
+
+    fig, ax = plt.subplots(figsize=(9.2, 0.95 * len(stations) + 2.2))
+
+    # discharge at the gage's distance from summit (scaled like the power traces)
     j0 = load_timeseries(banded[0]["path"])
-    hd, = ax2.plot(j0.index, j0["Q"], color="0.2", lw=1.5, ls="--", label="discharge", zorder=1)
-    ax2.set_ylabel(r"discharge (m³ s$^{-1}$)")
+    qn = np.log10((j0["Q"] / j0["Q"].median()).clip(lower=10 ** CLIP[0])).clip(*CLIP)
+    ax.axhline(dgage, color="0.6", lw=0.6, ls=":", zorder=0)
+    hd, = ax.plot(j0.index, dgage - AMP * qn, color="black", lw=1.4, ls="--", zorder=6)
 
-    yt, yl, base = [], [], 0.0
-    for idx, sta in enumerate(stations):
-        base = idx * STEP
-        c = _color(sta)
-        lst = sorted(by_sta[sta])
-        ax1.axhline(base, color="0.85", lw=0.6, zorder=0)            # median level
-        if len(lst) >= 2:                                            # LF (flow), faint
+    for s in stations:
+        c = cmap(norm(dist[s]))
+        y0 = lane[s]
+        lst = sorted(by_sta[s])
+        ax.axhline(y0, color="0.9", lw=0.5, zorder=0)
+        if len(lst) >= 2:                       # LF (flow), faint
             jl = load_timeseries(lst[0][1]["path"])
-            yv = np.log10((jl["P"] / jl["P"].median()).clip(lower=FLOOR)) + base
-            ax1.plot(jl.index, yv, color=c, lw=0.8, alpha=0.5, zorder=3)
-        jh = load_timeseries(lst[-1][1]["path"])                     # HF (bedload), opaque
-        yv = np.log10((jh["P"] / jh["P"].median()).clip(lower=FLOOR)) + base
-        ax1.plot(jh.index, yv, color=c, lw=0.9, alpha=1.0, zorder=4)
-        yt.append(base); yl.append(sta)
+            v = np.log10((jl["P"] / jl["P"].median()).clip(lower=10 ** CLIP[0])).clip(*CLIP)
+            ax.plot(jl.index, y0 - AMP * v, color=c, lw=0.8, alpha=0.45, zorder=3)
+        jh = load_timeseries(lst[-1][1]["path"])  # HF (bedload), opaque
+        v = np.log10((jh["P"] / jh["P"].median()).clip(lower=10 ** CLIP[0])).clip(*CLIP)
+        ax.plot(jh.index, y0 - AMP * v, color=c, lw=1.0, alpha=1.0, zorder=4)
+        ax.text(j0.index[0], y0, f" {s}  ({dist[s]:.0f} km)", color=c, fontsize=7.5,
+                fontweight="bold", va="center", ha="left", zorder=5)
 
-    ax1.set_yticks(yt)
-    ax1.set_yticklabels(yl)
-    for t, sta in zip(ax1.get_yticklabels(), yl):
-        t.set_color(_color(sta)); t.set_fontweight("bold")
-    ax1.set_ylim(-STEP * 0.7, base + STEP * 0.8)
-    ax1.set_ylabel("station lane  (offset; gridline = median, 1 lane-unit = ×10)")
-    ax1.set_xlabel("December 2025 (UTC)")
-    ax1.set_title("Seismic band power vs discharge — offset by station (source → downstream)", loc="left")
+    ax.set_ylim(dmax + 4, dmin - 4)             # source (small km) at top
+    ax.set_ylabel("distance downstream from Mt. Rainier summit (km)")
+    ax.set_xlabel("December 2025 (UTC)")
+    ax.set_title("Seismic power vs discharge along the source→downstream transect", loc="left")
 
-    # vertical 1-decade scale bar (top-left)
-    x0 = j0.index[int(0.02 * len(j0))]
-    ax1.plot([x0, x0], [base + STEP * 0.2, base + STEP * 0.2 + 1.0], color="k", lw=2)
-    ax1.text(x0, base + STEP * 0.2 + 0.5, " 1 decade", va="center", fontsize=7)
+    sm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
+    fig.colorbar(sm, ax=ax, label="distance from summit (km)", shrink=0.8, aspect=30, pad=0.02)
 
     style = [
-        Line2D([], [], color="0.35", lw=2, alpha=0.5, label="low-freq band (flow)"),
+        Line2D([], [], color="0.35", lw=2, alpha=0.45, label="low-freq band (flow)"),
         Line2D([], [], color="0.35", lw=2, alpha=1.0, label="high-freq band (bedload)"),
-        hd,
+        Line2D([], [], color="black", lw=1.4, ls="--", label="discharge (at gage)"),
     ]
-    fig.legend(handles=style, loc="upper center", bbox_to_anchor=(0.5, -0.01),
-               ncol=3, frameon=False)
+    fig.legend(handles=style, loc="upper center", bbox_to_anchor=(0.5, -0.01), ncol=3, frameon=False)
     fig.autofmt_xdate()
     fig.savefig(FIGDIR / "fig5_event_timeseries.png")
     plt.close(fig)
@@ -329,7 +355,8 @@ def main() -> int:
     items = discover()
     print(f"Discovered {len(items)} timeseries products: "
           + ", ".join(sorted({it['station'] for it in items})))
-    fig_transect_map()
+    # fig1 (transect map) is generated separately by workflows/03_make_map.py
+    # (PyGMT DEM map); do not overwrite it with the matplotlib fallback here.
     table = fig_scaling_exponent(items)
     fig_pq_scatter(items)
     fig_hysteresis(items)

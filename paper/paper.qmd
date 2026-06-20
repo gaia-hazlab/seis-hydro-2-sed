@@ -79,7 +79,7 @@ accelerometers, treated here as exploratory. Each seismic station is paired with
 the nearest co-located USGS discharge gage (e.g. Puyallup River near Electron,
 12092000). The event peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
 
-![Mountain-to-sea seismic transect along the Puyallup River. Broadband stations (red triangles), suitable for ambient river-noise analysis, cluster in the glacial source reach; the lowland/coastal corridor toward Puget Sound is covered only by urban strong-motion accelerometers (gray squares).](figures/fig1_transect_map.png){#fig-map width=72%}
+![Mountain-to-sea seismic transect along the Puyallup River (shaded SRTM topography; rivers from the USGS NHD). Broadband stations (red triangles), suitable for ambient river-noise analysis, cluster in the glacial source reach; the lowland/coastal corridor toward Puget Sound is covered only by urban strong-motion accelerometers (gray squares). Blue shows surface-water/flood extent from OPERA DSWx-S1 (Sentinel-1 SAR, 10 Dec 2025; NASA Disasters).](figures/fig1_transect_map.png){#fig-map width=78%}
 
 # Methods
 
@@ -105,9 +105,20 @@ $$ {#eq-fit}
 robustly (ordinary least squares and Theil–Sen, with bootstrap 95% confidence
 intervals on $b$), and quantify event hysteresis with the Lawler index. The
 0.5–2 Hz band is excluded from the turbulence baseline because it is dominated by
-the oceanic secondary microseism rather than river flow. Full parameters are in
-`config/analysis.yaml`; the pipeline and its 2026 corrections are documented in
-the [review chapter](../REVIEW_2026.md).
+the oceanic secondary microseism rather than river flow.
+
+**Station screening.** Candidate lowland stations were screened for anthropogenic
+contamination over a pre-flood week by the weekday/daytime-vs-night cycle of
+4–12 Hz power (`workflows/04_traffic_noise.py`). The glacial-source broadband
+stations are river-dominated (traffic index ≈1.3–2.6), whereas most lowland urban
+accelerometers are traffic-polluted — UW.TEHA most severely (traffic index ≈59,
+weekday/weekend ≈21; correlation with discharge $r\approx0$) — and are excluded
+(@fig-traffic). This restricts the usable transect to the upper broadband network.
+
+![Anthropogenic (traffic) noise screening: median 4–12 Hz power vs hour-of-week over the pre-flood week (weekends shaded). Traffic-polluted stations (red) show a strong weekday/daytime cycle; the river-dominated source stations do not.](figures/figS_traffic_noise.png){#fig-traffic width=85%}
+
+Full parameters are in `config/analysis.yaml`; the pipeline and its 2026
+corrections are documented in the [review chapter](../REVIEW_2026.md).
 
 # Results
 
@@ -141,6 +152,30 @@ generic flow artifact.
 ![Event hysteresis loops (December 2025 flood), colored by time into the event. Clockwise loops indicate supply exhaustion or proximal sources on the rising limb; counter-clockwise indicates delayed or distal sediment delivery.](figures/fig4_hysteresis.png){#fig-hyst width=95%}
 
 ![Seismic band power through the December 2025 flood, offset by station (ridgeline; source reach at bottom, downstream toward top). Each lane shows $\log_{10}$ of band power relative to that station's median (gridline); the low-frequency flow band is faint and the high-frequency bedload band solid, one color per station. Discharge (dashed) is shown behind for timing.](figures/fig5_event_timeseries.png){#fig-ts width=92%}
+
+## Time-dependent bedload across the three atmospheric rivers
+
+The compound event delivered three discharge pulses (AR1 peak 09 Dec ≈304 m³/s,
+AR2 10 Dec ≈278 m³/s, AR3 11 Dec ≈306 m³/s; @fig-bltime). Using the 5–15 Hz power
+as a bedload proxy normalized to each station's pre-flood median, **bedload peaks
+in AR2 at every station (≈110–180× background near the source), ~3× larger than in
+AR1 or AR3** — even though AR2's discharge peak was *not* the largest (@fig-blAR).
+That a later, slightly-smaller pulse mobilizes the most bedload is consistent with
+the bed being loosened/de-armored by AR1, raising transport efficiency in AR2 — a
+cross-pulse supply effect rather than a purely hydraulic response. The per-AR
+averages also fall steeply downstream (source ≈180× → CC.TRON ≈7×), mirroring the
+scaling-exponent decay.
+
+![Bedload-band (5–15 Hz) power normalized to each station's pre-flood median through the event; the three AR pulses are shaded. Bedload activation tracks — but is not maximized at — the largest discharge peak.](figures/fig6_bedload_time.png){#fig-bltime width=92%}
+
+![Per-AR average bedload (×pre-flood median) by station, ordered source→downstream. AR2 dominates at every station and the signal decays strongly downstream.](figures/fig7_bedload_per_AR.png){#fig-blAR width=88%}
+
+An animated map of per-station bedload strength through the three ARs is available
+in the HTML edition (`paper/figures/bedload_animation.gif`):
+
+::: {.content-visible when-format="html"}
+![Animated bedload strength (5–15 Hz power relative to pre-flood median) at each station through the three atmospheric rivers, with the discharge cursor below.](figures/bedload_animation.gif){#fig-blgif width=70%}
+:::
 
 # Discussion
 
