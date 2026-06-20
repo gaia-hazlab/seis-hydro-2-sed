@@ -1,39 +1,32 @@
-# Overview {.unnumbered}
+# Preface {.unnumbered}
 
-This book documents an end-to-end study of **bedload sediment transport inferred
-from seismic noise** on the glacier-fed rivers draining Mt. Rainier, Washington,
-during the **December 2025 Pacific Northwest atmospheric-river floods**.
+This book reports a study of **bedload sediment transport inferred from seismic
+noise** on the glacier-fed rivers draining Mt. Rainier, Washington, during the
+**December 2025 Pacific Northwest atmospheric-river floods** — and documents the
+analysis, review, and reproducible workflow behind it.
 
-It combines near-channel seismic stations (PNSN / Cascades Volcano Observatory)
-with co-located USGS discharge gages along the Puyallup and Carbon Rivers, from
-the glacial source toward Puget Sound.
+It is organized in three parts:
 
-## What's inside
+- **Part I — [Manuscript](paper/paper.qmd):** the research paper
+  (Introduction · Data & study area · Methods · Results · Discussion ·
+  Limitations · Conclusions).
+- **Part II — Reviews, critiques & development log:** the
+  [physics & code review](REVIEW_2026.md) (including the corrected scaling
+  baseline and the pipeline fixes), the
+  [literature & novelty positioning](paper/LITERATURE.md), and the
+  [reproducible workflow](workflows/README.md).
+- **Part III — [References](paper/references.qmd).**
 
-- **[Manuscript](paper/paper.qmd)** — the research paper: setting, methods, results
-  (the seismic–discharge scaling exponent and its frequency dependence), and
-  discussion, with figures and the scaling table generated from the live data.
-- **[Physics & code review](REVIEW_2026.md)** — a critical review of the
-  Gimbert/Tsai forward models, the pipeline implementation, the corrected
-  exponent baseline (it is **not** 5/4), the Tier-1 bug fixes, and the recomputed
-  diagnostics.
-- **[Literature & positioning](paper/LITERATURE.md)** — annotated bibliography and a
-  novelty matrix against recent (2022–2026) fluvial-seismology work, with the
-  reviewer objections to pre-empt.
-- **[Reproducibility](workflows/README.md)** — the configs, workflow scripts, and
-  commands to regenerate every figure and number.
-
-## Headline result
+## Headline result {.unnumbered}
 
 Band-limited seismic power scales with discharge as $P \propto Q^{b}$. At the
-glacial-source station the exponent **rises with frequency above the turbulent-flow
-baseline** ($b\approx0.9$–$1.4$; @gimbert2014) — the signature of a bedload
-contribution — while a lowland control river shows no high-frequency discharge
-coupling. The honest, de-contaminated estimate is modest ($b\approx1.5$–$1.7$);
-the larger values seen in early processing were artifacts removed by the pipeline
-fixes described in the review.
+glacial-source station the exponent rises with frequency above the turbulent-flow
+baseline ($b\approx 0.9$ to $1.4$) and decays downstream and away from the channel
+toward that baseline — the signature of a threshold-controlled bedload
+contribution confined to the near-source reach.
 
 ::: {.callout-note}
-This is a working research compendium. Sections flagged with 💬 are reviewer-defense
-notes and open items, not final claims.
+This is a working research compendium produced with substantial AI assistance.
+Part II preserves the review and development log; items flagged 💬 there are
+open questions and reviewer-defense notes, not settled claims.
 :::

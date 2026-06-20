@@ -40,12 +40,31 @@ FIGDIR = ROOT / "paper" / "figures"
 FIGDIR.mkdir(parents=True, exist_ok=True)
 
 plt.rcParams.update({
-    "font.size": 9, "axes.titlesize": 10, "axes.labelsize": 9,
+    "font.size": 9, "axes.titlesize": 9.5, "axes.labelsize": 9,
+    "legend.fontsize": 7.5, "xtick.labelsize": 8, "ytick.labelsize": 8,
     "figure.dpi": 150, "savefig.dpi": 300, "savefig.bbox": "tight",
-    "axes.grid": True, "grid.alpha": 0.25, "axes.axisbelow": True,
+    "axes.grid": True, "grid.alpha": 0.22, "axes.axisbelow": True,
+    "axes.spines.top": False, "axes.spines.right": False,
+    "figure.constrained_layout.use": True,   # auto spacing — no overlapping labels
 })
 
+# Stable color per station so a station keeps its color across all figures.
+_STA_COLORS: dict[str, str] = {}
+def _color(station: str) -> str:
+    if station not in _STA_COLORS:
+        pal = plt.cm.tab10.colors
+        _STA_COLORS[station] = pal[len(_STA_COLORS) % len(pal)]
+    return _STA_COLORS[station]
+
 FNAME_RE = re.compile(r"^(?P<net>[A-Z0-9]+)\.(?P<sta>[A-Z0-9]+)(?:_(?P<f1>[\d.]+)-(?P<f2>[\d.]+)Hz)?_timeseries\.csv$")
+
+# Stations excluded from the analysis. UW.BHW (lowland Snohomish) is too far from
+# any bedload source to be informative; dropped per the 2026 review.
+EXCLUDE_STATIONS = {"UW.BHW"}
+
+# Fixed log10(power) y-range for the per-station panels (fig 3, fig 4) so they
+# are not vertically squeezed.
+P_YLIM = (-15, -11)
 
 
 def discover() -> list[dict]:
@@ -55,9 +74,11 @@ def discover() -> list[dict]:
         if not m:
             continue
         d = m.groupdict()
+        station = f'{d["net"]}.{d["sta"]}'
+        if station in EXCLUDE_STATIONS:
+            continue
         band = (float(d["f1"]), float(d["f2"])) if d["f1"] else None
-        out.append(dict(path=f, station=f'{d["net"]}.{d["sta"]}',
-                        net=d["net"], sta=d["sta"], band=band))
+        out.append(dict(path=f, station=station, net=d["net"], sta=d["sta"], band=band))
     return out
 
 
@@ -80,51 +101,66 @@ def fig_scaling_exponent(items: list[dict]) -> pd.DataFrame:
     if df.empty:
         return df
 
-    fig, ax = plt.subplots(figsize=(6.5, 4.2))
-    ax.axhspan(*WATER_BASELINE, color="tab:blue", alpha=0.12,
-               label=f"turbulence baseline\nb≈{WATER_BASELINE[0]}–{WATER_BASELINE[1]} (Gimbert 2014)")
-    ax.axhline(1.0, color="tab:blue", ls=":", lw=1)
+    fig, ax = plt.subplots(figsize=(7.8, 4.6))
+    ax.axhspan(*WATER_BASELINE, color="0.6", alpha=0.18,
+               label=f"turbulence baseline (b≈{WATER_BASELINE[0]}–{WATER_BASELINE[1]})")
+    ax.axhline(1.0, color="0.5", ls=":", lw=1)
     # Exclude the 0.5-2 Hz oceanic-microseism band: it is not river turbulence
     # (it can be anti-correlated with discharge) and distorts the b(f) trend.
     plot_df = df[df["fc"] >= 1.5]
     for sta, g in plot_df.groupby("station"):
         g = g.sort_values("fc")
         yerr = np.vstack([g["b"] - g["b_lo"], g["b_hi"] - g["b"]])
-        ax.errorbar(g["fc"], g["b"], yerr=yerr, marker="o", capsize=3, lw=1.5, label=sta)
+        bvals = g["b"].tolist()
+        fit_lbl = (f"b={bvals[0]:.2f}" if len(bvals) == 1
+                   else "b=" + "→".join(f"{v:.2f}" for v in bvals))
+        ax.errorbar(g["fc"], g["b"], yerr=yerr, marker="o", ms=7, capsize=3, lw=1.8,
+                    color=_color(sta), label=f"{sta}   {fit_lbl}")
     ax.set_xscale("log")
-    ax.set_xlabel("band center frequency (Hz)")
-    ax.set_ylabel(r"scaling exponent  $b$  in  $P \propto Q^{\,b}$")
-    ax.set_title("Seismic–discharge scaling steepens with frequency → bedload signature")
-    ax.legend(fontsize=7, loc="upper left", framealpha=0.9)
+    ax.tick_params(labelsize=11)
+    ax.set_xlabel("band center frequency (Hz)", fontsize=13)
+    ax.set_ylabel(r"scaling exponent $b$   ($P \propto Q^{\,b}$)", fontsize=13)
+    ax.set_title("Seismic–discharge scaling vs frequency", loc="left", fontsize=14)
+    # legend outside, to the right — shows each station's fitted exponent
+    ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), frameon=False,
+              title="station (fitted exponent)", title_fontsize=12, fontsize=11)
     fig.savefig(FIGDIR / "fig2_scaling_exponent.png")
     plt.close(fig)
     return df
+
+
+def _grid(n: int) -> tuple[int, int]:
+    ncol = min(3, n)
+    return int(np.ceil(n / ncol)), ncol
 
 
 def fig_pq_scatter(items: list[dict]) -> None:
     banded = [it for it in items if it["band"] is not None]
     if not banded:
         return
-    n = len(banded)
-    ncol = min(3, n)
-    nrow = int(np.ceil(n / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(3.2 * ncol, 3.0 * nrow), squeeze=False)
-    for ax, it in zip(axes.ravel(), banded):
+    nrow, ncol = _grid(len(banded))
+    fig, axes = plt.subplots(nrow, ncol, figsize=(2.9 * ncol, 2.7 * nrow),
+                             squeeze=False, sharex=True, sharey=True)
+    flat = axes.ravel()
+    for ax, it in zip(flat, banded):
         j = load_timeseries(it["path"])
         fit = fit_scaling(j, it["station"], it["band"])
         lq = np.log10(j["Q"].clip(lower=1e-6))
         lp = np.log10(j["P"].clip(lower=1e-30))
-        ax.scatter(lq, lp, s=4, alpha=0.3, color="0.4")
+        ax.scatter(lq, lp, s=3, alpha=0.25, color="0.55", rasterized=True)
         xs = np.linspace(lq.quantile(0.02), lq.quantile(0.98), 50)
-        ax.plot(xs, fit.intercept + fit.b_ols * xs, "r-", lw=2,
-                label=f"b={fit.b_ols:.2f}\n[{fit.b_lo:.2f},{fit.b_hi:.2f}]\nr={fit.r:.2f}")
-        ax.set_title(f'{it["station"]}  {it["band"][0]:g}–{it["band"][1]:g} Hz', fontsize=8)
-        ax.set_xlabel(r"$\log_{10} Q$ (m³/s)")
-        ax.set_ylabel(r"$\log_{10} P$")
-        ax.legend(fontsize=6.5, loc="lower right")
-    for ax in axes.ravel()[len(banded):]:
-        ax.axis("off")
-    fig.suptitle("Band power vs discharge (robust log–log fits, bootstrap 95% CI)", y=1.0)
+        ax.plot(xs, fit.intercept + fit.b_ols * xs, color=_color(it["station"]), lw=2)
+        ax.set_title(f'{it["station"]}  {it["band"][0]:g}–{it["band"][1]:g} Hz')
+        # fit stats as an unobtrusive text box (no legend handle to overlap data)
+        ax.text(0.04, 0.96, f"b={fit.b_ols:.2f} [{fit.b_lo:.2f}, {fit.b_hi:.2f}]\nr={fit.r:.2f}",
+                transform=ax.transAxes, va="top", ha="left", fontsize=7,
+                bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7", alpha=0.85))
+        ax.set_ylim(*P_YLIM)   # fixed range so panels are not vertically squeezed
+    for ax in flat[len(banded):]:
+        ax.set_visible(False)
+    fig.supxlabel(r"$\log_{10}\,Q$  (m³ s$^{-1}$)")
+    fig.supylabel(r"$\log_{10}\,P$  (seismic band power)")
+    fig.suptitle("Band power vs discharge — robust log–log fits (95% CI)")
     fig.savefig(FIGDIR / "fig3_pq_scatter.png")
     plt.close(fig)
 
@@ -133,44 +169,107 @@ def fig_hysteresis(items: list[dict]) -> None:
     banded = [it for it in items if it["band"] is not None]
     if not banded:
         return
-    n = len(banded); ncol = min(3, n); nrow = int(np.ceil(n / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(3.2 * ncol, 3.0 * nrow), squeeze=False)
-    for ax, it in zip(axes.ravel(), banded):
+    nrow, ncol = _grid(len(banded))
+    fig, axes = plt.subplots(nrow, ncol, figsize=(2.9 * ncol, 2.7 * nrow),
+                             squeeze=False, sharey=True)
+    flat = axes.ravel()
+    sc = None
+    for ax, it in zip(flat, banded):
         j = load_timeseries(it["path"])
         ev = event_window(j)
         t = (ev.index - ev.index[0]).total_seconds() / 3600.0
-        sc = ax.scatter(ev["Q"], np.log10(ev["P"].clip(lower=1e-30)), c=t, s=8, cmap="viridis")
+        sc = ax.scatter(ev["Q"], np.log10(ev["P"].clip(lower=1e-30)), c=t, s=9,
+                        cmap="viridis", edgecolor="none")
         hi = lawler_hysteresis_index(ev["Q"].values, np.log10(ev["P"].clip(lower=1e-30)).values)
-        sense = "CW" if hi > 0.02 else ("CCW" if hi < -0.02 else "~0")
-        ax.set_title(f'{it["station"]} {it["band"][0]:g}–{it["band"][1]:g}Hz\nHI={hi:+.2f} ({sense})', fontsize=8)
-        ax.set_xlabel("Q (m³/s)"); ax.set_ylabel(r"$\log_{10} P$")
-        fig.colorbar(sc, ax=ax, label="hours into event", fraction=0.046)
-    for ax in axes.ravel()[len(banded):]:
-        ax.axis("off")
-    fig.suptitle("Event hysteresis: clockwise=supply/exhaustion, CCW=delayed/distal delivery", y=1.0)
+        sense = "clockwise" if hi > 0.02 else ("counter-clockwise" if hi < -0.02 else "≈single-valued")
+        ax.set_title(f'{it["station"]} {it["band"][0]:g}–{it["band"][1]:g} Hz\nHI={hi:+.2f} ({sense})')
+        ax.set_ylim(*P_YLIM)   # fixed range so panels are not vertically squeezed
+    for ax in flat[len(banded):]:
+        ax.set_visible(False)
+    fig.supxlabel(r"discharge $Q$  (m³ s$^{-1}$)")
+    fig.supylabel(r"$\log_{10}\,P$")
+    fig.suptitle("Event hysteresis (clockwise = supply/exhaustion; CCW = delayed/distal delivery)")
+    if sc is not None:  # single shared colorbar
+        fig.colorbar(sc, ax=axes, label="hours into event", shrink=0.85, aspect=30, pad=0.02)
     fig.savefig(FIGDIR / "fig4_hysteresis.png")
     plt.close(fig)
 
 
 def fig_event_timeseries(items: list[dict]) -> None:
+    """Offset (ridgeline) plot of seismic power vs discharge through the event.
+
+    Each station occupies its own vertical lane (offset, so traces never
+    overlap), ordered source→downstream by river-km. One color per station;
+    within a lane the low-frequency (flow) band is semi-transparent (alpha 0.5)
+    and the high-frequency (bedload) band opaque. Each lane shows
+    log10(power / its median), so the gridline is the station's median level and
+    one lane-unit = one decade. Discharge (dashed) is drawn behind for context.
+    """
+    from collections import defaultdict
+    from matplotlib.lines import Line2D
+
     banded = [it for it in items if it["band"] is not None]
     if not banded:
         return
-    fig, ax1 = plt.subplots(figsize=(8, 4))
-    ax2 = ax1.twinx()
-    j0 = load_timeseries(banded[0]["path"])
-    ax2.plot(j0.index, j0["Q"], color="k", lw=1.2, ls="--", label="discharge", zorder=5)
-    ax2.set_ylabel("discharge (m³/s)")
+
+    # station -> river-km, for source→sea ordering
+    rkm: dict[str, float] = {}
+    disc = ROOT / "config" / "_transect_discovery.json"
+    if disc.exists():
+        for v in json.loads(disc.read_text()).get("stations", []):
+            rkm[f'{v["net"]}.{v["sta"]}'] = v.get("river_km", 999)
+
+    by_sta: dict[str, list] = defaultdict(list)
     for it in banded:
-        j = load_timeseries(it["path"])
-        pn = j["P"] / j["P"].median()
-        ax1.semilogy(j.index, pn, lw=0.9, alpha=0.8,
-                     label=f'{it["station"]} {it["band"][0]:g}–{it["band"][1]:g}Hz')
-    ax1.set_ylabel("seismic power / median")
-    ax1.set_xlabel("UTC")
-    ax1.set_title("December 2025 atmospheric-river flood — seismic power vs discharge")
-    h1, l1 = ax1.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
-    ax1.legend(h1 + h2, l1 + l2, fontsize=7, loc="upper left", ncol=2)
+        fc = (it["band"][0] * it["band"][1]) ** 0.5
+        by_sta[it["station"]].append((fc, it))
+    stations = sorted(by_sta, key=lambda s: (rkm.get(s, 999), s))
+
+    STEP = 4.0          # vertical lane spacing, in decades
+    FLOOR = 1e-3        # clip for log10
+    fig, ax1 = plt.subplots(figsize=(8.8, 1.15 * len(stations) + 1.8))
+    ax2 = ax1.twinx()
+    ax2.grid(False)
+    j0 = load_timeseries(banded[0]["path"])
+    hd, = ax2.plot(j0.index, j0["Q"], color="0.2", lw=1.5, ls="--", label="discharge", zorder=1)
+    ax2.set_ylabel(r"discharge (m³ s$^{-1}$)")
+
+    yt, yl, base = [], [], 0.0
+    for idx, sta in enumerate(stations):
+        base = idx * STEP
+        c = _color(sta)
+        lst = sorted(by_sta[sta])
+        ax1.axhline(base, color="0.85", lw=0.6, zorder=0)            # median level
+        if len(lst) >= 2:                                            # LF (flow), faint
+            jl = load_timeseries(lst[0][1]["path"])
+            yv = np.log10((jl["P"] / jl["P"].median()).clip(lower=FLOOR)) + base
+            ax1.plot(jl.index, yv, color=c, lw=0.8, alpha=0.5, zorder=3)
+        jh = load_timeseries(lst[-1][1]["path"])                     # HF (bedload), opaque
+        yv = np.log10((jh["P"] / jh["P"].median()).clip(lower=FLOOR)) + base
+        ax1.plot(jh.index, yv, color=c, lw=0.9, alpha=1.0, zorder=4)
+        yt.append(base); yl.append(sta)
+
+    ax1.set_yticks(yt)
+    ax1.set_yticklabels(yl)
+    for t, sta in zip(ax1.get_yticklabels(), yl):
+        t.set_color(_color(sta)); t.set_fontweight("bold")
+    ax1.set_ylim(-STEP * 0.7, base + STEP * 0.8)
+    ax1.set_ylabel("station lane  (offset; gridline = median, 1 lane-unit = ×10)")
+    ax1.set_xlabel("December 2025 (UTC)")
+    ax1.set_title("Seismic band power vs discharge — offset by station (source → downstream)", loc="left")
+
+    # vertical 1-decade scale bar (top-left)
+    x0 = j0.index[int(0.02 * len(j0))]
+    ax1.plot([x0, x0], [base + STEP * 0.2, base + STEP * 0.2 + 1.0], color="k", lw=2)
+    ax1.text(x0, base + STEP * 0.2 + 0.5, " 1 decade", va="center", fontsize=7)
+
+    style = [
+        Line2D([], [], color="0.35", lw=2, alpha=0.5, label="low-freq band (flow)"),
+        Line2D([], [], color="0.35", lw=2, alpha=1.0, label="high-freq band (bedload)"),
+        hd,
+    ]
+    fig.legend(handles=style, loc="upper center", bbox_to_anchor=(0.5, -0.01),
+               ncol=3, frameon=False)
     fig.autofmt_xdate()
     fig.savefig(FIGDIR / "fig5_event_timeseries.png")
     plt.close(fig)

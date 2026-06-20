@@ -1,0 +1,8 @@
+# References {.unnumbered}
+
+Works cited across the manuscript (Part I). The reviews and development log
+(Part II) cite the same literature in prose; full annotated entries with novelty
+positioning are in the [Literature & positioning](LITERATURE.md) chapter.
+
+::: {#refs}
+:::

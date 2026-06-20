@@ -5,7 +5,7 @@ project:
 book:
   title: "Seismic Bedload Transport on Mt. Rainier's Glacial Rivers"
   subtitle: "The December 2025 atmospheric-river floods — analysis, review, and reproducible workflow"
-  author: "Marine Denolle and collaborators"
+  author: "Marine Denolle and Bradley P. Lipovsky"
   date: last-modified
   search: true
   repo-url: https://github.com/gaia-hazlab/seis-hydro-2-sed
@@ -14,12 +14,17 @@ book:
     style: docked
   chapters:
     - index.qmd
-    - paper/paper.qmd
-    - REVIEW_2026.md
-    - paper/LITERATURE.md
-    - part: "Reproducibility"
+    - part: "I · Manuscript"
       chapters:
+        - paper/paper.qmd
+    - part: "II · Reviews, critiques & development log"
+      chapters:
+        - REVIEW_2026.md
+        - paper/LITERATURE.md
         - workflows/README.md
+    - part: "III · References"
+      chapters:
+        - paper/references.qmd
 
 bibliography: paper/references.bib
 csl: https://www.zotero.org/styles/american-geophysical-union
@@ -31,6 +36,11 @@ format:
     number-sections: true
     fig-cap-location: bottom
     code-fold: true
+    # KaTeX (jsDelivr CDN) — faster and stricter than the default MathJax, and
+    # renders reliably for online viewers. The earlier "broken equations" were a
+    # malformed expression (en-dash inside \text{}), now fixed; all math is
+    # KaTeX-valid. (For fully offline rendering, self-host KaTeX into site_libs.)
+    html-math-method: katex
   # PDF intentionally omitted: it needs a LaTeX toolchain (tinytex) that would
   # make the Pages build fail. Re-add a `pdf:` format + tinytex step in CI later.
 

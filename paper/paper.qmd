@@ -4,112 +4,209 @@ author:
   - name: Marine Denolle
     affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
     email: mdenolle@uw.edu
+  - name: Bradley P. Lipovsky
+    affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
 date: last-modified
 abstract: |
   Bedload transport is notoriously difficult to measure directly, yet it governs
   channel aggradation and sediment hazard in glacier-fed mountain rivers. We use
   near-channel seismic stations along the Puyallup and Carbon Rivers draining Mt.
   Rainier, Washington, paired with co-located USGS discharge gages, to monitor
-  bedload during the December 2025 Pacific Northwest atmospheric-river floods —
+  bedload during the December 2025 Pacific Northwest atmospheric-river floods,
   which drove near-record flooding and debris flows. Band-limited seismic power
-  scales with discharge as $P\propto Q^{b}$; we find $b$ rises from $\approx1.6$
-  in the turbulence band (2–8 Hz) to $\approx2.0$ in the bedload band (10–30 Hz),
-  well above the $b\approx1$ turbulent-flow baseline, while a lowland control
-  river shows no high-frequency discharge coupling. This frequency-dependent
-  steepening, together with event-scale hysteresis, records threshold-controlled
-  bedload transport and sediment-supply dynamics. This is, to our knowledge, the
-  first transect-scale bedload seismology on Cascades glacial rivers and the first
-  tied to a named Pacific atmospheric-river event.
+  scales with discharge as $P\propto Q^{b}$; at the glacial-source station $b$
+  rises from $1.54$ in the turbulence band (2–8 Hz) to $1.66$ in the bedload band
+  (5–15 Hz), above the $b\approx1$ turbulent-flow baseline, and the exponent
+  decays downstream and away from the channel toward the turbulence baseline.
+  This frequency-dependent, spatially-decaying scaling records a
+  threshold-controlled bedload contribution near the glacial source.
+  To our knowledge this is the first transect-scale bedload seismology on Cascades
+  glacial rivers and the first tied to a named Pacific atmospheric-river event.
 keywords: [environmental seismology, bedload transport, fluvial geomorphology, Mt. Rainier, atmospheric river]
-bibliography: references.bib
 ---
 
 # Introduction
 
 Bedload sediment transport sets the pace of channel aggradation, controls flood
 conveyance, and drives sediment hazard in glacier-fed mountain rivers, yet it
-resists direct measurement. Passive seismic monitoring offers a continuous,
-non-contact alternative [@burtin2008; @tsai2012; @gimbert2014; @cookdietze2022].
-Two sources dominate the near-channel high-frequency wavefield: turbulent flow,
-whose seismic power scales roughly linearly with discharge
-($P_\text{water}\propto H^{7/3}\propto Q^{0.9\text{–}1.4}$; @gimbert2014), and
-bedload grain impacts, whose power is threshold-controlled and strongly
-nonlinear in discharge but linear in flux and proportional to the cube of grain
-size [@tsai2012; @bakker2020].
+resists direct measurement. Passive seismic monitoring of the high-frequency
+ground motion radiated by rivers offers a continuous, non-contact alternative
+[@burtin2008; @tsai2012; @gimbert2014; @cookdietze2022].
 
-<!-- 💬 Gap: lead with the COMBINATION — transect scale + Cascades glacial rivers +
-named AR event. Do NOT claim the β(f) diagnostic as novel (Bakker 2020). -->
+Two sources dominate the near-channel high-frequency wavefield. Turbulent flow
+exerting fluctuating tractions on the bed radiates seismic energy whose power
+scales with flow depth and slope,
+
+$$
+P_{\text{water}} \;\propto\; H^{7/3}\, S^{7/3} \;\propto\; u_*^{14/3},
+$$ {#eq-water}
+
+so that, through at-a-station hydraulic geometry ($H \propto Q^{0.3}$ to
+$Q^{0.6}$), the seismic power is roughly linear in discharge, $P_{\text{water}}
+\propto Q^{b}$ with $b\approx 0.9$ to $1.4$ [@gimbert2014]. Bedload grain impacts,
+by contrast, radiate power that is *threshold-controlled* and strongly nonlinear
+in discharge but linear in sediment flux and proportional to the cube of grain
+diameter,
+
+$$
+P_{\text{bed}} \;\propto\; q_b\, D^{3}, \qquad q_b \;\propto\; (\tau_* - \tau_{*c})^{3/2},
+$$ {#eq-bed}
+
+where $\tau_*$ is the Shields stress and $\tau_{*c}$ its critical value
+[@tsai2012; @bakker2020]. Because flux is super-linear and threshold-gated, a
+bedload contribution makes the seismic–discharge exponent $b$ exceed the
+turbulence baseline and rise with frequency [@bakker2020].
 
 The December 2025 atmospheric-river floods on Mt. Rainier — near-record discharge
 on the Carbon River and widespread debris flows — provide a natural experiment in
-flood-driven sediment delivery from a glacial source toward Puget Sound.
+flood-driven sediment delivery from a glacial source toward Puget Sound. We apply
+the frequency-dependent scaling diagnostic across a longitudinal station transect
+to ask *where* and *how strongly* a bedload signal appears, from the glacial
+source toward the lowland coast.
 
-# Setting and event
+# Data and study area
 
 The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
-and Carbon Glaciers) ~54 km to Commencement Bay, Puget Sound. We analyze a
-longitudinal transect of seismic stations (@fig-map): an upper broadband cluster
-in the glacial source reach and, downstream, urban strong-motion accelerometers
-toward the coast (the latter treated as exploratory). The river has aggraded up
-to 2.3 m (1984–2009) where it exits its confined upper reach [@czuba2012].
+and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
+has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
+[@czuba2012], underscoring an active, supply-rich sediment system.
 
-![Mountain-to-sea seismic transect along the Puyallup River. Broadband stations (red triangles) suitable for ambient river-noise analysis cluster in the glacial source reach; the lowland/coastal corridor toward Puget Sound is covered only by urban strong-motion accelerometers (gray squares).](figures/fig1_transect_map.png){#fig-map width=70%}
+We use a longitudinal transect of seismic stations (@fig-map). Broadband stations
+suitable for ambient river-noise analysis (network CC) cluster in the glacial
+source reach near Electron (CC.PR01–PR03) and extend ~20 km downstream (CC.TRON);
+the lowland corridor toward Puget Sound is covered only by urban strong-motion
+accelerometers, treated here as exploratory. Each seismic station is paired with
+the nearest co-located USGS discharge gage (e.g. Puyallup River near Electron,
+12092000). The event peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
 
-# Data and methods
+![Mountain-to-sea seismic transect along the Puyallup River. Broadband stations (red triangles), suitable for ambient river-noise analysis, cluster in the glacial source reach; the lowland/coastal corridor toward Puget Sound is covered only by urban strong-motion accelerometers (gray squares).](figures/fig1_transect_map.png){#fig-map width=72%}
 
-Seismic waveforms (IRIS FDSN) are processed in whole-UTC-day blocks: strict
-instrument-response removal to ground velocity, root-sum-square combination of
-the Z/N/E components, and Welch power spectral density integrated over each band
-in 10-min windows. Earthquakes (USGS, $M\ge3.5$ within 500 km) and impulsive
-transients (STA/LTA, clipped within triggered windows only) are removed. Discharge
-comes from USGS NWIS; a high-pass-detrended, sign-constrained lag scan aligns the
-series. We fit $\log_{10}P = a + b\log_{10}Q$ robustly (ordinary least squares and
-Theil–Sen, with bootstrap 95 % confidence intervals) per frequency band, and
-quantify event hysteresis with the Lawler index. Full parameters are in
+# Methods
+
+Seismic waveforms (IRIS FDSN) are processed in whole-UTC-day blocks. We remove the
+instrument response to ground velocity (strictly: a day with missing or failed
+response metadata is dropped rather than silently integrated as raw counts),
+combine the Z/N/E components as a root-sum-square, and integrate the Welch power
+spectral density over each frequency band in 10-minute windows to form a band
+power proxy $P(t)$. Earthquakes (USGS catalog, $M\ge 3.5$ within 500 km) and
+impulsive transients (STA/LTA detection, clipped within the triggered windows
+only) are removed.
+
+Discharge $Q(t)$ comes from USGS NWIS (instantaneous values, m³/s). We align the
+seismic and discharge series with a high-pass-detrended, sign-constrained
+constant-lag cross-correlation, which avoids the spurious large lags that arise
+when the slow storm trend dominates. For each station and band we fit the
+power law
+
+$$
+\log_{10} P \;=\; a \;+\; b\,\log_{10} Q
+$$ {#eq-fit}
+
+robustly (ordinary least squares and Theil–Sen, with bootstrap 95% confidence
+intervals on $b$), and quantify event hysteresis with the Lawler index. The
+0.5–2 Hz band is excluded from the turbulence baseline because it is dominated by
+the oceanic secondary microseism rather than river flow. Full parameters are in
 `config/analysis.yaml`; the pipeline and its 2026 corrections are documented in
-`REVIEW_2026.md`.
+the [review chapter](../REVIEW_2026.md).
 
 # Results
 
 ::: {#tbl-scaling}
 {{< include figures/_scaling_table.md >}}
 
-Robust seismic–discharge scaling fits per station and band (bootstrap 95 % CI).
-$b>\sim1.4$ indicates a bedload contribution; HI is the event Lawler hysteresis
-index (+ = clockwise). Regenerated by `workflows/02_make_figures.py`.
+Robust seismic–discharge scaling fits per station and band (bootstrap 95% CI).
+$b\gtrsim 1.4$ indicates a bedload contribution; HI is the event Lawler hysteresis
+index (positive = clockwise). Regenerated by `workflows/02_make_figures.py`.
 :::
 
-The seismic–discharge scaling exponent **steepens with frequency above the
-turbulent-flow baseline** at the glacial-source station (@fig-scaling, @fig-scatter),
-the signature of a bedload contribution. A lowland control river shows no
-high-frequency coupling, ruling out a generic flow artifact.
+**Frequency-dependent steepening.** At the glacial-source station CC.PR03 the
+exponent rises from $b=1.54$ (2–8 Hz, $r=0.94$) to $b=1.66$ (5–15 Hz, $r=0.94$),
+above the turbulent-flow baseline (@fig-scaling, @fig-scatter) — the signature of
+a bedload contribution superimposed on turbulence.
 
-![Scaling exponent $b$ versus band center frequency. The glacial-source station rises above the turbulence baseline (shaded, $b\approx0.9$–$1.4$; @gimbert2014) and steepens with frequency; the lowland control declines.](figures/fig2_scaling_exponent.png){#fig-scaling width=75%}
+**Spatial decay.** In the 5–15 Hz bedload band the exponent decays from the
+glacial source downstream and away from the channel: $b=1.66$–$1.67$ at the
+near-channel Electron stations (CC.PR02, CC.PR03), $b=1.24$ ($r=0.60$) at the
+tributary station CC.SIFT (~7.5 km off the mainstem), $b=1.19$ at CC.PR01 (0.7 km
+off-channel), and $b=0.61$ ($r=0.55$) at CC.TRON ~20 km downstream and 5.2 km from
+the channel. The high-frequency excess over the turbulence baseline is therefore
+confined to the near-source reach and falls to (or below) baseline downstream —
+an internal contrast indicating the response is source-specific rather than a
+generic flow artifact.
+
+![Scaling exponent $b$ versus band center frequency, with each station's fitted exponent in the legend. Near-source stations (CC.PR02, CC.PR03) rise above the turbulence baseline (shaded, $b\approx 0.9$ to $1.4$; @gimbert2014); the exponent decreases with distance from the channel and downstream (CC.SIFT, CC.PR01, CC.TRON).](figures/fig2_scaling_exponent.png){#fig-scaling width=82%}
 
 ![Band power versus discharge with robust log–log fits and bootstrap confidence intervals.](figures/fig3_pq_scatter.png){#fig-scatter width=95%}
 
-![Event hysteresis loops (December 2025 flood), colored by time. Clockwise loops indicate supply exhaustion / proximal sources on the rising limb; counter-clockwise indicates delayed or distal sediment delivery.](figures/fig4_hysteresis.png){#fig-hyst width=95%}
+![Event hysteresis loops (December 2025 flood), colored by time into the event. Clockwise loops indicate supply exhaustion or proximal sources on the rising limb; counter-clockwise indicates delayed or distal sediment delivery.](figures/fig4_hysteresis.png){#fig-hyst width=95%}
 
-![Seismic band power (normalized) and discharge through the December 2025 atmospheric-river flood.](figures/fig5_event_timeseries.png){#fig-ts width=85%}
+![Seismic band power through the December 2025 flood, offset by station (ridgeline; source reach at bottom, downstream toward top). Each lane shows $\log_{10}$ of band power relative to that station's median (gridline); the low-frequency flow band is faint and the high-frequency bedload band solid, one color per station. Discharge (dashed) is shown behind for timing.](figures/fig5_event_timeseries.png){#fig-ts width=92%}
 
 # Discussion
 
-<!-- 💬 Defenses to write out:
-  - Nativ et al. 2025: stationary-boulder turbulence can raise high-f power.
-    Counter with (a) lowland null, (b) event hysteresis, (c) steepening that
-    tracks the flood rather than a fixed bed.
-  - Roth et al. 2017: roughness-change hysteresis. Tie HI sense to the
-    debris-flow supply chronology, not stage.
-  - Reconcile our empirical ~1 baseline with Gimbert's ~1.4 prediction.
-  - What a transect adds over single-reach arrays (Roth 2014; Schmandt 2017;
-    Antoniazza 2023): catchment-length, glacial-source-to-lowland scale. -->
+The frequency-dependent steepening at the glacial source is consistent with a
+threshold-controlled bedload contribution: per @eq-bed the bedload term is
+super-linear in discharge and weighted toward the coarse grain-size tail, so it
+preferentially inflates the higher-frequency exponent during the flood. The
+downstream decay of $b$ in the bedload band is physically expected — high
+frequencies are strongly attenuated with distance, and CC.TRON sits 5.2 km from
+the channel — so the transect maps both genuine along-stream change in transport
+*and* the propagation control on what each station can sense.
+
+Three alternative explanations must be addressed. First, @nativ2025 show that
+stationary boulders can raise high-frequency seismic power through turbulence
+rather than transport; we argue against a static-bed origin here because the
+high-frequency response tracks the flood hydrograph in time (@fig-ts) and is
+confined to the near-source reach (decaying downstream), rather than being a
+fixed spectral feature.
+Second, @roth2017 caution that channel-roughness change competes with bedload as
+a cause of seismic–discharge hysteresis; accordingly we treat the (small) event
+hysteresis as suggestive rather than diagnostic and tie interpretation to the
+frequency-dependence of $b$, not to hysteresis alone. Third, the turbulence
+baseline itself is uncertain: our empirically clean turbulence band sits near
+$b\approx1.5$, between the linear expectation and the @gimbert2014 prediction of
+$b\approx1.4$, so we report the *excess* of the bedload band over the
+station's own lower band rather than over an assumed absolute baseline.
+
+Relative to prior seismic bedload studies — single-reach dense arrays
+[@schmandt2017], hysteresis-based pulse tracking [@roth2014], and watershed-scale
+networks [@antoniazza2023] — the contribution here is the *combination*: a
+catchment-length transect from a glacial source toward the coast, on Cascades
+rivers, during a named atmospheric-river flood. The frequency-scaling diagnostic
+itself is established [@bakker2020]; we apply and field-calibrate it at transect
+scale.
+
+# Limitations
+
+- **No absolute flux inversion.** We report a band-power proxy and scaling
+  exponents, not calibrated bedload flux. Absolute inversion requires
+  grain-size and impact assumptions [@tsai2012; @bakker2020] not constrained here.
+- **Distance–transport confound.** The downstream decay of $b$ conflates genuine
+  along-stream change in transport with frequency-dependent attenuation
+  (CC.TRON is 5.2 km off-channel). Disentangling them needs near-channel stations
+  downstream, which the current network lacks.
+- **Downstream coverage is urban accelerometers.** The lowland-to-Puget-Sound
+  reach has only strong-motion stations in noisy settings; those results are
+  exploratory, so the "mountain-to-sea" claim is presently anchored in the upper
+  ~20 km.
+- **Single event, modest hysteresis.** One flood; the event hysteresis is small
+  after cleaning, so supply-direction inferences are tentative pending more events.
+- **Microseism contamination** of the lowest band (0.5–2 Hz) precludes its use as
+  a turbulence reference.
 
 # Conclusions
 
-# Open science {.unnumbered}
+Seismic noise on the glacier-fed Puyallup/Carbon Rivers during the December 2025
+atmospheric-river floods carries a frequency-dependent, threshold-controlled
+bedload signal: the seismic–discharge exponent exceeds the turbulent-flow baseline
+at the glacial source and decays downstream toward the turbulence baseline.
+The result establishes a transect-scale, AR-flood, Cascades-glacial-river
+application of seismic bedload monitoring and motivates a near-channel downstream
+deployment to separate transport from propagation and to invert for flux.
 
-All code, configuration, and figure-generation scripts are in this repository.
-Seismic data are from IRIS FDSN and discharge from USGS NWIS (public). Figures and
-the scaling table regenerate via `pixi run python workflows/02_make_figures.py`.
+# Data and software availability {.unnumbered}
 
-# References {.unnumbered}
+Seismic data are from IRIS FDSN (networks CC, UW); discharge from USGS NWIS. All
+analysis code, configuration, and figure-generation scripts are in the project
+repository; figures and the scaling table regenerate via
+`pixi run python workflows/02_make_figures.py`.

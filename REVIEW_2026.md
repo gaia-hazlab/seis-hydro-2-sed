@@ -174,6 +174,12 @@ index over ±3 days around the event peak. Saved to
 
 *(These are the pre-fix, as-found numbers; the bedload signal shrinks after the Tier-1 fixes — see the clean values in the manuscript.)*
 
+> **Update (2026):** UW.BHW (lowland Snohomish) was used here only as an early
+> negative control. It was **subsequently removed from the analysis** as too far
+> from any bedload source to be informative; the published transect uses the
+> internal source→downstream decay (CC.PR0x → CC.SIFT → CC.TRON) as the contrast
+> instead. This chapter retains UW.BHW as a record of the development process.
+
 Event peak at Puyallup nr Electron: **2025-12-09 ~03:30 UTC, ≈323 m³/s** (11,400 cfs).
 
 ---
