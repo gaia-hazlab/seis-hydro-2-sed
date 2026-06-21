@@ -49,11 +49,13 @@ plt.rcParams.update({
 })
 
 # Stable color per station so a station keeps its color across all figures.
+# Okabe–Ito colorblind-safe qualitative palette.
+_OKABE_ITO = ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7",
+              "#56B4E9", "#F0E442", "#000000"]
 _STA_COLORS: dict[str, str] = {}
 def _color(station: str) -> str:
     if station not in _STA_COLORS:
-        pal = plt.cm.tab10.colors
-        _STA_COLORS[station] = pal[len(_STA_COLORS) % len(pal)]
+        _STA_COLORS[station] = _OKABE_ITO[len(_STA_COLORS) % len(_OKABE_ITO)]
     return _STA_COLORS[station]
 
 FNAME_RE = re.compile(r"^(?P<net>[A-Z0-9]+)\.(?P<sta>[A-Z0-9]+)(?:_(?P<f1>[\d.]+)-(?P<f2>[\d.]+)Hz)?_timeseries\.csv$")

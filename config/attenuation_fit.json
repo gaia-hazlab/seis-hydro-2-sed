@@ -1,0 +1,8 @@
+{
+  "fc_hz": 8.66,
+  "vc_ms": 577.6,
+  "Q_theory": 20.0,
+  "r_e_theory_m": 212.0,
+  "observed_decay_per_km": 0.005,
+  "note": "Observed 5-15 Hz power is ~distance-independent over 0.2-2 km, far weaker than the Q=20 prediction -> the band retains less-attenuated lower-frequency energy; site response and crude channel distances also limit a data-driven Q. Adopt literature Q=20."
+}

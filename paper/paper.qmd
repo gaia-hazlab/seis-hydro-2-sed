@@ -153,28 +153,37 @@ generic flow artifact.
 
 ![Seismic band power through the December 2025 flood, offset by station (ridgeline; source reach at bottom, downstream toward top). Each lane shows $\log_{10}$ of band power relative to that station's median (gridline); the low-frequency flow band is faint and the high-frequency bedload band solid, one color per station. Discharge (dashed) is shown behind for timing.](figures/fig5_event_timeseries.png){#fig-ts width=92%}
 
-## Time-dependent bedload across the three atmospheric rivers
+## Time-dependent bedload across the atmospheric rivers
 
-The compound event delivered three discharge pulses (AR1 peak 09 Dec ≈304 m³/s,
-AR2 10 Dec ≈278 m³/s, AR3 11 Dec ≈306 m³/s; @fig-bltime). Using the 5–15 Hz power
-as a bedload proxy normalized to each station's pre-flood median, **bedload peaks
-in AR2 at every station (≈110–180× background near the source), ~3× larger than in
-AR1 or AR3** — even though AR2's discharge peak was *not* the largest (@fig-blAR).
-That a later, slightly-smaller pulse mobilizes the most bedload is consistent with
-the bed being loosened/de-armored by AR1, raising transport efficiency in AR2 — a
-cross-pulse supply effect rather than a purely hydraulic response. The per-AR
-averages also fall steeply downstream (source ≈180× → CC.TRON ≈7×), mirroring the
-scaling-exponent decay.
+The compound event delivered a weak pre-AR (06 Dec ≈50 m³/s) followed by three
+strong pulses (AR1 peak 09 Dec ≈304 m³/s, AR2 10 Dec ≈278 m³/s, AR3 11 Dec
+≈306 m³/s; @fig-bltime). Using the 5–15 Hz power as a bedload proxy normalized to
+each station's pre-flood median, the bed barely moves in the pre-AR (1–4×
+background), then **bedload peaks in AR2 at every station (≈110–180× background near
+the source), ~3× larger than in AR1 or AR3** — even though AR2's discharge peak was
+*not* the largest (@fig-blAR). That a later, slightly-smaller pulse mobilizes the
+most bedload — after a priming pre-AR and AR1 — is consistent with progressive bed
+loosening/de-armoring raising transport efficiency, a cross-pulse supply effect
+rather than a purely hydraulic response. A time-resolved fit of the exponent
+confirms this: $b(t)$ rises above the turbulent-flow baseline during AR1–AR2 and
+relaxes afterward (@fig-bt). The per-AR averages also fall steeply downstream
+(source ≈180× → CC.TRON ≈7×), mirroring the scaling-exponent decay.
+
+![Time-resolved scaling exponent $b(t)$ for the 5–15 Hz band (24 h sliding fit), per station; the turbulence baseline is shaded and the pre-AR/AR1/AR2/AR3 windows marked. The exponent exceeds the baseline during the main pulses — bedload activation — then relaxes.](figures/fig8_b_of_time.png){#fig-bt width=92%}
 
 ![Bedload-band (5–15 Hz) power normalized to each station's pre-flood median through the event; the three AR pulses are shaded. Bedload activation tracks — but is not maximized at — the largest discharge peak.](figures/fig6_bedload_time.png){#fig-bltime width=92%}
 
 ![Per-AR average bedload (×pre-flood median) by station, ordered source→downstream. AR2 dominates at every station and the signal decays strongly downstream.](figures/fig7_bedload_per_AR.png){#fig-blAR width=88%}
 
-An animated map of per-station bedload strength through the three ARs is available
-in the HTML edition (`paper/figures/bedload_animation.gif`):
+A multidisciplinary animation ties the meteorological driver to the bedload
+response (HTML edition; `paper/figures/bedload_animation.gif`): the map shows
+per-station bedload strength while the panels below track SNOTEL precipitation and
+discharge at five gages down the corridor. The traffic-contaminated UW.TEHA, shown
+as a grey control, does **not** light up — the bedload signal is localized to the
+river-proximal clean stations.
 
 ::: {.content-visible when-format="html"}
-![Animated bedload strength (5–15 Hz power relative to pre-flood median) at each station through the three atmospheric rivers, with the discharge cursor below.](figures/bedload_animation.gif){#fig-blgif width=70%}
+![Multidisciplinary animation through the pre-AR and three ARs: (top) map of per-station bedload strength (5–15 Hz power vs pre-flood median) with the traffic control UW.TEHA in grey; (middle) SNOTEL precipitation; (bottom) discharge at five gages. A cursor and AR shading tie the panels in time.](figures/bedload_animation.gif){#fig-blgif width=68%}
 :::
 
 # Discussion
@@ -187,6 +196,23 @@ downstream decay of $b$ in the bedload band is physically expected — high
 frequencies are strongly attenuated with distance, and CC.TRON sits 5.2 km from
 the channel — so the transect maps both genuine along-stream change in transport
 *and* the propagation control on what each station can sense.
+
+**Attenuation and seismic reach.** Power decays as $e^{-2\pi f r/(v_cQ)}$ with
+e-folding distance $r_e=v_cQ/(2\pi f)$; for $Q\approx20$ this is ~210 m at the
+5–15 Hz band center and only ~13 m at 50 Hz (@fig-atten a), so bedload is
+recoverable only within a few hundred metres of the channel and CC.TRON lies well
+beyond reach. A first-order test on the same-source PR cluster (PR03/PR01/PR02 at
+0.19/0.71/1.9 km) finds the 5–15 Hz power is *nearly distance-independent over
+0.2–2 km* — far weaker than the $Q=20$ prediction (@fig-atten b) — implying the
+band retains less-attenuated lower-frequency (turbulence) energy, and that site
+response and crude channel distances preclude a data-driven $Q$ from this small
+array. We therefore adopt the literature $Q\approx20$ for the reach diagnostic,
+restrict bedload claims to near-channel stations, and treat farther stations as
+upper-distance bounds rather than attenuation-corrected flux; a clean correction
+would require active-source Green's-function calibration [@bakker2020; @lagarde2021]
+or amplitude-decay source location across a denser array (`eseis`; @dietze2018).
+
+![First-order distance attenuation. (a) Seismic reach $r_e(f)=v_cQ/(2\pi f)$ for $Q=10$–40, with the turbulence (1–10 Hz) and bedload (30–80 Hz) bands and our station standoffs; bedload frequencies reach only tens–hundreds of metres. (b) Observed AR2 5–15 Hz power vs distance for the same-source PR cluster (blue) decays far more weakly than the $Q=20$ prediction (red).](figures/fig9_attenuation.png){#fig-atten width=98%}
 
 Three alternative explanations must be addressed. First, @nativ2025 show that
 stationary boulders can raise high-frequency seismic power through turbulence

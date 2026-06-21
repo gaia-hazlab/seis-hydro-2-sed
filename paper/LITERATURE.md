@@ -61,6 +61,37 @@ Compiled June 2026. DOIs marked *(unverified)* must be confirmed before submissi
 
 ---
 
+## 6b. Distance attenuation & the "seismic reach" (correction methods)
+
+The central confound for a multi-station transect: high-frequency (bedload) power
+is attenuated with distance from the channel.
+
+- **Physical term** (Tsai 2012 Eq. 3; Gimbert 2014 ψβ(f)): amplitude
+  $\propto r^{-1/2} e^{-\pi f r/(v_u Q)}$; power $\propto r^{-1} e^{-2\pi f r/(v_c Q)}$.
+  e-folding distance $r_e = v_c Q/(2\pi f)$. With $Q\approx20$, $v_c(f)=1295\,(f)^{-0.374}$ m/s
+  (Tsai): $r_e\approx316$ m at 5 Hz, **~210 m at the 5–15 Hz band center, ~13 m at 50 Hz**.
+  So bedload (≳30 Hz) is essentially gone beyond a few hundred metres while turbulence
+  (1–10 Hz) survives kilometres — bedload dominates only for $r<\sim100$ m and $f>\sim30$ Hz
+  (Gimbert 2014).
+- **Solutions used in the field:**
+  1. **Active-source / hammer calibration** of the Green's function (Bakker et al. 2020
+     doi:10.1029/2019JF005416; Lagarde et al. 2021 doi:10.1029/2020WR028700) — measures
+     $v_c(f), Q$ locally; improves spectrogram fit by ~1 order of magnitude. *Not available to us.*
+  2. **Amplitude-decay source location (ASL)**: $A_i=A_t\,\frac{S_i}{R_i}e^{-\pi f t_i/Q}$,
+     grid-searched (Battaglia & Aki; Walter et al. 2017 nhess-17-939; Burtin et al. 2008/2010;
+     packaged in **`eseis` `spatial_amplitude/_track`**, Dietze 2018). Needs ≥3–4 stations + assumed $v_c,Q$.
+  3. **Spectral-decay inversion** of $Q,v_c$ from the data (trades off strongly with grain size).
+  4. **Per-station normalization** (what we use) — simplest, but folds site+distance+source together; not transferable.
+  5. **DAS** (Roth et al. 2025, Seismica) sidesteps standoff by sensing in/along the channel.
+- **Our first-order result (fig 9):** the same-source PR cluster (PR03/PR01/PR02 at 0.19/0.71/1.9 km)
+  shows the 5–15 Hz power **~distance-independent over 0.2–2 km — far weaker decay than the Q=20
+  prediction** (which would give ~10⁴× drop to PR02). Interpretation: at these mid frequencies the
+  band retains less-attenuated lower-frequency (turbulence) energy, and site response + crude
+  channel distances preclude a data-driven $Q$. We therefore adopt the literature $Q\approx20$ for the
+  reach diagnostic, restrict bedload claims to near-channel stations, and treat farther stations as
+  *upper-distance bounds* rather than corrected flux. A clean correction needs active-source
+  calibration or a higher (30–80 Hz) band recorded close to the channel.
+
 ## 7. Novelty matrix (what to claim, what to defend)
 
 | Claim | Strength | Blocking prior work | Framing |

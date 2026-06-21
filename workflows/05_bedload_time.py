@@ -67,24 +67,40 @@ def load() -> dict:
 
 
 def detect_ars(q: pd.Series) -> list[tuple]:
-    """Return up to 3 (start, peak, end) AR windows from the discharge series.
+    """Return (start, peak, end, label) AR windows from the discharge series.
 
-    Keeps the three largest hydrograph peaks (height-filtered to the flood, so
-    minor pre-flood bumps are ignored); inner boundaries are the troughs between
-    peaks, outer boundaries are the flood onset/recession (not the quiet baseline).
+    The three largest hydrograph peaks are the main ARs (Dec 9/10/11); a weaker
+    earlier peak (~Dec 6), below the main height filter but above baseline, is
+    included as the 'pre-AR'. Inner boundaries are troughs between peaks; outer
+    boundaries are the flood onset/recession (not the quiet baseline).
     """
     qs = q.resample("1h").median().interpolate(limit=12).dropna()
     v = qs.values
-    pk, _ = find_peaks(v, distance=18, height=0.4 * float(np.nanmax(v)))
+    mx = float(np.nanmax(v))
+    pk, _ = find_peaks(v, distance=18, height=0.08 * mx)
     if len(pk) == 0:
         return []
-    top = sorted(pk[np.argsort(v[pk])[::-1][:3]])
     hr = lambda h: int(round(h))                                  # noqa: E731
-    bounds = [max(0, top[0] - hr(30))]                            # flood onset before AR1
-    for a, b in zip(top[:-1], top[1:]):
-        bounds.append(a + int(np.argmin(v[a:b])))                 # trough between peaks
-    bounds.append(min(len(v) - 1, top[-1] + hr(36)))              # recession after AR3
-    return [(qs.index[bounds[i]], qs.index[p], qs.index[bounds[i + 1]]) for i, p in enumerate(top)]
+    main = sorted(pk[np.argsort(v[pk])[::-1][:3]].tolist())       # 3 main ARs
+    # pre-AR: largest peak before the main flood, below the main-AR height band
+    pre = [p for p in pk if p < main[0] and v[p] < 0.4 * mx]
+    pre_pk = max(pre, key=lambda p: v[p]) if pre else None
+
+    wins = []
+    if pre_pk is not None:
+        end = min(pre_pk + hr(30), main[0] - hr(30))
+        wins.append((qs.index[max(0, pre_pk - hr(28))], qs.index[pre_pk], qs.index[max(end, pre_pk + 1)], "pre-AR"))
+    bounds = [max(0, main[0] - hr(30))]
+    for a, b in zip(main[:-1], main[1:]):
+        bounds.append(a + int(np.argmin(v[a:b])))
+    bounds.append(min(len(v) - 1, main[-1] + hr(36)))
+    for i, p in enumerate(main):
+        wins.append((qs.index[bounds[i]], qs.index[p], qs.index[bounds[i + 1]], f"AR{i+1}"))
+    return wins
+
+
+# Colorblind-safe (Okabe–Ito) palette for AR shading: pre-AR grey, then 3 ARs.
+AR_COLORS = {"pre-AR": "#999999", "AR1": "#0072B2", "AR2": "#56B4E9", "AR3": "#E69F00"}
 
 
 def main() -> int:
@@ -103,6 +119,10 @@ def main() -> int:
         if data[s]["dist"] == dmin:
             q = data[s]["Q"].dropna(); break
     ars = detect_ars(q)
+    # persist AR windows so other workflows (b(t), GIF) stay consistent
+    (ROOT / "config" / "ar_windows.json").write_text(json.dumps(
+        [{"start": s0.isoformat(), "peak": pk.isoformat(), "end": s1.isoformat(), "label": lab}
+         for (s0, pk, s1, lab) in ars], indent=2))
 
     # normalize each station's bedload proxy to its pre-flood median
     for s in stations:
@@ -115,11 +135,11 @@ def main() -> int:
                                  gridspec_kw=dict(height_ratios=[1, 1.7]))
     a1.plot(q.index, q.values, color="k", lw=1.2)
     a1.set_ylabel("discharge (m³ s⁻¹)")
-    arcol = ["#4575b4", "#91bfdb", "#fc8d59"]
-    for i, (s0, pk, s1) in enumerate(ars):
+    labels = [w[3] for w in ars]
+    for (s0, pk, s1, lab) in ars:
         for a in (a1, a2):
-            a.axvspan(s0, s1, color=arcol[i % 3], alpha=0.16, zorder=0)
-        a1.text(pk, a1.get_ylim()[1] * 0.92, f"AR{i+1}", ha="center", fontsize=10, fontweight="bold")
+            a.axvspan(s0, s1, color=AR_COLORS.get(lab, "#999999"), alpha=0.18, zorder=0)
+        a1.text(pk, a1.get_ylim()[1] * 0.92, lab, ha="center", fontsize=9, fontweight="bold")
     for s in stations:
         a2.semilogy(data[s]["norm"].index, data[s]["norm"].values, lw=1.0, color=col[s],
                     label=f"{s} ({data[s]['dist']:.0f} km)")
@@ -127,7 +147,7 @@ def main() -> int:
     a2.set_ylabel("bedload-band power / pre-flood median")
     a2.set_xlabel("December 2025 (UTC)")
     a2.legend(fontsize=7, ncol=2, loc="upper right")
-    a1.set_title("Bedload-band (5–15 Hz) response across the three atmospheric rivers", loc="left")
+    a1.set_title("Bedload-band (5–15 Hz) response across the pre-AR and three atmospheric rivers", loc="left")
     fig.autofmt_xdate()
     fig.savefig(FIGDIR / "fig6_bedload_time.png")
     plt.close(fig)
@@ -136,17 +156,18 @@ def main() -> int:
     rows = []
     for s in stations:
         rec = {"station": s, "dist_km": round(data[s]["dist"], 1)}
-        for i, (s0, pk, s1) in enumerate(ars):
+        for (s0, pk, s1, lab) in ars:
             seg = data[s]["norm"][(data[s]["norm"].index >= s0) & (data[s]["norm"].index < s1)]
-            rec[f"AR{i+1}"] = round(float(seg.mean()), 2) if len(seg) else None
+            rec[lab] = round(float(seg.mean()), 2) if len(seg) else None
         rows.append(rec)
     (ROOT / "config" / "bedload_per_AR.json").write_text(json.dumps(rows, indent=2))
 
-    fig, ax = plt.subplots(figsize=(8, 4.2))
-    x = np.arange(len(stations)); w = 0.26
-    for i in range(len(ars)):
-        vals = [r.get(f"AR{i+1}") or np.nan for r in rows]
-        ax.bar(x + (i - 1) * w, vals, w, color=arcol[i % 3], label=f"AR{i+1}", edgecolor="0.3", lw=0.4)
+    fig, ax = plt.subplots(figsize=(8.4, 4.2))
+    x = np.arange(len(stations)); n = len(labels); w = 0.8 / n
+    for i, lab in enumerate(labels):
+        vals = [r.get(lab) or np.nan for r in rows]
+        ax.bar(x + (i - (n - 1) / 2) * w, vals, w, color=AR_COLORS.get(lab, "#999999"),
+               label=lab, edgecolor="0.3", lw=0.4)
     ax.set_xticks(x)
     ax.set_xticklabels([f"{s}\n{data[s]['dist']:.0f} km" for s in stations], fontsize=8)
     ax.axhline(1.0, color="0.5", ls=":", lw=1)
@@ -157,8 +178,8 @@ def main() -> int:
     plt.close(fig)
 
     print("AR windows:")
-    for i, (s0, pk, s1) in enumerate(ars):
-        print(f"  AR{i+1}: {s0:%m-%d %H:%M} … peak {pk:%m-%d %H:%M} … {s1:%m-%d %H:%M}")
+    for (s0, pk, s1, lab) in ars:
+        print(f"  {lab:7s}: {s0:%m-%d %H:%M} … peak {pk:%m-%d %H:%M} … {s1:%m-%d %H:%M}")
     print("\nPer-AR mean bedload (×pre-flood median):")
     print(pd.DataFrame(rows).to_string(index=False))
     print(f"\nwrote {FIGDIR}/fig6_bedload_time.png, fig7_bedload_per_AR.png")
