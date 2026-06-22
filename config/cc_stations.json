@@ -1,0 +1,281 @@
+[
+  {
+    "sta": "CARB",
+    "lat": 46.9883,
+    "lon": -122.0054,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Carbon",
+    "site": "Carbon Repeater"
+  },
+  {
+    "sta": "TRON",
+    "lat": 46.9977,
+    "lon": -122.1753,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Carbon",
+    "site": "Electron Hydro, WA, USA"
+  },
+  {
+    "sta": "ARAT",
+    "lat": 46.789,
+    "lon": -121.853,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Mount Ararat"
+  },
+  {
+    "sta": "COPP",
+    "lat": 46.798,
+    "lon": -121.8287,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "COPP"
+  },
+  {
+    "sta": "CRBN",
+    "lat": 46.9882,
+    "lon": -121.961,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Carbon River Ranger Stat"
+  },
+  {
+    "sta": "KAUT",
+    "lat": 46.7303,
+    "lon": -121.8574,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Kautz Creek Helibase"
+  },
+  {
+    "sta": "MILD",
+    "lat": 46.8081,
+    "lon": -121.7757,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Mildred Point"
+  },
+  {
+    "sta": "OPCH",
+    "lat": 46.7313,
+    "lon": -121.5713,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Ohanapecosh Administrati"
+  },
+  {
+    "sta": "PARA",
+    "lat": 46.7864,
+    "lon": -121.7422,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Paradise Precip Tower"
+  },
+  {
+    "sta": "PR04",
+    "lat": 46.9298,
+    "lon": -121.9886,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Puyallup River 04"
+  },
+  {
+    "sta": "PR05",
+    "lat": 46.8417,
+    "lon": -121.9489,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Puyallup River 05"
+  },
+  {
+    "sta": "SIFT",
+    "lat": 46.8668,
+    "lon": -121.9533,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Swift Creek"
+  },
+  {
+    "sta": "TABR",
+    "lat": 46.8043,
+    "lon": -121.8495,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Tahoma Bridge"
+  },
+  {
+    "sta": "TAVI",
+    "lat": 46.7957,
+    "lon": -121.8842,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Tahoma Vista"
+  },
+  {
+    "sta": "WOW",
+    "lat": 46.78,
+    "lon": -121.8851,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Mowich",
+    "site": "Mount Wow"
+  },
+  {
+    "sta": "GNOB",
+    "lat": 46.7941,
+    "lon": -121.9144,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Mowich",
+    "site": "Gobblers Knob Seismic"
+  },
+  {
+    "sta": "OBSR",
+    "lat": 46.8997,
+    "lon": -121.8153,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Mowich",
+    "site": "Observation Rock"
+  },
+  {
+    "sta": "PANH",
+    "lat": 46.859,
+    "lon": -121.6426,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Mowich",
+    "site": "Panhandle Gap"
+  },
+  {
+    "sta": "RUSH",
+    "lat": 46.9031,
+    "lon": -121.9442,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Mowich",
+    "site": "Rushingwater Creek"
+  },
+  {
+    "sta": "VOIT",
+    "lat": 46.9664,
+    "lon": -121.9833,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Mowich",
+    "site": "Voight Creek"
+  },
+  {
+    "sta": "GTWY",
+    "lat": 46.7402,
+    "lon": -121.917,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Nisqually",
+    "site": "Gateway Entrance Station"
+  },
+  {
+    "sta": "ELBE",
+    "lat": 46.7664,
+    "lon": -122.1933,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Nisqually",
+    "site": "Elbe Fire Station"
+  },
+  {
+    "sta": "KAVK",
+    "lat": 46.7604,
+    "lon": -122.0386,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Nisqually",
+    "site": "Kavik - Ashford Fire Sta"
+  },
+  {
+    "sta": "PR03",
+    "lat": 46.9034,
+    "lon": -122.0327,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Puyallup",
+    "site": "Puyallup River 03"
+  },
+  {
+    "sta": "STYX",
+    "lat": 46.9637,
+    "lon": -122.0805,
+    "sr": 500.0,
+    "chan": "BH,CH",
+    "basin": "Puyallup",
+    "site": "STYX, Puyallup River, WA"
+  },
+  {
+    "sta": "PR01",
+    "lat": 46.9101,
+    "lon": -122.0376,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Puyallup",
+    "site": "Puyallup River 01"
+  },
+  {
+    "sta": "PR02",
+    "lat": 46.9183,
+    "lon": -122.0487,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "Puyallup",
+    "site": "Puyallup River 02"
+  },
+  {
+    "sta": "SUNT",
+    "lat": 47.0401,
+    "lon": -121.5967,
+    "sr": 500.0,
+    "chan": "BH,CH,HH",
+    "basin": "White",
+    "site": "Sun Top"
+  },
+  {
+    "sta": "GRWR",
+    "lat": 47.1134,
+    "lon": -121.6144,
+    "sr": 100.0,
+    "chan": "HH",
+    "basin": "White",
+    "site": "Greenwater Fire Station"
+  },
+  {
+    "sta": "LONR",
+    "lat": 47.0099,
+    "lon": -121.6737,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "White",
+    "site": "Lonesome Lake Unique"
+  },
+  {
+    "sta": "PALI",
+    "lat": 47.0777,
+    "lon": -121.7105,
+    "sr": 50.0,
+    "chan": "BH",
+    "basin": "White",
+    "site": "Palisades"
+  }
+]

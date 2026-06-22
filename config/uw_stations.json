@@ -1,0 +1,110 @@
+[
+  {
+    "sta": "LO2",
+    "lat": 46.7506,
+    "lon": -121.8096,
+    "sr": 100.0,
+    "chan": "EH",
+    "d_river": 0.21,
+    "site": "Longmire, WA, USA"
+  },
+  {
+    "sta": "LON",
+    "lat": 46.7506,
+    "lon": -121.8096,
+    "sr": 100.0,
+    "chan": "EN,HH",
+    "d_river": 0.21,
+    "site": "Longmire, WA, USA"
+  },
+  {
+    "sta": "BLDG",
+    "lat": 47.2746,
+    "lon": -122.2197,
+    "sr": 200.0,
+    "chan": "HN",
+    "d_river": 0.22,
+    "site": "Mount Baker Middle School,"
+  },
+  {
+    "sta": "RER",
+    "lat": 46.8186,
+    "lon": -121.8425,
+    "sr": 100.0,
+    "chan": "HH",
+    "d_river": 0.44,
+    "site": "Emerald Ridge, Mount Raini"
+  },
+  {
+    "sta": "PAYL",
+    "lat": 47.1928,
+    "lon": -122.313,
+    "sr": 200.0,
+    "chan": "HN",
+    "d_river": 1.25,
+    "site": "Puyallup School ANSS-SMO"
+  },
+  {
+    "sta": "TAPPS",
+    "lat": 47.2269,
+    "lon": -122.1371,
+    "sr": 200.0,
+    "chan": "HN",
+    "d_river": 1.46,
+    "site": "Dieringer Heights Elementa"
+  },
+  {
+    "sta": "STOR",
+    "lat": 47.1881,
+    "lon": -121.9888,
+    "sr": 100.0,
+    "chan": "EN,HH",
+    "d_river": 1.79,
+    "site": "Enumclaw, WA, USA"
+  },
+  {
+    "sta": "TEHA",
+    "lat": 47.1279,
+    "lon": -122.1963,
+    "sr": 200.0,
+    "chan": "HN",
+    "d_river": 2.65,
+    "site": "Tehaleh Heights Elementary"
+  },
+  {
+    "sta": "RCM",
+    "lat": 46.8356,
+    "lon": -121.7332,
+    "sr": 100.0,
+    "chan": "HH",
+    "d_river": 2.93,
+    "site": "Camp Muir, Mount Rainier, "
+  },
+  {
+    "sta": "QDNP",
+    "lat": 47.1658,
+    "lon": -122.2704,
+    "sr": 200.0,
+    "chan": "HN",
+    "d_river": 3.14,
+    "site": "Puyallup, WA, USA"
+  },
+  {
+    "sta": "QKEV",
+    "lat": 47.3072,
+    "lon": -122.2172,
+    "sr": 200.0,
+    "chan": "HN",
+    "d_river": 3.26,
+    "site": "Auburn, WA, USA"
+  },
+  {
+    "sta": "GSM",
+    "lat": 47.2039,
+    "lon": -121.796,
+    "sr": 100.0,
+    "chan": "EH,EN",
+    "d_river": 3.32,
+    "site": "Grass Mtn, Enumclaw, WA, U"
+  }
+]

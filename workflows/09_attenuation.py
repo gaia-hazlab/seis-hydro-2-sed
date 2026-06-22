@@ -32,8 +32,15 @@ EXCLUDE = {"UW.BHW", "UW.TEHA"}
 HF_RE = re.compile(r"^(?P<net>[A-Z0-9]+)\.(?P<sta>[A-Z0-9]+)_5\.0-15\.0Hz_timeseries\.csv$")
 
 FC = (5 * 15) ** 0.5          # band-center 8.66 Hz
-VC0, F0, XI, Q_THEORY = 1295.0, 1.0, 0.374, 20.0   # Tsai 2012 dispersion params
+VC0, F0, XI = 1295.0, 1.0, 0.374                    # Tsai 2012 velocity dispersion
 VC = VC0 * (FC / F0) ** (-XI)                       # phase velocity at FC (~578 m/s)
+# PNW / Mt. Rainier-edifice attenuation (coda/Lg-Q + MSH edifice studies):
+# Q(f)=Q0 f^eta, Q0≈25, eta≈0.5 -> Q(10 Hz)≈80 (range 40–240); higher than the
+# fluvial default Tsai Q≈20 (less attenuation). See LITERATURE.md.
+Q0_PNW, ETA = 25.0, 0.5
+Q_TSAI = 20.0
+def Q_pnw(f):
+    return Q0_PNW * f ** ETA
 # stations sharing the Electron source reach (same gage 12092000), used for the fit
 SAME_SOURCE = ["CC.PR03", "CC.PR01", "CC.PR02"]
 
@@ -63,45 +70,52 @@ def main() -> int:
     sub = [(rows[s]["r_km"] * 1000.0, np.log(rows[s]["P"])) for s in SAME_SOURCE if s in rows]
     r_m = np.array([a for a, _ in sub]); lnP = np.array([b for _, b in sub])
     k_obs = -np.polyfit(r_m, lnP, 1)[0]                       # observed decay rate (1/m)
-    re_theory = VC * Q_THEORY / (2 * np.pi * FC)             # theoretical e-folding (m)
+    re_pnw = VC * Q_pnw(FC) / (2 * np.pi * FC)               # PNW e-folding (m)
+    re_tsai = VC * Q_TSAI / (2 * np.pi * FC)
 
-    fit = dict(fc_hz=round(FC, 2), vc_ms=round(VC, 1), Q_theory=Q_THEORY,
-               r_e_theory_m=round(re_theory, 0),
+    fit = dict(fc_hz=round(FC, 2), vc_ms=round(VC, 1),
+               Q_pnw_at_fc=round(Q_pnw(FC), 1), Q0_pnw=Q0_PNW, eta=ETA, Q_tsai=Q_TSAI,
+               r_e_pnw_m=round(re_pnw, 0), r_e_tsai_m=round(re_tsai, 0),
                observed_decay_per_km=round(float(k_obs * 1000), 3),
-               note="Observed 5-15 Hz power is ~distance-independent over 0.2-2 km, "
-                    "far weaker than the Q=20 prediction -> the band retains "
-                    "less-attenuated lower-frequency energy; site response and crude "
-                    "channel distances also limit a data-driven Q. Adopt literature Q=20.")
+               note="PNW/Rainier-edifice Q(f)=25 f^0.5 (Q≈74 at the band center) gives "
+                    "r_e≈790 m vs ≈210 m for Tsai Q=20. Observed 5-15 Hz power is still "
+                    "~distance-independent over 0.2-2 km (weaker decay than even the PNW "
+                    "prediction) -> the band retains less-attenuated lower-frequency "
+                    "energy; site response + crude distances limit a data-driven Q.")
     (ROOT / "config" / "attenuation_fit.json").write_text(json.dumps(fit, indent=2))
 
     fig, (axA, axB) = plt.subplots(1, 2, figsize=(11, 4.6))
 
-    # Panel A: seismic reach r_e(f) for Q=20 (band Q=10..40), with our bands + standoffs
+    # Panel A: seismic reach r_e(f) — PNW Q(f) (range), Tsai Q=20 reference, our bands/standoffs
     ff = np.logspace(0, 2, 200)
     vcf = VC0 * (ff / F0) ** (-XI)
-    axA.fill_between(ff, vcf * 10 / (2 * np.pi * ff), vcf * 40 / (2 * np.pi * ff),
-                     color="0.8", alpha=0.6, label="Q = 10–40")
-    axA.plot(ff, vcf * Q_THEORY / (2 * np.pi * ff), "k-", lw=1.8, label="Q = 20")
-    axA.axvspan(1, 10, color="#0072B2", alpha=0.12)
+    re = lambda Q: vcf * Q / (2 * np.pi * ff)
+    axA.fill_between(ff, re(20 * ff ** 0.3), re(60 * ff ** 0.8), color="0.8", alpha=0.6,
+                     label="PNW range")
+    axA.plot(ff, re(Q0_PNW * ff ** ETA), "k-", lw=1.8, label="PNW Q=25 f$^{0.5}$")
+    axA.plot(ff, re(Q_TSAI), color="tab:red", ls=":", lw=1.4, label="Tsai Q=20")
+    axA.axvline(25, color="0.4", ls="--", lw=1)
+    axA.text(25, 0.012, " 50-sps Nyquist", fontsize=6.5, color="0.3", rotation=90, va="bottom")
+    axA.axvspan(1, 20, color="#0072B2", alpha=0.12)
     axA.axvspan(30, 80, color="#E69F00", alpha=0.15)
-    axA.text(3, 4, "turbulence\n1–10 Hz", fontsize=7, ha="center")
-    axA.text(49, 4, "bedload\n30–80 Hz", fontsize=7, ha="center")
+    axA.text(4.5, 5, "turbulence\n1–20 Hz", fontsize=7, ha="center")
+    axA.text(49, 5, "bedload\n30–80 Hz", fontsize=7, ha="center")
     for sid in ("CC.PR03", "CC.PR01", "CC.PR02", "CC.TRON"):
         if sid in rows:
             axA.axhline(rows[sid]["r_km"], color="0.5", ls=":", lw=0.8)
             axA.text(1.05, rows[sid]["r_km"] * 1.05, sid.split(".")[1], fontsize=6.5, color="0.4")
     axA.set_xscale("log"); axA.set_yscale("log")
     axA.set_xlabel("frequency (Hz)"); axA.set_ylabel("e-folding distance r_e (km)")
-    axA.set_title("Seismic reach: r_e = v_c Q / (2πf)", loc="left", fontsize=10)
+    axA.set_title("Seismic reach r_e = v_c Q(f) / (2πf)", loc="left", fontsize=10)
     axA.legend(fontsize=7, loc="upper right")
     axA.set_ylim(0.01, 30)
 
-    # Panel B: observed AR2 power vs distance vs the Q=20 prediction
+    # Panel B: observed AR2 power vs distance vs the PNW-Q prediction
     rr = np.linspace(50, 6000, 200)
-    kt = 2 * np.pi * FC / (VC * Q_THEORY)
+    kt = 2 * np.pi * FC / (VC * Q_pnw(FC))
     P0 = rows["CC.PR03"]["P"] * np.exp(kt * rows["CC.PR03"]["r_km"] * 1000)
     axB.plot(rr / 1000, P0 * np.exp(-kt * rr), color="tab:red", lw=1.5,
-             label=f"theory Q=20 (r_e≈{re_theory:.0f} m)")
+             label=f"theory PNW Q≈{Q_pnw(FC):.0f} (r_e≈{re_pnw:.0f} m)")
     for sid, d in rows.items():
         same = sid in SAME_SOURCE
         axB.scatter(d["r_km"], d["P"], s=75 if same else 45,

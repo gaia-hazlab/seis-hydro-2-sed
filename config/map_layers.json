@@ -1,0 +1,264 @@
+{
+  "gages": [
+    {
+      "id": "12092000",
+      "name": "PUYALLUP RIVER NEAR ELECTRON, WA",
+      "lat": 46.9037164,
+      "lon": -122.0351092
+    },
+    {
+      "id": "12093500",
+      "name": "PUYALLUP RIVER NEAR ORTING, WA",
+      "lat": 47.0392396,
+      "lon": -122.2078708
+    },
+    {
+      "id": "12094000",
+      "name": "CARBON RIVER NEAR FAIRFAX, WA",
+      "lat": 47.02788105,
+      "lon": -122.0326105
+    },
+    {
+      "id": "12095000",
+      "name": "SOUTH PRAIRIE CREEK AT SOUTH PRAIR",
+      "lat": 47.13954628,
+      "lon": -122.0926135
+    },
+    {
+      "id": "12096500",
+      "name": "PUYALLUP RIVER AT ALDERTON, WA",
+      "lat": 47.18510115,
+      "lon": -122.2295625
+    },
+    {
+      "id": "12096505",
+      "name": "PUYALLUP RIVER AT E MAIN BRIDGE AT",
+      "lat": 47.196739,
+      "lon": -122.2509312
+    },
+    {
+      "id": "12096865",
+      "name": "HUCKLEBERRY CREEK NEAR GREENWATER,",
+      "lat": 47.0603864,
+      "lon": -121.6056517
+    },
+    {
+      "id": "12097500",
+      "name": "GREENWATER RIVER AT GREENWATER, WA",
+      "lat": 47.1534409,
+      "lon": -121.6356543
+    },
+    {
+      "id": "12097820",
+      "name": "CLEARWATER RIVER NEAR BUCKLEY, WA",
+      "lat": 47.1275,
+      "lon": -121.801389
+    },
+    {
+      "id": "12097850",
+      "name": "WHITE RIVER BELOW CLEARWATER RIVER",
+      "lat": 47.1467703,
+      "lon": -121.8601066
+    },
+    {
+      "id": "12098500",
+      "name": "WHITE RIVER NEAR BUCKLEY, WA",
+      "lat": 47.15118666,
+      "lon": -121.94981
+    },
+    {
+      "id": "12098920",
+      "name": "WHITE RIVER FLUME AT BUCKLEY, WA",
+      "lat": 47.1695193,
+      "lon": -122.0120345
+    },
+    {
+      "id": "12099200",
+      "name": "WHITE RIVER ABOVE BOISE CREEK AT B",
+      "lat": 47.17388889,
+      "lon": -122.0080556
+    },
+    {
+      "id": "12099550",
+      "name": "BOISE CREEK AT 252ND AVE NE NR BUC",
+      "lat": 47.1856944,
+      "lon": -122.0053889
+    },
+    {
+      "id": "12099600",
+      "name": "BOISE CREEK AT BUCKLEY, WA",
+      "lat": 47.175935,
+      "lon": -122.0184452
+    },
+    {
+      "id": "12100490",
+      "name": "WHITE RIVER AT R STREET NEAR AUBUR",
+      "lat": 47.27479497,
+      "lon": -122.207876
+    },
+    {
+      "id": "12100496",
+      "name": "WHITE RIVER NEAR AUBURN, WA",
+      "lat": 47.26593409,
+      "lon": -122.2298417
+    },
+    {
+      "id": "12101100",
+      "name": "LAKE TAPPS DIVERSION AT DIERINGER,",
+      "lat": 47.2381564,
+      "lon": -122.2281746
+    },
+    {
+      "id": "12101470",
+      "name": "PUYALLUP RIVER AT 5TH ST BRIDGE AT",
+      "lat": 47.19871179,
+      "lon": -122.287342
+    },
+    {
+      "id": "12101500",
+      "name": "PUYALLUP RIVER AT PUYALLUP, WA",
+      "lat": 47.20843358,
+      "lon": -122.3270652
+    },
+    {
+      "id": "12102078",
+      "name": "CLARKS CREEK AT STEWART AVENUE NEA",
+      "lat": 47.2009047,
+      "lon": -122.3417673
+    },
+    {
+      "id": "12102190",
+      "name": "SWAN CREEK AT 80TH ST EAST NEAR TA",
+      "lat": 47.18451529,
+      "lon": -122.393713
+    },
+    {
+      "id": "12082500",
+      "name": "NISQUALLY RIVER NEAR NATIONAL, WA",
+      "lat": 46.75260766,
+      "lon": -122.0837194
+    },
+    {
+      "id": "12083000",
+      "name": "MINERAL CREEK NEAR MINERAL, WA",
+      "lat": 46.74424068,
+      "lon": -122.144529
+    },
+    {
+      "id": "12086000",
+      "name": "NISQUALLY RIVER AT LA GRANDE DAM, ",
+      "lat": 46.82260445,
+      "lon": -122.30428
+    },
+    {
+      "id": "12086500",
+      "name": "NISQUALLY RIVER AT LA GRANDE, WA",
+      "lat": 46.83927048,
+      "lon": -122.3292809
+    },
+    {
+      "id": "12087000",
+      "name": "MASHEL RIVER NEAR LA GRANDE, WA",
+      "lat": 46.85673885,
+      "lon": -122.3025917
+    },
+    {
+      "id": "12088000",
+      "name": "OHOP CREEK NEAR EATONVILLE, WA",
+      "lat": 46.88093699,
+      "lon": -122.2790026
+    },
+    {
+      "id": "12089208",
+      "name": "CENTRALIA POWER CANAL NEAR MCKENNA",
+      "lat": 46.9001003,
+      "lon": -122.4984532
+    },
+    {
+      "id": "12089500",
+      "name": "NISQUALLY RIVER AT MCKENNA, WA",
+      "lat": 46.93340268,
+      "lon": -122.5609345
+    },
+    {
+      "id": "12079000",
+      "name": "DESCHUTES RIVER NEAR RAINIER, WA",
+      "lat": 46.85204488,
+      "lon": -122.6687354
+    },
+    {
+      "id": "12073500",
+      "name": "HUGE CREEK NEAR WAUNA, WA",
+      "lat": 47.38926205,
+      "lon": -122.6990241
+    },
+    {
+      "id": "12090400",
+      "name": "NORTH FORK CLOVER CREEK NEAR PARKL",
+      "lat": 47.1345151,
+      "lon": -122.4151013
+    },
+    {
+      "id": "12090500",
+      "name": "CLOVER CREEK NEAR TILLICUM, WA",
+      "lat": 47.14590298,
+      "lon": -122.5103822
+    },
+    {
+      "id": "12091100",
+      "name": "FLETT CREEK AT TACOMA, WA",
+      "lat": 47.1888583,
+      "lon": -122.5201028
+    },
+    {
+      "id": "12091200",
+      "name": "LEACH CREEK NEAR FIRCREST, WA",
+      "lat": 47.22145848,
+      "lon": -122.5092728
+    },
+    {
+      "id": "12091290",
+      "name": "LEACH CR AT MEADOW PARK GC AT UNIV",
+      "lat": 47.1984316,
+      "lon": -122.5209584
+    },
+    {
+      "id": "12091500",
+      "name": "CHAMBERS CREEK BL LEACH CREEK NEAR",
+      "lat": 47.1975694,
+      "lon": -122.5287173
+    }
+  ],
+  "snotel": [
+    {
+      "id": "679:WA:SNTL",
+      "name": "Paradise",
+      "lat": 46.783,
+      "lon": -121.748
+    },
+    {
+      "id": "941:WA:SNTL",
+      "name": "Mowich",
+      "lat": 46.928,
+      "lon": -121.952
+    },
+    {
+      "id": "942:WA:SNTL",
+      "name": "Burnt Mountain",
+      "lat": 47.044,
+      "lon": -121.94
+    },
+    {
+      "id": "928:WA:SNTL",
+      "name": "Huckleberry Ck",
+      "lat": 47.066,
+      "lon": -121.588
+    },
+    {
+      "id": "1085:WA:SNTL",
+      "name": "Cayuse Pass",
+      "lat": 46.87,
+      "lon": -121.534
+    }
+  ]
+}

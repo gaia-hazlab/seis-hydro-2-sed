@@ -1,5 +1,5 @@
 ---
-title: "Transect-scale seismic monitoring of bedload transport on Mt. Rainier's glacial rivers during the December 2025 atmospheric-river floods"
+title: "Transect-scale seismic monitoring of glacial-river turbulent flow during the December 2025 atmospheric-river floods on Mt. Rainier — with bounds on bedload detection"
 author:
   - name: Marine Denolle
     affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
@@ -8,21 +8,24 @@ author:
     affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
 date: last-modified
 abstract: |
-  Bedload transport is notoriously difficult to measure directly, yet it governs
-  channel aggradation and sediment hazard in glacier-fed mountain rivers. We use
-  near-channel seismic stations along the Puyallup and Carbon Rivers draining Mt.
-  Rainier, Washington, paired with co-located USGS discharge gages, to monitor
-  bedload during the December 2025 Pacific Northwest atmospheric-river floods,
-  which drove near-record flooding and debris flows. Band-limited seismic power
-  scales with discharge as $P\propto Q^{b}$; at the glacial-source station $b$
-  rises from $1.54$ in the turbulence band (2–8 Hz) to $1.66$ in the bedload band
-  (5–15 Hz), above the $b\approx1$ turbulent-flow baseline, and the exponent
-  decays downstream and away from the channel toward the turbulence baseline.
-  This frequency-dependent, spatially-decaying scaling records a
-  threshold-controlled bedload contribution near the glacial source.
-  To our knowledge this is the first transect-scale bedload seismology on Cascades
-  glacial rivers and the first tied to a named Pacific atmospheric-river event.
-keywords: [environmental seismology, bedload transport, fluvial geomorphology, Mt. Rainier, atmospheric river]
+  Glacier-fed mountain rivers carry the floods and sediment that drive downstream
+  hazard, yet they are sparsely gaged. We use near-channel seismic stations along
+  the Puyallup and Carbon Rivers draining Mt. Rainier, Washington, paired with
+  co-located USGS discharge gages, to monitor the December 2025 Pacific Northwest
+  atmospheric-river (AR) floods. Band-limited seismic power scales with discharge
+  as $P\propto Q^{b}$ with $b\approx1$–1.7 in the resolvable 1–15 Hz band; flood-vs-quiet
+  spectra show this signal is **turbulent-flow noise** that rises broadband to the
+  25 Hz Nyquist of the 50-sps source stations. The canonical bedload band
+  (30–80 Hz) is therefore *unsampled* at the source and lost to attenuation and
+  urban noise at the only high-rate (200 sps) downstream stations, so we report a
+  robust turbulent-flow signal and treat bedload as a frequency-bounded hypothesis.
+  Across the compound event the exponent and power steepen through the pulses
+  (peaking in AR2) and decay downstream, tracking *local* hydraulics: the upstream
+  seismic and gage stay flat across successive ARs while the basin-integrating
+  downstream gage rises monotonically. Upstream seismic power leads the downstream
+  flood-peak stage by ~36 h, suggesting a seismic early-warning role for this
+  undammed, lahar-hazard corridor.
+keywords: [environmental seismology, turbulent flow, river discharge, flood early warning, Mt. Rainier, atmospheric river]
 ---
 
 # Introduction
@@ -33,36 +36,53 @@ resists direct measurement. Passive seismic monitoring of the high-frequency
 ground motion radiated by rivers offers a continuous, non-contact alternative
 [@burtin2008; @tsai2012; @gimbert2014; @cookdietze2022].
 
-Two sources dominate the near-channel high-frequency wavefield. Turbulent flow
-exerting fluctuating tractions on the bed radiates seismic energy whose power
-scales with flow depth and slope,
+Two sources dominate the near-channel high-frequency wavefield, and — because we
+observe discharge $Q$, not the underlying hydraulics — we cast both as scalings in
+$Q$. Turbulent flow over the bed radiates seismic power that is, to first order,
+**linear in discharge**,
 
 $$
-P_{\text{water}} \;\propto\; H^{7/3}\, S^{7/3} \;\propto\; u_*^{14/3},
+P_{\text{water}} \;\propto\; Q^{\,b_t}, \qquad b_t \approx 0.9\text{–}1.4 ,
 $$ {#eq-water}
 
-so that, through at-a-station hydraulic geometry ($H \propto Q^{0.3}$ to
-$Q^{0.6}$), the seismic power is roughly linear in discharge, $P_{\text{water}}
-\propto Q^{b}$ with $b\approx 0.9$ to $1.4$ [@gimbert2014]. Bedload grain impacts,
-by contrast, radiate power that is *threshold-controlled* and strongly nonlinear
-in discharge but linear in sediment flux and proportional to the cube of grain
-diameter,
+whereas bedload grain impacts radiate power that is **threshold-gated and
+super-linear** in discharge,
 
 $$
-P_{\text{bed}} \;\propto\; q_b\, D^{3}, \qquad q_b \;\propto\; (\tau_* - \tau_{*c})^{3/2},
+P_{\text{bed}} \;\propto\; (Q - Q_c)^{\,b_b}, \qquad b_b > b_t ,
 $$ {#eq-bed}
 
-where $\tau_*$ is the Shields stress and $\tau_{*c}$ its critical value
-[@tsai2012; @bakker2020]. Because flux is super-linear and threshold-gated, a
-bedload contribution makes the seismic–discharge exponent $b$ exceed the
-turbulence baseline and rise with frequency [@bakker2020].
+with $Q_c$ an entrainment threshold. A bedload contribution therefore makes the
+measured exponent $b$ exceed the turbulence baseline $b_t$ and rise with frequency
+[@bakker2020].
+
+*Model assumptions behind @eq-water–@eq-bed.* These discharge forms are reductions
+of the physical models, and we list the assumptions they fold in. The turbulence
+exponent follows from $P_{\text{water}}\propto H^{7/3}S^{7/3}\propto u_*^{14/3}$
+(Gimbert et al. 2014) combined with at-a-station hydraulic geometry
+($H\propto Q^{0.3\text{–}0.6}$ at fixed slope $S$), giving $b_t\approx1$. The
+bedload form follows from $P_{\text{bed}}\propto q_b\,D^{3}$ with impact flux
+$q_b\propto(\tau_*-\tau_{*c})^{3/2}$ (Tsai et al. 2012; @bakker2020), so $b_b$
+inherits the excess-Shields-stress nonlinearity and the strong $D^3$ weighting
+toward the coarse grain-size tail. We do not measure flow depth $H$, shear
+velocity $u_*$, Shields stress $\tau_*$, or grain size $D$; they enter only as the
+exponents $b_t,b_b$ and the threshold $Q_c$, which we estimate empirically. Two
+further assumptions are implicit and revisited later: that the recorded frequency
+band actually samples the bedload source (it is set by station Nyquist; §Methods),
+and that seismic attenuation lets a station sense the channel of interest
+(§Discussion).
 
 The December 2025 atmospheric-river floods on Mt. Rainier — near-record discharge
-on the Carbon River and widespread debris flows — provide a natural experiment in
-flood-driven sediment delivery from a glacial source toward Puget Sound. We apply
-the frequency-dependent scaling diagnostic across a longitudinal station transect
-to ask *where* and *how strongly* a bedload signal appears, from the glacial
-source toward the lowland coast.
+on the Carbon River — provide a natural experiment in flood monitoring along a
+glacial-river transect. We first establish what the network can robustly measure:
+band-limited seismic power that tracks turbulent flow and therefore discharge.
+We then ask three questions — (i) does a *bedload* contribution emerge, and is it
+even sampled given station bandwidth? (ii) how does the signal organize in space
+(source→downstream) and across the successive AR pulses? and (iii) can upstream
+seismic anticipate the downstream flood peak? As we show, the resolvable band is
+turbulence-dominated and the canonical bedload band is unsampled, so bedload
+remains a bounded hypothesis while the turbulent-flow and early-warning results
+are robust.
 
 # Data and study area
 
@@ -71,15 +91,54 @@ and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
 has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
 [@czuba2012], underscoring an active, supply-rich sediment system.
 
-We use a longitudinal transect of seismic stations (@fig-map). Broadband stations
-suitable for ambient river-noise analysis (network CC) cluster in the glacial
-source reach near Electron (CC.PR01–PR03) and extend ~20 km downstream (CC.TRON);
-the lowland corridor toward Puget Sound is covered only by urban strong-motion
-accelerometers, treated here as exploratory. Each seismic station is paired with
-the nearest co-located USGS discharge gage (e.g. Puyallup River near Electron,
-12092000). The event peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
+We use the Cascade Volcano Observatory (network **CC**) stations across the
+**western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
+and upper White — paired with USGS discharge gages and NRCS SNOTEL/precipitation
+stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
+network, not a single transect.
 
-![Mountain-to-sea seismic transect along the Puyallup River (shaded SRTM topography; rivers from the USGS NHD). Broadband stations (red triangles), suitable for ambient river-noise analysis, cluster in the glacial source reach; the lowland/coastal corridor toward Puget Sound is covered only by urban strong-motion accelerometers (gray squares). Blue shows surface-water/flood extent from OPERA DSWx-S1 (Sentinel-1 SAR, 10 Dec 2025; NASA Disasters).](figures/fig1_transect_map.png){#fig-map width=78%}
+**An upgrading network.** The CC stations are being progressively upgraded from
+50 sps to **500 sps**: of 31 stations in the study area, 19 now record 500-sps
+high-rate (CH) channels (Nyquist 250 Hz), one at 100 sps, and 11 at the legacy
+50 sps (@fig-map, marker color). Our analysis below uses the legacy 50-sps (BH)
+channels for uniform multi-year comparability, which caps the resolvable band at
+25 Hz. Critically, however, the **500-sps channels at near-channel source stations
+(CC.PR03, SIFT, STYX, CARB) do reach the 30–80 Hz bedload band during this event** —
+so the bedload-detectability limit we report for the 50-sps data is *not* a
+permanent ceiling but a snapshot of a network in transition. This demonstrates an
+emerging capability for **multi-sensor flood and sediment monitoring**, and
+motivates a specific recommendation: continue the 500-sps upgrade at near-channel
+stations to unlock bedload-band sensing (§Discussion). The event peaked at
+≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
+
+![Western-draining basins of Mt. Rainier: the CC seismic network (triangles, colored by sample rate — the network is upgrading 50→500 sps), all USGS discharge gages (cyan diamonds), and NRCS SNOTEL/met stations (blue stars), on shaded SRTM topography with USGS-NHD rivers. Blue shows surface-water/flood extent from OPERA DSWx-S1 (Sentinel-1 SAR, 10 Dec 2025; NASA Disasters).](figures/fig1_transect_map.png){#fig-map width=92%}
+
+# The December 2025 atmospheric-river floods
+
+The study event was a **historic compound atmospheric-river sequence**, among the
+strongest and longest-lasting on record for the Puget Sound region. Two back-to-back
+ARs made landfall ~8–12 December 2025, delivering on the order of 25 cm of rain in
+the Cascades (locally more over the multi-week period) and >7 cm in ~10 h at the
+Paradise station on Mt. Rainier, on top of a warm, rain-on-snow setup. Washington
+Governor Ferguson declared a **statewide emergency** (~10 December); tens of
+thousands were under evacuation orders and hundreds of water rescues were
+conducted.
+
+The western-draining rivers of Mt. Rainier responded at or near record levels:
+the **Carbon River near Fairfax reached its highest stage in 19 years** (a
+near-record crest), the **Puyallup produced historic flooding** through Pierce
+County (Orting, Puyallup), and the **Nisqually saw major flooding**. Mt. Rainier
+National Park closed indefinitely after mudslides and road washouts. In our gage
+record the event built **downstream**: peak discharge of ≈306 m³/s at Puyallup
+near Electron (RM 41), ≈350 m³/s on the Carbon, ≈416 m³/s on the Nisqually, and
+**≈1254 m³/s at Puyallup at Puyallup** near the mouth — the latter ~4× the
+headwater peak (@fig-ew).
+
+This combination — a named, well-documented, near-record AR flood over a
+glacier-fed volcanic edifice draining toward a densely populated, lahar-hazard
+lowland (Orting–Puyallup–Tacoma) — makes the event a rare natural experiment for
+testing seismic flood and sediment monitoring, and is the motivation for the
+network analysis that follows.
 
 # Methods
 
@@ -106,6 +165,19 @@ robustly (ordinary least squares and Theil–Sen, with bootstrap 95% confidence
 intervals on $b$), and quantify event hysteresis with the Lawler index. The
 0.5–2 Hz band is excluded from the turbulence baseline because it is dominated by
 the oceanic secondary microseism rather than river flow.
+
+**Frequency sampling — an important caveat.** Turbulent flow dominates the
+seismic wavefield at ~1–20 Hz and bedload impacts at higher frequencies, with the
+bedload band conventionally placed at **30–80 Hz** (Tsai et al. 2012; @bakker2020).
+Our upper-transect broadband stations (network CC) sample at **50 sps (Nyquist
+25 Hz)**, so they *cannot* reach the canonical bedload band: our 5–15 Hz "bedload"
+proxy in fact sits in the turbulence-to-bedload transition and is partly
+turbulence-controlled. Accessing the true 30–80 Hz band requires ≥160-sps
+instruments; the only such stations on the corridor are the lowland urban
+accelerometers (100–200 sps), several of which are traffic-polluted. We therefore
+interpret the upper-station exponents as a *transition-band* bedload indicator and
+separately analyze the high-rate lowland stations in the 30–80 Hz band (§Results)
+to probe genuine bedload frequencies, accepting their anthropogenic-noise penalty.
 
 **Station screening.** Candidate lowland stations were screened for anthropogenic
 contamination over a pre-flood week by the weekday/daytime-vs-night cycle of
@@ -186,31 +258,78 @@ river-proximal clean stations.
 ![Multidisciplinary animation through the pre-AR and three ARs: (top) map of per-station bedload strength (5–15 Hz power vs pre-flood median) with the traffic control UW.TEHA in grey; (middle) SNOTEL precipitation; (bottom) discharge at five gages. A cursor and AR shading tie the panels in time.](figures/bedload_animation.gif){#fig-blgif width=68%}
 :::
 
+## Turbulence or bedload? The frequency evidence
+
+Whether the signal above is bedload or turbulent flow hinges on frequency. Median
+flood-vs-quiet velocity spectra (@fig-spec) are unambiguous: at the 50-sps source
+station the flood lifts power **broadband from ~1 Hz to the 25 Hz Nyquist** — the
+turbulent-flow band — with no access to the canonical bedload band (30–80 Hz;
+Tsai et al. 2012; @bakker2020). At the only high-rate (200 sps) downstream station
+that *can* reach 80 Hz, the flood spectrum is indistinguishable from quiet — 54 km
+of attenuation and urban noise leave no river signal. **No station both reaches the
+bedload band and senses the river.** Grain physics agrees: a 1 m boulder's contact
+corner is ~200–300 Hz, so intrinsic impacts do not radiate into 1–15 Hz; only
+attenuation-shifted, non-unique energy could, degenerate with the 5–7 Hz turbulence
+peak. We therefore interpret the resolvable signal as turbulent-flow noise and
+treat bedload as a frequency-bounded hypothesis (see Limitations).
+
+![Median ground-velocity PSD, flood (10 Dec) vs quiet (03 Dec), for a 50-sps source station (CC.PR03) and a 200-sps lowland station (UW.UPS). The flood raises broadband power to the 25 Hz Nyquist at the source; the bedload band (30–80 Hz) is unsampled there and shows no flood signal at the distant high-rate station.](figures/fig11_spectra.png){#fig-spec width=82%}
+
+## Local sensing and downstream early warning
+
+The seismic signal senses *local* hydraulics, which explains an otherwise puzzling
+contrast across the compound event: the **upstream gage and seismic stay flat**
+across successive ARs (Electron 304→278→306 m³/s; CC.PR03 power peaking in AR2),
+while the **basin-integrating downstream gage rises monotonically** (Puyallup
+1014→1150→1254 m³/s). The small, steep glacial headwater received similar forcing
+each pulse, and the near-channel station only senses its own ~km reach; the
+downstream peak instead grows through cumulative basin-scale processes — soil
+saturation, a rising freezing level feeding the large White River sub-basin, and
+superposition of lagged tributary waves. The upstream seismic thus follows local,
+not integrated, discharge — independent support for the turbulent-flow interpretation.
+
+Because the upstream signal precedes the downstream peak, it carries early-warning
+value: the upstream seismic power leads the downstream (Puyallup) stage peak by
+~36 h, and the headwater gage leads it by longer (@fig-ew). For an undammed,
+gage-sparse, lahar-hazard corridor (Orting, Puyallup), a continuous upstream
+seismic proxy could extend warning lead time; predicting the downstream peak
+*amplitude* (here 4× the headwater) would require a trained, multi-event model
+(see Limitations and the development log).
+
+![Early warning. (top) The flood peak propagates downstream — the Puyallup (RM~10) peak lags Electron (RM~41) by tens of hours. (bottom) Upstream seismic power (CC.PR03, 5–15 Hz) leads the downstream discharge peak by ~36 h.](figures/fig10_early_warning.png){#fig-ew width=88%}
+
 # Discussion
 
-The frequency-dependent steepening at the glacial source is consistent with a
-threshold-controlled bedload contribution: per @eq-bed the bedload term is
-super-linear in discharge and weighted toward the coarse grain-size tail, so it
-preferentially inflates the higher-frequency exponent during the flood. The
-downstream decay of $b$ in the bedload band is physically expected — high
-frequencies are strongly attenuated with distance, and CC.TRON sits 5.2 km from
-the channel — so the transect maps both genuine along-stream change in transport
-*and* the propagation control on what each station can sense.
+The robust result is a **transect of turbulent-flow seismic power that tracks
+discharge** through a compound AR flood, with exponents $b\approx1$–1.7 in the
+resolvable 1–15 Hz band and a clear AR2 maximum and downstream decay. The
+super-linear, frequency-rising part of $b$ is *consistent with* an added,
+threshold-controlled bedload term (@eq-bed) weighted toward the coarse grain-size
+tail — but, as the spectra show (@fig-spec), the canonical bedload band is
+unsampled, so we cannot separate that contribution from turbulence within
+1–15 Hz. We therefore present bedload as a bounded hypothesis: an upper limit set
+by how much of the steepening could be bedload rather than a measured flux. The
+downstream decay similarly conflates genuine along-stream change with the
+propagation control on what each station can sense (next).
 
 **Attenuation and seismic reach.** Power decays as $e^{-2\pi f r/(v_cQ)}$ with
-e-folding distance $r_e=v_cQ/(2\pi f)$; for $Q\approx20$ this is ~210 m at the
-5–15 Hz band center and only ~13 m at 50 Hz (@fig-atten a), so bedload is
-recoverable only within a few hundred metres of the channel and CC.TRON lies well
+e-folding distance $r_e=v_cQ/(2\pi f)$. Rather than the fluvial default $Q\approx20$
+(Tsai et al. 2012), we adopt a PNW/Rainier-edifice value $Q(f)=Q_0 f^{\eta}$,
+$Q_0\approx25$, $\eta\approx0.5$ (from Cascade coda-/Lg-Q and Mt. St. Helens
+edifice studies; @gimbert2014 and refs in the literature chapter), giving
+$Q\approx74$ at the 5–15 Hz band center — so $r_e\approx780$ m here (vs ~210 m for
+$Q=20$) but still only tens of metres at 50 Hz (@fig-atten a). Bedload is thus
+recoverable only within ≲1 km of the channel, and CC.TRON (5.2 km) lies well
 beyond reach. A first-order test on the same-source PR cluster (PR03/PR01/PR02 at
-0.19/0.71/1.9 km) finds the 5–15 Hz power is *nearly distance-independent over
-0.2–2 km* — far weaker than the $Q=20$ prediction (@fig-atten b) — implying the
+0.19/0.71/1.9 km) finds the 5–15 Hz power *nearly distance-independent over
+0.2–2 km* — weaker decay than even the PNW prediction (@fig-atten b) — implying the
 band retains less-attenuated lower-frequency (turbulence) energy, and that site
 response and crude channel distances preclude a data-driven $Q$ from this small
-array. We therefore adopt the literature $Q\approx20$ for the reach diagnostic,
-restrict bedload claims to near-channel stations, and treat farther stations as
-upper-distance bounds rather than attenuation-corrected flux; a clean correction
-would require active-source Green's-function calibration [@bakker2020; @lagarde2021]
-or amplitude-decay source location across a denser array (`eseis`; @dietze2018).
+array. We therefore restrict bedload claims to near-channel stations and treat
+farther stations as upper-distance bounds rather than attenuation-corrected flux;
+a clean correction would require active-source Green's-function calibration
+[@bakker2020; @lagarde2021] or amplitude-decay source location across a denser
+array (`eseis`; @dietze2018).
 
 ![First-order distance attenuation. (a) Seismic reach $r_e(f)=v_cQ/(2\pi f)$ for $Q=10$–40, with the turbulence (1–10 Hz) and bedload (30–80 Hz) bands and our station standoffs; bedload frequencies reach only tens–hundreds of metres. (b) Observed AR2 5–15 Hz power vs distance for the same-source PR cluster (blue) decays far more weakly than the $Q=20$ prediction (red).](figures/fig9_attenuation.png){#fig-atten width=98%}
 
@@ -229,16 +348,59 @@ $b\approx1.5$, between the linear expectation and the @gimbert2014 prediction of
 $b\approx1.4$, so we report the *excess* of the bedload band over the
 station's own lower band rather than over an assumed absolute baseline.
 
-Relative to prior seismic bedload studies — single-reach dense arrays
-[@schmandt2017], hysteresis-based pulse tracking [@roth2014], and watershed-scale
-networks [@antoniazza2023] — the contribution here is the *combination*: a
-catchment-length transect from a glacial source toward the coast, on Cascades
-rivers, during a named atmospheric-river flood. The frequency-scaling diagnostic
-itself is established [@bakker2020]; we apply and field-calibrate it at transect
-scale.
+Relative to prior single-reach or watershed bedload arrays [@schmandt2017;
+@roth2014; @antoniazza2023], our contribution is not a new bedload measurement but
+a **transect-scale demonstration of seismic discharge sensing and flood-wave
+tracking on a Cascades glacial network**, plus an explicit **detectability map**
+for when bedload seismology is feasible there. "Local" sensing — often treated as
+a limitation — is here the asset: a station is a virtual gage for its reach, so an
+array becomes distributed, gap-tolerant hydrologic monitoring of an ungaged,
+hazard-prone basin.
+
+## Seismic virtual discharge
+
+Each river-proximal station can be calibrated as a rating $\log_{10}P=a+b\log_{10}Q$
+and inverted to a **seismic virtual discharge** $Q_{\text{seis}}=10^{(\log_{10}P-a)/b}$.
+At clean near-channel stations this tracks the co-located gage well (CC.PR03/PR02
+$r=0.94$, Nash–Sutcliffe of $\log Q$ = 0.88/0.86; CC.PR01 0.70; CC.STYX 0.60),
+while off-channel/distant stations (CC.SIFT, CC.TRON) are poor — consistent with
+the turbulence/attenuation picture. The fitted exponents cluster at $b\approx1.4$–1.7,
+near the Gimbert (2014) turbulent-flow prediction, and are roughly steady in time,
+so the rating is stable rather than carrying additional time-varying information.
+Combining the gages with these virtual gages yields a **space–time discharge field**
+across the western Rainier drainages (animation, HTML edition), i.e. a distributed
+streamflow nowcast from a seismic network.
+
+![Seismic virtual discharge (orange) versus the co-located USGS gage (black) at each river-proximal station, from the turbulence-band rating $P\propto Q^{b}$. Near-channel source stations reproduce the hydrograph; off-channel/distant stations degrade.](figures/fig12_virtual_q.png){#fig-vqval width=95%}
+
+::: {.content-visible when-format="html"}
+![Space–time virtual-discharge animation: USGS gages (diamonds) and seismic virtual gages (triangles, $Q$ inverted from $P\propto Q^{b}$), colored on one discharge scale, through the Dec-2025 ARs. Rivers swell with discharge; the panel below shows gage hydrographs with a time cursor.](figures/virtual_q_animation.gif){#fig-vq width=70%}
+:::
+
+## New capabilities and a 2026 "what-if"
+
+The network that recorded this event is mid-upgrade from 50 to 500 sps (@fig-map),
+which reframes what is observable. **Had the identical AR sequence struck in 2026**,
+with the 500-sps CH channels live at the near-channel source stations (CC.PR03,
+SIFT, STYX, CARB), we could (i) compute the **30–80 Hz bedload band directly** and
+test for a *measured* (not merely bounded) bedload signal at the glacial source;
+(ii) run the **virtual-discharge field in real time** as a distributed nowcast that
+fills the long ungaged reaches between USGS gages; and (iii) operate the
+**~36 h upstream-to-downstream lead** as an early-warning product for the
+Orting–Puyallup lahar corridor, fused with SNOTEL precipitation and OPERA SAR
+flood maps. The same compound event would thus move from a turbulence-and-discharge
+study to an integrated, multi-sensor flood-and-sediment observation — the central
+forward-looking capability this work demonstrates and recommends.
 
 # Limitations
 
+- **Bedload band is under-used (not permanently unsampled).** Our analysis uses the
+  legacy 50-sps (BH) channels (25 Hz Nyquist), so the 30–80 Hz bedload band is
+  absent and the resolvable 1–15 Hz signal is turbulence-dominated — bedload here
+  is an upper bound, not a measurement (@fig-spec). But near-channel source stations
+  now also record **500-sps (CH) channels** (Nyquist 250 Hz); reprocessing CC.PR03/
+  SIFT/STYX/CARB in 30–80 Hz is the immediate next step to test bedload directly,
+  with the short high-frequency seismic reach (hundreds of m) keeping it near-channel.
 - **No absolute flux inversion.** We report a band-power proxy and scaling
   exponents, not calibrated bedload flux. Absolute inversion requires
   grain-size and impact assumptions [@tsai2012; @bakker2020] not constrained here.
@@ -257,13 +419,22 @@ scale.
 
 # Conclusions
 
-Seismic noise on the glacier-fed Puyallup/Carbon Rivers during the December 2025
-atmospheric-river floods carries a frequency-dependent, threshold-controlled
-bedload signal: the seismic–discharge exponent exceeds the turbulent-flow baseline
-at the glacial source and decays downstream toward the turbulence baseline.
-The result establishes a transect-scale, AR-flood, Cascades-glacial-river
-application of seismic bedload monitoring and motivates a near-channel downstream
-deployment to separate transport from propagation and to invert for flux.
+Near-channel seismic stations along Mt. Rainier's glacial rivers provide a
+continuous, distributed proxy for **turbulent flow, and hence discharge**, through
+the December 2025 atmospheric-river floods — a capability that does not depend on
+resolving bedload. Three contributions follow. (1) *Distributed discharge sensing:*
+turbulent-flow power tracks discharge at every station, turning a seismic network
+into virtual gages along an otherwise sparsely-gaged glacial network. (2) *Flood
+propagation and early warning:* because each station senses its local reach,
+the array resolves the flood peak moving downstream and shows upstream seismic
+leading the downstream stage peak by ~36 h — directly relevant to the Orting–
+Puyallup lahar/flood corridor. (3) *A quantitative detectability limit for bedload
+seismology:* the spectra and attenuation analysis show that, with 50-sps source
+stations (25 Hz Nyquist) and few-hundred-metre seismic reach at high frequency,
+the canonical 30–80 Hz bedload band is unsampled — so any bedload contribution is
+an upper bound, and we specify the instrumentation (near-channel, ≥160 sps) needed
+to measure it. Extending the existing multi-station network across the drainage
+would turn each of these into a calibrated, basin-wide capability.
 
 # Data and software availability {.unnumbered}
 

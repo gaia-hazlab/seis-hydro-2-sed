@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.animation import FuncAnimation, PillowWriter
+from matplotlib.collections import LineCollection
 from matplotlib.colors import LightSource
 
 import pygmt
@@ -87,9 +88,17 @@ def main() -> int:
     axq = fig.add_axes([0.08, 0.07, 0.84, 0.15])
 
     axm.imshow(hs, cmap="gray", extent=REGION, origin="lower", vmin=0, vmax=1, aspect=1.45, zorder=0)
-    for segs in rivers.values():
-        for seg in segs:
-            a = np.array(seg); axm.plot(a[:, 0], a[:, 1], color="#3b6fb0", lw=0.7, alpha=0.8, zorder=1)
+    # rivers as a LineCollection so width can swell with discharge through time
+    river_segs = [np.array(seg)[:, :2] for segs in rivers.values() for seg in segs]
+    river_lc = LineCollection(river_segs, colors="#1f6fb2", linewidths=1.8, alpha=0.9, zorder=1)
+    axm.add_collection(river_lc)
+    # USGS gage markers
+    gvals = list(aux["discharge"].values())
+    axm.scatter([d["lon"] for d in gvals], [d["lat"] for d in gvals],
+                marker="D", s=48, c="cyan", edgecolor="k", lw=0.6, zorder=2.5, label="USGS gage")
+    for d in gvals:
+        axm.text(d["lon"], d["lat"], "  " + d["name"].split(" nr")[0].split(" at")[0],
+                 fontsize=5.5, color="navy", va="center", ha="left", zorder=4)
     axm.plot(*SUMMIT, marker="^", ms=11, color="firebrick", mec="k", zorder=2)
     axm.text(SUMMIT[0], SUMMIT[1] - 0.03, "Mt. Rainier", ha="center", fontsize=8, fontweight="bold")
     for sid, d in sta.items():
@@ -127,17 +136,22 @@ def main() -> int:
                        s=70, marker="s", c="0.6", edgecolor="k", lw=0.6, zorder=3)
     lon = np.array([sta[s]["lon"] for s in river_ids]); lat = np.array([sta[s]["lat"] for s in river_ids])
     title = axm.set_title("", loc="left", fontsize=11, fontweight="bold")
+    # normalized basin discharge drives the river "swell" (line width) through time
+    qsw = disch["12101500"]["s"] if "12101500" in disch else next(iter(disch.values()))["s"]
+    qn = ((qsw - qsw.min()) / (qsw.max() - qsw.min() + 1e-9)).fillna(0).values
 
     def update(i):
         t = frames[i]
         v = np.array([np.clip(sta[s]["s"].iloc[i], *CLIP) for s in river_ids])
         scat.set_offsets(np.column_stack([lon, lat])); scat.set_array(v)
         scat.set_sizes(50 + 230 * (v - CLIP[0]) / (CLIP[1] - CLIP[0]))
+        river_lc.set_linewidths(1.6 + 5.5 * qn[i])      # rivers swell with discharge
+        river_lc.set_alpha(0.6 + 0.4 * qn[i])
         cur_p.set_xdata([t, t]); cur_q.set_xdata([t, t])
         lab = next((w["label"] for w in ars
                     if pd.Timestamp(w["start"]) <= t < pd.Timestamp(w["end"])), "")
         title.set_text(f"Bedload transport — {t:%Y-%m-%d %H:%M} UTC   {lab}")
-        return scat, cur_p, cur_q, title
+        return scat, river_lc, cur_p, cur_q, title
 
     FuncAnimation(fig, update, frames=len(frames), interval=200, blit=False).save(
         GIF, writer=PillowWriter(fps=6), dpi=80)

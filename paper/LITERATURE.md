@@ -87,10 +87,16 @@ is attenuated with distance from the channel.
   shows the 5–15 Hz power **~distance-independent over 0.2–2 km — far weaker decay than the Q=20
   prediction** (which would give ~10⁴× drop to PR02). Interpretation: at these mid frequencies the
   band retains less-attenuated lower-frequency (turbulence) energy, and site response + crude
-  channel distances preclude a data-driven $Q$. We therefore adopt the literature $Q\approx20$ for the
-  reach diagnostic, restrict bedload claims to near-channel stations, and treat farther stations as
-  *upper-distance bounds* rather than corrected flux. A clean correction needs active-source
-  calibration or a higher (30–80 Hz) band recorded close to the channel.
+  channel distances preclude a data-driven $Q$.
+- **PNW-inferred $Q$ (adopted instead of $Q=20$):** $Q(f)=Q_0 f^{\eta}$, **$Q_0\approx25$, $\eta\approx0.5$**
+  → $Q(10\,\text{Hz})\approx80$ (range 40–240), from Cascade coda-Q (Havskov et al. 1989 BSSA, $Q_0{\approx}63 f^{0.9}$),
+  Lg-Q (Erickson et al. 2004 BSSA, $152 f^{0.76}$, lower near the arc), and Mt. St. Helens **edifice**
+  attenuation (Tusa et al. 2006 GJI, $Q_p{\approx}30$ under the crater; De Siena et al. 2016 EPSL). This gives
+  $r_e\approx780$ m at the 5–15 Hz center (vs ~210 m for $Q=20$) — less attenuation, but bedload (30–80 Hz)
+  still reaches only tens–hundreds of m. We restrict bedload claims to near-channel stations and treat farther
+  ones as *upper-distance bounds*. A clean correction needs active-source calibration or a higher (30–80 Hz)
+  band recorded close to the channel — which requires **≥160-sps instruments** (our CC broadband stations are
+  50 sps, Nyquist 25 Hz; see the frequency-sampling caveat in §Methods).
 
 ## 7. Novelty matrix (what to claim, what to defend)
 

@@ -1,8 +1,12 @@
 {
   "fc_hz": 8.66,
   "vc_ms": 577.6,
-  "Q_theory": 20.0,
-  "r_e_theory_m": 212.0,
+  "Q_pnw_at_fc": 73.6,
+  "Q0_pnw": 25.0,
+  "eta": 0.5,
+  "Q_tsai": 20.0,
+  "r_e_pnw_m": 781.0,
+  "r_e_tsai_m": 212.0,
   "observed_decay_per_km": 0.005,
-  "note": "Observed 5-15 Hz power is ~distance-independent over 0.2-2 km, far weaker than the Q=20 prediction -> the band retains less-attenuated lower-frequency energy; site response and crude channel distances also limit a data-driven Q. Adopt literature Q=20."
+  "note": "PNW/Rainier-edifice Q(f)=25 f^0.5 (Q\u224874 at the band center) gives r_e\u2248790 m vs \u2248210 m for Tsai Q=20. Observed 5-15 Hz power is still ~distance-independent over 0.2-2 km (weaker decay than even the PNW prediction) -> the band retains less-attenuated lower-frequency energy; site response + crude distances limit a data-driven Q."
 }

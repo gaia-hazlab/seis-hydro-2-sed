@@ -18,25 +18,21 @@ ROOT = Path(__file__).resolve().parents[1]
 FIG = ROOT / "paper" / "figures" / "fig1_transect_map.png"
 DISC = ROOT / "config" / "_transect_discovery.json"
 
-REGION = [-122.55, -121.55, 46.72, 47.34]   # W, E, S, N
+REGION = [-122.75, -121.55, 46.68, 47.40]   # W, E, S, N (western Rainier drainages)
 DEM = "@earth_relief_03s"                    # ~90 m SRTM
-
-# USGS gages along the corridor (id -> name, lon, lat)
-GAGES = {
-    "12092000": ("Puyallup nr Electron", -122.0351, 46.9037),
-    "12094000": ("Carbon nr Fairfax",    -122.0326, 47.0279),
-    "12093500": ("Puyallup nr Orting",   -122.2079, 47.0392),
-    "12096500": ("Puyallup at Alderton", -122.2296, 47.1851),
-    "12101500": ("Puyallup at Puyallup", -122.3271, 47.2084),
-    "12082500": ("Nisqually nr National", -122.0828, 46.7558),
-}
 RAINIER = (-121.7603, 46.8523)
-# Stations to label (the analysis transect)
-LABEL = {"CC.PR01", "CC.PR02", "CC.PR03", "CC.SIFT", "CC.STYX", "CC.TRON", "UW.TEHA"}
+# CC stations to label (the analysis transect + a few notable)
+LABEL = {"CC.PR03", "CC.SIFT", "CC.STYX", "CC.TRON", "CC.CARB", "CC.PARA", "CC.GTWY"}
+# key gages to label (rest are markers only, to avoid clutter)
+GAGE_LABEL = {"12092000", "12093500", "12096500", "12101500", "12094000", "12082500"}
+# sample-rate -> color (shows the CC network's increasing sampling rate)
+SR_COLOR = {500: "200/30/30", 100: "230/140/0", 50: "120/120/120"}
 
 
 def main() -> int:
-    stations = json.loads(DISC.read_text())["stations"] if DISC.exists() else []
+    cc = json.loads((ROOT / "config" / "cc_stations.json").read_text())
+    layers = json.loads((ROOT / "config" / "map_layers.json").read_text())
+    gages, snotel = layers["gages"], layers["snotel"]
 
     fig = pygmt.Figure()
     pygmt.config(FONT_TITLE="14p,Helvetica-Bold", MAP_FRAME_TYPE="plain")
@@ -79,29 +75,33 @@ def main() -> int:
     fig.text(x=RAINIER[0], y=RAINIER[1] - 0.045, text="Mt. Rainier", font="9p,Helvetica-Bold,black",
              justify="TC")
 
-    # USGS gages (no text box)
-    gx = [v[1] for v in GAGES.values()]
-    gy = [v[2] for v in GAGES.values()]
-    fig.plot(x=gx, y=gy, style="d0.34c", fill="cyan", pen="0.7p,black")
-    for gid, (nm, lon, lat) in GAGES.items():
-        fig.text(x=lon, y=lat, text=nm.split(" nr")[0].split(" at")[0],
-                 font="6.5p,Helvetica,30/30/30", offset="0.22c/0.0c", justify="ML")
+    # all USGS discharge gages (cyan diamonds); label only the corridor mainstem
+    fig.plot(x=[g["lon"] for g in gages], y=[g["lat"] for g in gages],
+             style="d0.30c", fill="cyan", pen="0.6p,black")
+    for g in gages:
+        if g["id"] in GAGE_LABEL:
+            fig.text(x=g["lon"], y=g["lat"], text=g["name"].split(" nr")[0].split(" at")[0].title(),
+                     font="6p,Helvetica,20/20/20", offset="0.20c/0.0c", justify="ML")
 
-    # seismic stations: broadband (triangles) vs accelerometer (squares); no text box
-    for v in stations:
-        sid = f'{v["net"]}.{v["sta"]}'
-        bb = v["broadband"]
+    # SNOTEL / met stations (blue stars)
+    fig.plot(x=[s["lon"] for s in snotel], y=[s["lat"] for s in snotel],
+             style="a0.34c", fill="dodgerblue4", pen="0.6p,white")
+    for s in snotel:
+        fig.text(x=s["lon"], y=s["lat"], text=s["name"], font="6p,Helvetica-Bold,dodgerblue4",
+                 offset="0.0c/-0.22c", justify="TC")
+
+    # CC seismic stations: triangle colored by SAMPLE RATE (network is upgrading 50->500 sps)
+    for v in cc:
+        sid = f'CC.{v["sta"]}'
         emph = sid in LABEL
-        fig.plot(x=[v["lon"]], y=[v["lat"]],
-                 style=("t0.42c" if bb else "s0.34c"),
-                 fill=("red" if bb else "gray60"),
-                 pen=("1.0p,black" if emph else "0.4p,black"))
+        fig.plot(x=[v["lon"]], y=[v["lat"]], style="t0.40c",
+                 fill=SR_COLOR.get(int(v["sr"]), "120/120/120"),
+                 pen=("1.1p,black" if emph else "0.4p,black"))
         if emph:
             fig.text(x=v["lon"], y=v["lat"], text=sid, font="7p,Helvetica-Bold,black",
                      offset="0.0c/0.30c", justify="BC")
 
-    # legend (manual via plot + text)
-    fig.legend(spec=_legend(), position="jBL+o0.2c", box="+gwhite@20+p0.5p")
+    fig.legend(spec=_legend(), position="jBL+o0.2c", box="+gwhite@15+p0.5p")
     fig.colorbar(cmap=str(elev_cpt), frame=["x+lelevation", "y+lm"], position="JMR+o0.6c/0c+w8c")
     fig.savefig(FIG, dpi=300)
     print(f"wrote {FIG}")
@@ -112,11 +112,13 @@ def _legend() -> str:
     # GMT legend spec file content
     lines = [
         "G 0.05c",
-        "S 0.25c t 0.42c red 1p,black 0.7c broadband station (BH/EH)",
-        "S 0.25c s 0.34c gray60 0.4p,black 0.7c strong-motion (HN/EN)",
-        "S 0.25c d 0.34c cyan 0.7p,black 0.7c USGS discharge gage",
+        "S 0.25c t 0.40c 200/30/30 0.4p,black 0.7c CC station, 500 sps",
+        "S 0.25c t 0.40c 230/140/0 0.4p,black 0.7c CC station, 100 sps",
+        "S 0.25c t 0.40c 120/120/120 0.4p,black 0.7c CC station, 50 sps",
+        "S 0.25c d 0.30c cyan 0.6p,black 0.7c USGS discharge gage",
+        "S 0.25c a 0.34c dodgerblue4 0.6p,white 0.7c SNOTEL / met station",
         "S 0.25c kvolcano 0.5c firebrick 0.8p,black 0.7c Mt. Rainier",
-        "S 0.25c r 0.4c 30/110/230@35 - 0.7c flood/water (OPERA DSWx, 10 Dec 2025)",
+        "S 0.25c r 0.4c 30/110/230@35 - 0.7c flood (OPERA DSWx, 10 Dec 2025)",
         "G 0.05c",
     ]
     p = ROOT / "config" / "_map_legend.txt"
