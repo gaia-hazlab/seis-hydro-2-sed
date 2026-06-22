@@ -254,6 +254,83 @@ out-of-sample on the March-2026 event.
 
 ![Transport-onset threshold: continuous broken-stick fit of $\log_{10}P$ vs $\log_{10}Q$ (5–15 Hz). Blue dashed line marks the breakpoint $Q_c$ where the scaling steepens.](figures/fig14_threshold.png){#fig-thr width=95%}
 
+## The braided-reach problem: a distributed, non-stationary source {#sec-braided}
+
+The single most consequential geomorphic caveat to everything above is hiding in
+plain sight: the Puyallup source cluster (CC.PR01/PR02/PR03, within $\sim$1.5 km of
+one another) sits on an **aggrading glacial-outwash braidplain**, not the single,
+fixed channel that the governing models assume. Both the turbulent-flow model
+[@gimbert2014] and the impact model [@tsai2012] idealize the source as a *single
+line channel at a known, stationary distance* $r$, with power decaying as
+$\sim r^{-1}\exp(-2\pi f r / v_c Q)$. A braided reach violates this in ways that the
+fluvial-seismology calibration literature — built almost entirely on single-thread
+channels — has rarely had to confront. We argue this is a distinct interpretive
+regime that deserves its own treatment.
+
+**Why braiding changes the physics.** (i) The source is *spatially distributed*
+across multiple simultaneously active anabranches spread over a valley floor that
+can exceed the e-folding attenuation length ($r_e\approx780$ m at band center). The
+station therefore senses an attenuation-weighted sum dominated by whichever thread
+is momentarily closest, not by the total discharge. (ii) Discharge *partitioning*
+among threads is strongly nonlinear in stage: as stage rises, threads widen,
+coalesce, and the wetted front jumps laterally — a purely **geometric** way to
+manufacture a steepening $P$–$Q$ break that mimics a transport onset. (iii)
+Splitting a given $Q$ into $N$ wide, shallow threads lowers per-channel depth $H$,
+and because turbulent power scales as $H^{7/3}$, the braided sum is *suppressed*
+relative to a confined channel and the exponent flattens. (iv) Braided threads
+**avulse and migrate** between and during floods, so the dominant source relocates —
+imposing a non-stationary distance $r$ and resetting the calibration constant.
+
+These expectations match the data. Of the three co-located stations, the most
+braidplain-central, **CC.PR01 has the flattest exponent ($b=1.19$, at the turbulence
+floor), the lowest correlation ($r=0.88$ vs 0.94), and the sharpest broken-stick
+break in the whole network** ($b:0.17\!\to\!1.77$ at $Q_c\approx35$ m³/s; @fig-thr).
+Read naively, that break is the cleanest "bedload onset" we have. But a
+rising-vs-falling-limb diagnostic (@fig-braid) overturns that reading: the per-AR
+$P$–$Q$ loops are **reversible (Lawler hysteresis index $|HI|\le0.06$, no clockwise
+sense)** and the in-window **peak power does not decline across successive ARs** —
+neither the loop direction nor the supply-exhaustion signature expected for
+genuine bedload onset [cf. the clockwise sediment hysteresis of @burtin2008;
+@roth2016] is present. The break is therefore most consistent with a **geometric
+wetted-front onset**: at $Q_c$ a broad, close, active flow front switches on, not
+the bed.
+
+What *is* present is a coherent, monotonic **baseline drift across the AR sequence**:
+at matched discharge the 5–15 Hz power rises by $\sim$0.2 log units ($\approx$1.6×)
+from AR1 to AR3 at all three stations simultaneously (@fig-braid). A whole-cluster
+shift at fixed $Q$ is the signature of the active thread **migrating toward the
+stations** over the event sequence — i.e. avulsion/lateral reworking of the
+braidplain, exactly the instability proglacial braided systems are known for
+[@coppin2022]. This is the first-order risk to the seismic virtual-discharge
+rating: a calibration learned on December 2025 may not transfer to a later event if
+the channel has moved, independent of any change in the flow itself.
+
+This connects directly to the only dense-array study of a braided reach to date.
+Using 80 seismometers across a 600 m braided segment of the Séveraisse (French
+Alps), @coppin2022 located impulsive sources to *the bend apex of a single active
+branch* — direct evidence that the seismic source in a braided reach lives on
+specific, migrating anabranches rather than the whole wetted area. The pioneering
+braided-river seismic study [@burtin2011, torrent de St Pierre] likewise had to
+contend with multiple channels in attributing $\sim$3–9 Hz power to turbulent flow.
+The lesson for a *single regional station* like ours is sharper than for a dense
+array: we cannot resolve which anabranch radiates, so we necessarily integrate a
+non-stationary, attenuation-weighted sum — and must treat braided-reach exponents,
+thresholds, and ratings as **reach-geometry-dependent and event-specific** rather
+than universal grain-mechanical constants.
+
+::: {.callout-note}
+## PlanetScope pre/post imagery (in preparation)
+The avulsion interpretation of the cross-AR baseline drift makes a falsifiable
+prediction: the active thread(s) nearest CC.PR01/PR02/PR03 should have shifted
+*toward* the stations between the pre-flood and post-flood states. High-cadence
+PlanetScope optical imagery bracketing the December-2025 floods (pre- vs post-event
+channel maps) will be added to test this directly — quantifying wetted-channel
+position relative to each sensor and converting the seismic baseline drift into a
+measured channel-migration distance.
+:::
+
+![Braided-reach onset diagnostic for the three co-located Puyallup stations. Solid = rising limb, dashed = falling limb of each AR's $P$–$Q$ loop; the Lawler hysteresis index (HI) is annotated. Loops are reversible (HI$\approx$0, not clockwise) and peak power does not decay across ARs — arguing against a supply-limited transport onset — while a coherent positive baseline shift from AR1 to AR3 indicates the active channel migrated toward the cluster.](figures/fig16_braided_hysteresis.png){#fig-braid width=98%}
+
 ## Time-dependent bedload across the atmospheric rivers
 
 The compound event delivered a weak pre-AR (06 Dec ≈50 m³/s) followed by three
@@ -404,6 +481,10 @@ while off-channel/distant stations (CC.SIFT, CC.TRON) are poor — consistent wi
 the turbulence/attenuation picture. The fitted exponents cluster at $b\approx1.4$–1.7,
 near the Gimbert (2014) turbulent-flow prediction, and are roughly steady in time,
 so the rating is stable rather than carrying additional time-varying information.
+The braidplain station CC.PR01 is the weakest of the source cluster ($r=0.88$, NSE
+0.70) and shows the cross-event baseline drift documented in @sec-braided — a
+caution that virtual-discharge ratings on braided reaches may need re-calibration
+after channel-reworking events rather than transferring unchanged.
 Combining the gages with these virtual gages yields a **space–time discharge field**
 across the western Rainier drainages (animation, HTML edition), i.e. a distributed
 streamflow nowcast from a seismic network.

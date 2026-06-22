@@ -1,0 +1,80 @@
+{
+  "CC.PR01": {
+    "b_pooled": 1.19,
+    "per_AR": [
+      {
+        "AR": "AR1",
+        "HI": -0.028,
+        "peak_logP": -12.353,
+        "baseline_offset": -0.046,
+        "n": 649
+      },
+      {
+        "AR": "AR2",
+        "HI": 0.015,
+        "peak_logP": -12.239,
+        "baseline_offset": 0.124,
+        "n": 373
+      },
+      {
+        "AR": "AR3",
+        "HI": 0.041,
+        "peak_logP": -12.638,
+        "baseline_offset": 0.06,
+        "n": 505
+      }
+    ]
+  },
+  "CC.PR02": {
+    "b_pooled": 1.67,
+    "per_AR": [
+      {
+        "AR": "AR1",
+        "HI": -0.057,
+        "peak_logP": -11.321,
+        "baseline_offset": -0.193,
+        "n": 649
+      },
+      {
+        "AR": "AR2",
+        "HI": -0.005,
+        "peak_logP": -11.179,
+        "baseline_offset": 0.036,
+        "n": 373
+      },
+      {
+        "AR": "AR3",
+        "HI": 0.014,
+        "peak_logP": -11.412,
+        "baseline_offset": 0.144,
+        "n": 505
+      }
+    ]
+  },
+  "CC.PR03": {
+    "b_pooled": 1.66,
+    "per_AR": [
+      {
+        "AR": "AR1",
+        "HI": -0.037,
+        "peak_logP": -11.103,
+        "baseline_offset": -0.212,
+        "n": 649
+      },
+      {
+        "AR": "AR2",
+        "HI": -0.004,
+        "peak_logP": -10.843,
+        "baseline_offset": -0.005,
+        "n": 373
+      },
+      {
+        "AR": "AR3",
+        "HI": 0.036,
+        "peak_logP": -11.313,
+        "baseline_offset": 0.169,
+        "n": 505
+      }
+    ]
+  }
+}

@@ -19,6 +19,7 @@ book:
         - paper/paper.qmd
     - part: "II · Reviews, critiques & development log"
       chapters:
+        - paper/ROADMAP.md
         - REVIEW_2026.md
         - paper/LITERATURE.md
         - workflows/README.md
