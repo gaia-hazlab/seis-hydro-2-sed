@@ -111,15 +111,23 @@ def fig_scaling_exponent(items: list[dict]) -> pd.DataFrame:
     ax.axhline(1.0, color="0.5", ls=":", lw=1)
     # Exclude the 0.5-2 Hz oceanic-microseism band: it is not river turbulence
     # (it can be anti-correlated with discharge) and distorts the b(f) trend.
+    # station signal status: none-signal stations drawn hollow/grey (documented, not hidden)
+    sp = ROOT / "config" / "station_status.json"
+    status = {s["station"]: s["status"] for s in json.loads(sp.read_text())} if sp.exists() else {}
     plot_df = df[df["fc"] >= 1.5]
     for sta, g in plot_df.groupby("station"):
         g = g.sort_values("fc")
         yerr = np.vstack([g["b"] - g["b_lo"], g["b_hi"] - g["b"]])
         bvals = g["b"].tolist()
+        nosig = status.get(sta) in ("none", "control")
         fit_lbl = (f"b={bvals[0]:.2f}" if len(bvals) == 1
                    else "b=" + "→".join(f"{v:.2f}" for v in bvals))
-        ax.errorbar(g["fc"], g["b"], yerr=yerr, marker="o", ms=7, capsize=3, lw=1.8,
-                    color=_color(sta), label=f"{sta}   {fit_lbl}")
+        tag = "  (no signal)" if nosig else ""
+        ax.errorbar(g["fc"], g["b"], yerr=yerr, marker="o", ms=7, capsize=3,
+                    lw=1.2 if nosig else 1.8, ls=":" if nosig else "-",
+                    color="0.6" if nosig else _color(sta),
+                    markerfacecolor="none" if nosig else _color(sta),
+                    label=f"{sta}   {fit_lbl}{tag}")
     ax.set_xscale("log")
     ax.tick_params(labelsize=11)
     ax.set_xlabel("band center frequency (Hz)", fontsize=13)

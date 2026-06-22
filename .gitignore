@@ -84,3 +84,6 @@ paper/_freeze/
 
 # Claude Code session dir
 .claude/
+
+# March-2026 second-event working dir (large)
+notebooks/data_march/

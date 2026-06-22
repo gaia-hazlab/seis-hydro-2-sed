@@ -31,10 +31,12 @@ OKABE = ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#000
 
 def load(path):
     df = pd.read_csv(path, parse_dates=["time_utc"]).set_index("time_utc")
+    df.index = pd.to_datetime(df.index, utc=True, errors="coerce")
+    df = df[df.index.notna()]
     P = pd.to_numeric(df["proxy"], errors="coerce")
     Q = pd.to_numeric(df["gauge"], errors="coerce")
     j = pd.concat([P.rename("P"), Q.rename("Q")], axis=1).sort_index()
-    j["Q"] = j["Q"].interpolate("time", limit=12)
+    j["Q"] = j["Q"].interpolate("linear", limit=12)
     return j.dropna()
 
 

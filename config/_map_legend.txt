@@ -2,6 +2,7 @@ G 0.05c
 S 0.25c t 0.40c 200/30/30 0.4p,black 0.7c CC station, 500 sps
 S 0.25c t 0.40c 230/140/0 0.4p,black 0.7c CC station, 100 sps
 S 0.25c t 0.40c 120/120/120 0.4p,black 0.7c CC station, 50 sps
+S 0.25c t 0.42c white 1.6p,black 0.7c attempted, no river signal
 S 0.25c d 0.30c cyan 0.6p,black 0.7c USGS discharge gage
 S 0.25c a 0.34c dodgerblue4 0.6p,white 0.7c SNOTEL / met station
 S 0.25c kvolcano 0.5c firebrick 0.8p,black 0.7c Mt. Rainier

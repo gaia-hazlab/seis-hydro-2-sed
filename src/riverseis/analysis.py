@@ -38,10 +38,12 @@ class ScalingFit:
 def load_timeseries(path: str | Path) -> pd.DataFrame:
     """Load a *_timeseries.csv (proxy, gauge[, gauge_shifted]) -> aligned frame."""
     df = pd.read_csv(path, parse_dates=["time_utc"]).set_index("time_utc")
+    df.index = pd.to_datetime(df.index, utc=True, errors="coerce")
+    df = df[df.index.notna()]
     p = pd.to_numeric(df["proxy"], errors="coerce")
     g = pd.to_numeric(df["gauge"], errors="coerce")
     j = pd.concat([p.rename("P"), g.rename("Q")], axis=1).sort_index()
-    j["Q"] = j["Q"].interpolate(method="time", limit=12)
+    j["Q"] = j["Q"].interpolate(method="linear", limit=12)
     return j.dropna()
 
 

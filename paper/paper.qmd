@@ -97,19 +97,20 @@ and upper White — paired with USGS discharge gages and NRCS SNOTEL/precipitati
 stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
 network, not a single transect.
 
-**An upgrading network.** The CC stations are being progressively upgraded from
-50 sps to **500 sps**: of 31 stations in the study area, 19 now record 500-sps
-high-rate (CH) channels (Nyquist 250 Hz), one at 100 sps, and 11 at the legacy
-50 sps (@fig-map, marker color). Our analysis below uses the legacy 50-sps (BH)
-channels for uniform multi-year comparability, which caps the resolvable band at
-25 Hz. Critically, however, the **500-sps channels at near-channel source stations
-(CC.PR03, SIFT, STYX, CARB) do reach the 30–80 Hz bedload band during this event** —
-so the bedload-detectability limit we report for the 50-sps data is *not* a
-permanent ceiling but a snapshot of a network in transition. This demonstrates an
-emerging capability for **multi-sensor flood and sediment monitoring**, and
-motivates a specific recommendation: continue the 500-sps upgrade at near-channel
-stations to unlock bedload-band sensing (§Discussion). The event peaked at
-≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
+**An upgrading network.** The CC stations are being upgraded from 50 sps to
+**500 sps** high-rate (CH) channels: 19 of 31 stations in the study area now list
+CH channels (Nyquist 250 Hz) in their metadata (@fig-map, marker color). However,
+these high-rate channels came online in **2026**: for the December 2025 event only
+the legacy **50-sps (BH)** waveforms are archived and retrievable (CH returns no
+data through FDSN at any 2025 date), capping the resolvable band at the **25 Hz
+Nyquist** — below the canonical 30–80 Hz bedload band. The highest-rate
+near-channel data that *do* exist for the event are the **100-sps (HH)** PNSN/UW
+broadband stations (UW.RER 0.44 km, UW.LON 0.21 km), which reach a 30–50 Hz lower
+bedload edge. The 500-sps upgrade is thus a *2026 capability*: the same event today
+would be recorded into the full bedload band — the basis for the "what-if 2026"
+scenario (§Discussion) — and it also flags that **instrument upgrades must be
+matched by high-rate data archival** to realize bedload monitoring. The event
+peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
 
 ![Western-draining basins of Mt. Rainier: the CC seismic network (triangles, colored by sample rate — the network is upgrading 50→500 sps), all USGS discharge gages (cyan diamonds), and NRCS SNOTEL/met stations (blue stars), on shaded SRTM topography with USGS-NHD rivers. Blue shows surface-water/flood extent from OPERA DSWx-S1 (Sentinel-1 SAR, 10 Dec 2025; NASA Disasters).](figures/fig1_transect_map.png){#fig-map width=92%}
 
@@ -225,6 +226,34 @@ generic flow artifact.
 
 ![Seismic band power through the December 2025 flood, offset by station (ridgeline; source reach at bottom, downstream toward top). Each lane shows $\log_{10}$ of band power relative to that station's median (gridline); the low-frequency flow band is faint and the high-frequency bedload band solid, one color per station. Discharge (dashed) is shown behind for timing.](figures/fig5_event_timeseries.png){#fig-ts width=92%}
 
+## Where river seismology works — and where it does not
+
+Across all 13 analyzed stations (best flow band, December 2025), **6 yield a usable
+river signal** ($r\ge0.7$): the Puyallup source cluster (CC.PR01/PR02/PR03, CC.STYX)
+*and both Nisqually stations* (CC.GTWY $r=0.89$, UW.LON $r=0.91$) — so the method
+generalizes to a second basin. Two are **marginal** (CC.SIFT, CC.TRON; $r\approx0.5$–0.6),
+and **three show no signal**: CC.CARB (Carbon, 1.7 km off-channel, $r\approx-0.2$),
+UW.RER (high on the edifice, far from its gage), and the urban UW.UPS. We plot the
+no-signal stations alongside the rest (hollow/grey) rather than hide them, and mark
+them on the map (@fig-map, hollow triangles) to document *where river seismology was
+attempted and did not work* — itself a useful deployment guide. Notably, the
+steepest scaling is on the Nisqually (UW.LON $b\approx2.2$), exceeding the Puyallup
+source ($b\approx1.66$).
+
+## Transport-onset threshold
+
+Bedload is threshold-gated, so the seismic-power–discharge relation should steepen
+above a critical discharge. A continuous broken-stick fit (@fig-thr) finds a
+slope-steepening breakpoint at several stations: $Q_c\approx35$ m³/s on the upper
+Puyallup and $Q_c\approx70$–90 m³/s on the Nisqually/Carbon (strongest at UW.LON,
+$b:1.2\!\to\!4.3$). This matches the slope-dependent critical Shields stress
+($\tau^*_c=0.15\,S^{0.25}$; Lamb et al. 2008), which predicts higher thresholds on
+steeper, coarser reaches. The breakpoints are *candidate* transport onsets (the
+band is turbulence-dominated; PR03/STYX show no upward break), to be tested
+out-of-sample on the March-2026 event.
+
+![Transport-onset threshold: continuous broken-stick fit of $\log_{10}P$ vs $\log_{10}Q$ (5–15 Hz). Blue dashed line marks the breakpoint $Q_c$ where the scaling steepens.](figures/fig14_threshold.png){#fig-thr width=95%}
+
 ## Time-dependent bedload across the atmospheric rivers
 
 The compound event delivered a weak pre-AR (06 Dec ≈50 m³/s) followed by three
@@ -274,6 +303,19 @@ peak. We therefore interpret the resolvable signal as turbulent-flow noise and
 treat bedload as a frequency-bounded hypothesis (see Limitations).
 
 ![Median ground-velocity PSD, flood (10 Dec) vs quiet (03 Dec), for a 50-sps source station (CC.PR03) and a 200-sps lowland station (UW.UPS). The flood raises broadband power to the 25 Hz Nyquist at the source; the bedload band (30–80 Hz) is unsampled there and shows no flood signal at the distant high-rate station.](figures/fig11_spectra.png){#fig-spec width=82%}
+
+The best available probe of the bedload edge is the 100-sps UW broadband stations
+(Nyquist 50 Hz): at UW.LON (Nisqually, 0.21 km) the 30–50 Hz power scales with
+discharge ($b\approx1.4$), a tentative high-frequency transport signal, whereas
+UW.RER (far from its gage) is noise (@fig-edge). A clean 30–80 Hz test awaits the
+2026 high-rate (CH) archive. Grain size, moreover, is encoded in *amplitude*
+($\propto D^3$), not in the band: even a 2 m boulder's Hertzian contact corner is
+~140 Hz, so within ≤50 Hz boulders and cobbles share a flat spectral shape — a low
+band is a coarse-transport *amplitude* proxy, not a grain-size discriminator. The
+genuinely low-frequency coarse signatures (debris-flow/lahar boulder fronts to
+~2 Hz; possible large-wood tremor) are a separate, underexplored target.
+
+![Lower bedload edge (30–50 Hz) from the 100-sps UW broadband stations: flood-vs-quiet spectra and 30–50 Hz vs discharge scaling. UW.LON (Nisqually) shows a tentative high-frequency transport signal.](figures/fig13_bedload_ch.png){#fig-edge width=95%}
 
 ## Local sensing and downstream early warning
 
@@ -394,13 +436,14 @@ forward-looking capability this work demonstrates and recommends.
 
 # Limitations
 
-- **Bedload band is under-used (not permanently unsampled).** Our analysis uses the
-  legacy 50-sps (BH) channels (25 Hz Nyquist), so the 30–80 Hz bedload band is
-  absent and the resolvable 1–15 Hz signal is turbulence-dominated — bedload here
-  is an upper bound, not a measurement (@fig-spec). But near-channel source stations
-  now also record **500-sps (CH) channels** (Nyquist 250 Hz); reprocessing CC.PR03/
-  SIFT/STYX/CARB in 30–80 Hz is the immediate next step to test bedload directly,
-  with the short high-frequency seismic reach (hundreds of m) keeping it near-channel.
+- **Bedload band unsampled for this event (a data-archival gap, not a permanent one).**
+  For December 2025 only the 50-sps (BH) CC waveforms are archived (25 Hz Nyquist),
+  so the 30–80 Hz band is absent and the 1–15 Hz signal is turbulence-dominated —
+  bedload here is an upper bound, not a measurement (@fig-spec). The 500-sps (CH)
+  upgrade came online in 2026, and its high-rate data are not yet retrievable through
+  FDSN; obtaining them from CVO/PNSN is the route to a direct 30–80 Hz test. For the
+  2025 event the best available probe is the 100-sps UW broadband stations (RER, LON)
+  at the 30–50 Hz lower bedload edge.
 - **No absolute flux inversion.** We report a band-power proxy and scaling
   exponents, not calibrated bedload flux. Absolute inversion requires
   grain-size and impact assumptions [@tsai2012; @bakker2020] not constrained here.

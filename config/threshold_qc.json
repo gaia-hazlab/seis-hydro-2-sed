@@ -1,0 +1,83 @@
+[
+  {
+    "station": "CC.CARB",
+    "Qc_cms": 10.5,
+    "b_below": -3.74,
+    "b_above": 0.19,
+    "dslope": 3.93,
+    "var_reduction": 0.204,
+    "onset": true
+  },
+  {
+    "station": "CC.GTWY",
+    "Qc_cms": 92.8,
+    "b_below": 1.13,
+    "b_above": 2.72,
+    "dslope": 1.59,
+    "var_reduction": 0.172,
+    "onset": true
+  },
+  {
+    "station": "CC.PR01",
+    "Qc_cms": 35.0,
+    "b_below": 0.17,
+    "b_above": 1.77,
+    "dslope": 1.6,
+    "var_reduction": 0.444,
+    "onset": true
+  },
+  {
+    "station": "CC.PR02",
+    "Qc_cms": 37.4,
+    "b_below": 1.33,
+    "b_above": 1.9,
+    "dslope": 0.57,
+    "var_reduction": 0.059,
+    "onset": true
+  },
+  {
+    "station": "CC.PR03",
+    "Qc_cms": 14.7,
+    "b_below": 4.07,
+    "b_above": 1.55,
+    "dslope": -2.52,
+    "var_reduction": 0.06,
+    "onset": false
+  },
+  {
+    "station": "CC.SIFT",
+    "Qc_cms": 37.4,
+    "b_below": 0.14,
+    "b_above": 1.95,
+    "dslope": 1.8,
+    "var_reduction": 0.084,
+    "onset": true
+  },
+  {
+    "station": "CC.STYX",
+    "Qc_cms": 14.7,
+    "b_below": 5.29,
+    "b_above": 1.23,
+    "dslope": -4.07,
+    "var_reduction": 0.068,
+    "onset": false
+  },
+  {
+    "station": "CC.TRON",
+    "Qc_cms": 68.0,
+    "b_below": -0.68,
+    "b_above": 1.88,
+    "dslope": 2.56,
+    "var_reduction": 0.526,
+    "onset": true
+  },
+  {
+    "station": "UW.LON",
+    "Qc_cms": 89.1,
+    "b_below": 1.22,
+    "b_above": 4.29,
+    "dslope": 3.07,
+    "var_reduction": 0.43,
+    "onset": true
+  }
+]

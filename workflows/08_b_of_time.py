@@ -64,10 +64,12 @@ def main() -> int:
         if not sid or sid in EXCLUDE:
             continue
         df = pd.read_csv(f, parse_dates=["time_utc"]).set_index("time_utc")
+        df.index = pd.to_datetime(df.index, utc=True, errors="coerce")
+        df = df[df.index.notna()]
         P = pd.to_numeric(df["proxy"], errors="coerce")
         Q = pd.to_numeric(df["gauge"], errors="coerce")
         j = pd.concat([P.rename("P"), Q.rename("Q")], axis=1).sort_index()
-        j["Q"] = j["Q"].interpolate("time", limit=12)
+        j["Q"] = j["Q"].interpolate("linear", limit=12)
         j = j.dropna()
         series[sid] = b_of_time(j)
         if qref is None:

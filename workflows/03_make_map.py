@@ -33,6 +33,12 @@ def main() -> int:
     cc = json.loads((ROOT / "config" / "cc_stations.json").read_text())
     layers = json.loads((ROOT / "config" / "map_layers.json").read_text())
     gages, snotel = layers["gages"], layers["snotel"]
+    # station signal classification (where river seismology worked / didn't)
+    status = {}
+    sp = ROOT / "config" / "station_status.json"
+    if sp.exists():
+        status = {s["station"]: s for s in json.loads(sp.read_text())}
+    NOSIG = {"none", "control"}
 
     fig = pygmt.Figure()
     pygmt.config(FONT_TITLE="14p,Helvetica-Bold", MAP_FRAME_TYPE="plain")
@@ -90,15 +96,25 @@ def main() -> int:
         fig.text(x=s["lon"], y=s["lat"], text=s["name"], font="6p,Helvetica-Bold,dodgerblue4",
                  offset="0.0c/-0.22c", justify="TC")
 
-    # CC seismic stations: triangle colored by SAMPLE RATE (network is upgrading 50->500 sps)
-    for v in cc:
-        sid = f'CC.{v["sta"]}'
-        emph = sid in LABEL
-        fig.plot(x=[v["lon"]], y=[v["lat"]], style="t0.40c",
-                 fill=SR_COLOR.get(int(v["sr"]), "120/120/120"),
-                 pen=("1.1p,black" if emph else "0.4p,black"))
-        if emph:
-            fig.text(x=v["lon"], y=v["lat"], text=sid, font="7p,Helvetica-Bold,black",
+    # Seismic stations: triangle colored by SAMPLE RATE (network upgrading 50->500 sps).
+    # Stations where river seismology was attempted but gave NO signal (or are
+    # out-of-drainage/traffic controls) are drawn as HOLLOW triangles with a thick
+    # outline, to document where it was not possible/observed.
+    seis = [(f'CC.{v["sta"]}', v["lon"], v["lat"], int(v["sr"])) for v in cc]
+    uw = json.loads((ROOT / "config" / "uw_stations.json").read_text())
+    seen = {s[0] for s in seis}
+    for v in uw:                      # add analyzed UW stations not already shown
+        sid = f'UW.{v["sta"]}'
+        if sid in status and sid not in seen:
+            seis.append((sid, v["lon"], v["lat"], int(v["sr"])))
+    for sid, lon, lat, sr in seis:
+        st = status.get(sid, {}).get("status")
+        nosig = st in NOSIG
+        fig.plot(x=[lon], y=[lat], style="t0.42c",
+                 fill=("white" if nosig else SR_COLOR.get(sr, "120/120/120")),
+                 pen=("1.6p,black" if nosig else ("1.1p,black" if sid in LABEL else "0.4p,black")))
+        if sid in LABEL or nosig and sid in status:
+            fig.text(x=lon, y=lat, text=sid, font="7p,Helvetica-Bold,black",
                      offset="0.0c/0.30c", justify="BC")
 
     fig.legend(spec=_legend(), position="jBL+o0.2c", box="+gwhite@15+p0.5p")
@@ -115,6 +131,7 @@ def _legend() -> str:
         "S 0.25c t 0.40c 200/30/30 0.4p,black 0.7c CC station, 500 sps",
         "S 0.25c t 0.40c 230/140/0 0.4p,black 0.7c CC station, 100 sps",
         "S 0.25c t 0.40c 120/120/120 0.4p,black 0.7c CC station, 50 sps",
+        "S 0.25c t 0.42c white 1.6p,black 0.7c attempted, no river signal",
         "S 0.25c d 0.30c cyan 0.6p,black 0.7c USGS discharge gage",
         "S 0.25c a 0.34c dodgerblue4 0.6p,white 0.7c SNOTEL / met station",
         "S 0.25c kvolcano 0.5c firebrick 0.8p,black 0.7c Mt. Rainier",
