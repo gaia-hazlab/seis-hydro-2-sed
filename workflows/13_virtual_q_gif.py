@@ -51,12 +51,16 @@ def main() -> int:
     for gid, d in aux["discharge"].items():
         if REGION[0] <= d["lon"] <= REGION[1] and REGION[2] <= d["lat"] <= REGION[3]:
             gages.append(dict(lon=d["lon"], lat=d["lat"], s=on_frames(frames, d["time"], d["q_cms"])))
-    # seismic virtual gages
-    vg = []
+    # seismic virtual gages — split valid (observed/marginal) vs no-signal
+    sp = ROOT / "config" / "station_status.json"
+    status = {s["station"]: s["status"] for s in json.loads(sp.read_text())} if sp.exists() else {}
+    vg, vg_nosig = [], []
     for sid, v in virt.items():
-        if sid in coords:
-            vg.append(dict(sid=sid, lon=coords[sid]["lon"], lat=coords[sid]["lat"],
-                           s=on_frames(frames, v["time"], v["q_seis"])))
+        if sid not in coords:
+            continue
+        rec = dict(sid=sid, lon=coords[sid]["lon"], lat=coords[sid]["lat"],
+                   s=on_frames(frames, v["time"], v["q_seis"]))
+        (vg if status.get(sid, "observed") in ("observed", "marginal") else vg_nosig).append(rec)
 
     grid = pygmt.datasets.load_earth_relief(resolution="15s", region=REGION)
     hs = LightSource(azdeg=300, altdeg=35).hillshade(np.asarray(grid), vert_exag=2, dx=400, dy=400)
@@ -73,13 +77,18 @@ def main() -> int:
     axm.add_collection(river_lc)
     axm.plot(*SUMMIT, marker="^", ms=11, color="firebrick", mec="k", zorder=5)
     axm.text(SUMMIT[0], SUMMIT[1] - 0.03, "Mt. Rainier", ha="center", fontsize=8, fontweight="bold")
-    for v in vg:
+    for v in vg + vg_nosig:
         axm.text(v["lon"], v["lat"] + 0.012, v["sid"].split(".")[1], ha="center", fontsize=6, zorder=6)
+    # no-signal stations: hollow grey triangles (sensor present, no usable estimate)
+    if vg_nosig:
+        axm.scatter([v["lon"] for v in vg_nosig], [v["lat"] for v in vg_nosig], s=140,
+                    marker="^", facecolor="none", edgecolor="0.4", lw=1.6, zorder=4)
     axm.set_xlim(*REGION[:2]); axm.set_ylim(*REGION[2:]); axm.set_xticks([]); axm.set_yticks([])
     cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=axm, fraction=0.035, pad=0.01)
     cb.set_label("discharge (m³ s⁻¹)")
     axm.scatter([], [], marker="D", c="gray", edgecolor="k", label="USGS gage (measured Q)")
-    axm.scatter([], [], marker="^", c="gray", edgecolor="k", label="seismic virtual gage (Q from P∝Q$^b$)")
+    axm.scatter([], [], marker="^", c="gray", edgecolor="k", label="seismic virtual gage (Q ∝ P$^{1/b}$)")
+    axm.scatter([], [], marker="^", facecolor="none", edgecolor="0.4", lw=1.6, label="no usable signal")
     axm.legend(loc="lower left", fontsize=7, framealpha=0.9)
 
     # discharge context panel

@@ -1,0 +1,42 @@
+[
+  {
+    "gage": "12092000",
+    "name": "Puyallup nr Electron",
+    "h0": -0.73,
+    "beta": 4.94,
+    "C": 0.53,
+    "h_min": 1.23,
+    "h_max": 2.99,
+    "Q_max": 323.0
+  },
+  {
+    "gage": "12093500",
+    "name": "Puyallup nr Orting",
+    "h0": -1.36,
+    "beta": 6.71,
+    "C": 0.01,
+    "h_min": 1.64,
+    "h_max": 3.76,
+    "Q_max": 589.0
+  },
+  {
+    "gage": "12101500",
+    "name": "Puyallup at Puyallup",
+    "h0": 2.6,
+    "beta": 1.6,
+    "C": 66.83,
+    "h_min": 3.69,
+    "h_max": 8.74,
+    "Q_max": 1257.0
+  },
+  {
+    "gage": "12082500",
+    "name": "Nisqually nr National",
+    "h0": 1.06,
+    "beta": 2.04,
+    "C": 65.21,
+    "h_min": 1.49,
+    "h_max": 3.57,
+    "Q_max": 425.0
+  }
+]

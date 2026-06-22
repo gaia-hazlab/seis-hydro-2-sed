@@ -276,16 +276,11 @@ relaxes afterward (@fig-bt). The per-AR averages also fall steeply downstream
 
 ![Per-AR average bedload (×pre-flood median) by station, ordered source→downstream. AR2 dominates at every station and the signal decays strongly downstream.](figures/fig7_bedload_per_AR.png){#fig-blAR width=88%}
 
-A multidisciplinary animation ties the meteorological driver to the bedload
-response (HTML edition; `paper/figures/bedload_animation.gif`): the map shows
-per-station bedload strength while the panels below track SNOTEL precipitation and
-discharge at five gages down the corridor. The traffic-contaminated UW.TEHA, shown
-as a grey control, does **not** light up — the bedload signal is localized to the
-river-proximal clean stations.
-
-::: {.content-visible when-format="html"}
-![Multidisciplinary animation through the pre-AR and three ARs: (top) map of per-station bedload strength (5–15 Hz power vs pre-flood median) with the traffic control UW.TEHA in grey; (middle) SNOTEL precipitation; (bottom) discharge at five gages. A cursor and AR shading tie the panels in time.](figures/bedload_animation.gif){#fig-blgif width=68%}
-:::
+A multidisciplinary animation that ties SNOTEL precipitation, gage discharge, and
+per-station bedload strength together (and shows the traffic-contaminated UW.TEHA
+*not* lighting up — bedload is localized to river-proximal clean stations) is in
+the repository (`paper/figures/bedload_animation.gif`); the single animation
+embedded here is the distributed-discharge field (@fig-vq, Discussion).
 
 ## Turbulence or bedload? The frequency evidence
 
@@ -416,8 +411,26 @@ streamflow nowcast from a seismic network.
 ![Seismic virtual discharge (orange) versus the co-located USGS gage (black) at each river-proximal station, from the turbulence-band rating $P\propto Q^{b}$. Near-channel source stations reproduce the hydrograph; off-channel/distant stations degrade.](figures/fig12_virtual_q.png){#fig-vqval width=95%}
 
 ::: {.content-visible when-format="html"}
-![Space–time virtual-discharge animation: USGS gages (diamonds) and seismic virtual gages (triangles, $Q$ inverted from $P\propto Q^{b}$), colored on one discharge scale, through the Dec-2025 ARs. Rivers swell with discharge; the panel below shows gage hydrographs with a time cursor.](figures/virtual_q_animation.gif){#fig-vq width=70%}
+![Space–time virtual-discharge animation (the single embedded animation): USGS gages (diamonds) and seismic virtual gages (filled triangles, $Q$ inverted from $P\propto Q^{b}$; hollow = no usable signal), colored on one discharge scale, through the Dec-2025 ARs. Rivers swell with discharge; the panel below shows gage hydrographs with a time cursor.](figures/virtual_q_animation.gif){#fig-vq width=70%}
 :::
+
+## From discharge to stage: the rating curve
+
+Flood and inundation hazard is governed by **stage** (gage height $h$), whereas the
+seismic proxy estimates **discharge** $Q$. USGS gages bridge the two with a
+site-specific **stage–discharge rating**, $Q = C\,(h-h_0)^{\beta}$, where $h_0$ is
+the stage of zero flow and $\beta$ the rating exponent; stage is measured
+continuously and converted to discharge via this curve, calibrated by periodic
+direct measurements. Fitting the December-2025 stage and discharge at the corridor
+gages (@fig-rating) gives $\beta\approx1.6$ near the mouth (Puyallup at Puyallup),
+$\beta\approx2$ on the Nisqually, and a much steeper $\beta\approx5$ in the
+confined upper Puyallup (Electron) — coarser, narrower channels are more stage-sensitive.
+The practical consequence is that a **seismic virtual discharge can be mapped to a
+stage nowcast** through the local rating ($h = h_0 + (Q_{\text{seis}}/C)^{1/\beta}$),
+turning the upstream early-warning lead (≈36 h) into a forecast of the
+flood-relevant variable downstream — without a co-located stage sensor.
+
+![Stage–discharge rating $Q=C(h-h_0)^\beta$ at four corridor gages (Dec 2025 instantaneous stage vs discharge, with power-law fits). The rating converts between the seismic-estimated discharge and the flood-hazard stage.](figures/fig15_rating.png){#fig-rating width=70%}
 
 ## New capabilities and a 2026 "what-if"
 
