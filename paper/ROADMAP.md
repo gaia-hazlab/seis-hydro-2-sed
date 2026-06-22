@@ -45,27 +45,29 @@ provisional and will move as the three open dependencies resolve.
 
 ## Figure inventory (label → file → one-line content)
 
-| Label | File | Content |
+*(Click any figure name to open it.)*
+
+| Label | Figure (click to view) | Content |
 |---|---|---|
-| `@fig-map` | fig1_transect_map.png | PyGMT transect: DEM, NHD rivers, gages (diamonds), SNOTEL, OPERA flood, station status (hollow = no signal) |
-| `@fig-scaling` | fig2_scaling_exponent.png | Scaling exponent *b* per station, source→downstream; no-signal hollow/grey |
-| `@fig-scatter` | fig3_pq_scatter.png | log P vs log Q scatter + power-law fits |
-| `@fig-hyst` | fig4_hysteresis.png | Per-event P–Q hysteresis loops |
-| `@fig-ts` | fig5_event_timeseries.png | Ridgeline event timeseries, ordered by distance downstream |
-| `@fig-bltime` | fig6_bedload_time.png | 5–15 Hz "bedload" power ×pre-flood median through the ARs |
-| `@fig-bl` | fig7_bedload_per_AR.png | Per-AR average bedload by station (AR2 dominates) |
-| `@fig-bt` | fig8_b_of_time.png | Time-resolved exponent *b(t)* vs turbulence baseline |
-| `@fig-atten` | fig9_attenuation.png | PNW Q(f) attenuation correction, e-folding distance |
-| `@fig-ew` | fig10_early_warning.png | Upstream seismic leads downstream stage peak (~36 h) |
-| `@fig-spec` | fig11_spectra.png | Flood-vs-quiet PSD: 50-sps source (≤25 Hz) vs 200-sps lowland |
-| `@fig-vqval` | fig12_virtual_q.png | Seismic virtual discharge vs co-located gage, per station |
-| `@fig-edge` | fig13_bedload_ch.png | 30–50 Hz bedload edge from 100-sps UW broadband |
-| `@fig-thr` | fig14_threshold.png | Broken-stick transport-onset threshold Qc |
-| `@fig-rating` | fig15_rating.png | Stage–discharge rating Q=C(h−h0)^β at 4 gages |
-| `@fig-braid` | fig16_braided_hysteresis.png | Braided-reach onset diagnostic (geometric vs transport) |
-| `@fig-traffic` | figS_traffic_noise.png | Traffic-noise contamination control (supplement) |
-| `@fig-vq` | virtual_q_animation.gif | **Embedded GIF**: space–time distributed discharge field |
-| — | bedload_animation.gif | Repo-only multidisciplinary GIF (SNOTEL + gage + bedload) |
+| `@fig-map` | [fig1_transect_map.png](figures/fig1_transect_map.png) | PyGMT transect: DEM, NHD rivers, gages (diamonds), SNOTEL, OPERA flood, station status (hollow = no signal) |
+| `@fig-scaling` | [fig2_scaling_exponent.png](figures/fig2_scaling_exponent.png) | Scaling exponent *b* per station, source→downstream; no-signal hollow/grey |
+| `@fig-scatter` | [fig3_pq_scatter.png](figures/fig3_pq_scatter.png) | log P vs log Q scatter + power-law fits |
+| `@fig-hyst` | [fig4_hysteresis.png](figures/fig4_hysteresis.png) | Per-event P–Q hysteresis loops |
+| `@fig-ts` | [fig5_event_timeseries.png](figures/fig5_event_timeseries.png) | Ridgeline event timeseries, ordered by distance downstream |
+| `@fig-bltime` | [fig6_bedload_time.png](figures/fig6_bedload_time.png) | 5–15 Hz "bedload" power ×pre-flood median through the ARs |
+| `@fig-bl` | [fig7_bedload_per_AR.png](figures/fig7_bedload_per_AR.png) | Per-AR average bedload by station (AR2 dominates) |
+| `@fig-bt` | [fig8_b_of_time.png](figures/fig8_b_of_time.png) | Time-resolved exponent *b(t)* vs turbulence baseline |
+| `@fig-atten` | [fig9_attenuation.png](figures/fig9_attenuation.png) | PNW Q(f) attenuation correction, e-folding distance |
+| `@fig-ew` | [fig10_early_warning.png](figures/fig10_early_warning.png) | Upstream seismic leads downstream stage peak (~36 h) |
+| `@fig-spec` | [fig11_spectra.png](figures/fig11_spectra.png) | Flood-vs-quiet PSD: 50-sps source (≤25 Hz) vs 200-sps lowland |
+| `@fig-vqval` | [fig12_virtual_q.png](figures/fig12_virtual_q.png) | Seismic virtual discharge vs co-located gage, per station |
+| `@fig-edge` | [fig13_bedload_ch.png](figures/fig13_bedload_ch.png) | 30–50 Hz bedload edge from 100-sps UW broadband |
+| `@fig-thr` | [fig14_threshold.png](figures/fig14_threshold.png) | Broken-stick transport-onset threshold Qc |
+| `@fig-rating` | [fig15_rating.png](figures/fig15_rating.png) | Stage–discharge rating Q=C(h−h0)^β at 4 gages |
+| `@fig-braid` | [fig16_braided_hysteresis.png](figures/fig16_braided_hysteresis.png) | Braided-reach onset diagnostic (geometric vs transport) |
+| `@fig-traffic` | [figS_traffic_noise.png](figures/figS_traffic_noise.png) | Traffic-noise contamination control (supplement) |
+| `@fig-vq` | [virtual_q_animation.gif](figures/virtual_q_animation.gif) | **Embedded GIF**: space–time distributed discharge field |
+| — | [bedload_animation.gif](figures/bedload_animation.gif) | Repo-only multidisciplinary GIF (SNOTEL + gage + bedload) |
 
 ---
 

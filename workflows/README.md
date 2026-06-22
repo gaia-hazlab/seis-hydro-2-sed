@@ -6,7 +6,21 @@ Run from the repo root inside the pixi env (`pixi shell` or prefix with `pixi ru
 |---|---|---|
 | 0 | `python workflows/00_discover_stations.py` | `config/_transect_discovery.json` — stations + river-km along the corridor |
 | 1 | `python scripts/run_river_rumble_batch.py --focus-seis-key CC.PR03 --use-rss --exclude-earthquakes --clip-impulses --despike-proxy` | `notebooks/data/results/*_timeseries.csv`, `fit_parameters.csv` |
-| 2 | `python workflows/02_make_figures.py` | `paper/figures/fig1..5.png`, `scaling_table.csv` |
+| 2 | `python workflows/02_make_figures.py` | `fig1..5` (scaling, scatter, hysteresis, event ts) + `scaling_table.csv` |
+| 3 | `python workflows/03_make_map.py` | `fig1_transect_map.png` (PyGMT DEM + gages + SNOTEL + OPERA + station status) |
+| 4 | `python workflows/04_traffic_noise.py` | `figS_traffic_noise.png` (contamination control) |
+| 5,7,8 | `python workflows/05_bedload_time.py` / `07_fetch_aux_data.py` / `08_b_of_time.py` | `fig6` bedload time, `fig7` per-AR, `fig8` b(t); `config/aux_timeseries.json` |
+| 6,13 | `python workflows/06_bedload_gif.py` / `13_virtual_q_gif.py` | `bedload_animation.gif`, `virtual_q_animation.gif` |
+| 9 | `python workflows/09_attenuation.py` | `fig9_attenuation.png` (PNW Q, e-folding distance) |
+| 10 | `python workflows/10_early_warning.py` | `fig10_early_warning.png` (~36 h upstream lead) |
+| 11,14 | `python workflows/11_spectra.py` / `14_bedload_ch.py` | `fig11` flood-vs-quiet PSD, `fig13` 30–50 Hz edge |
+| 12 | `python workflows/12_virtual_q.py` | `fig12_virtual_q.png` + `config/virtual_q*.json` (ratings) |
+| 15 | `python workflows/15_threshold.py` | `fig14_threshold.png` + `config/threshold_qc.json` (Qc) |
+| 16 | `python workflows/16_classify_stations.py` | `config/station_status.json` (drives hollow no-signal markers) |
+| 17 | `python workflows/17_rating.py` | `fig15_rating.png` + `config/rating_fits.json` (stage–discharge) |
+| 18 | `python workflows/18_braided_hysteresis.py` | `fig16_braided_hysteresis.png` + `config/braided_hysteresis.json` |
+
+Scripts are standalone and idempotent; most read `notebooks/data/results/` (step 1) plus committed `config/*.json` and write into `paper/figures/`. Steps 3–18 can run in any order after step 1. See [`paper/ROADMAP.md`](../paper/ROADMAP.md) for which figure supports which research thread.
 
 Batch over the whole upper transect (all CC stations with gages):
 ```bash

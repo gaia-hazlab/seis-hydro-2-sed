@@ -575,7 +575,32 @@ would turn each of these into a calibrated, basin-wide capability.
 
 # Data and software availability {.unnumbered}
 
-Seismic data are from IRIS FDSN (networks CC, UW); discharge from USGS NWIS. All
+Seismic data are from IRIS FDSN (networks CC, UW); discharge and stage from USGS
+NWIS; precipitation/snow from NRCS SNOTEL; flood extent from OPERA DSWx-S1. All
 analysis code, configuration, and figure-generation scripts are in the project
-repository; figures and the scaling table regenerate via
-`pixi run python workflows/02_make_figures.py`.
+repository and run inside a `pixi` environment (Quarto included). The complete
+pipeline is a numbered sequence of standalone scripts under `workflows/`, each
+writing a figure and/or a `config/*.json` it consumes downstream:
+
+| Step | Script | Produces |
+|---|---|---|
+| discovery | `00_discover_stations.py` | station↔gage transect (river-km) |
+| proxy + fit | `scripts/run_river_rumble_batch.py` | per-station `results/*_timeseries.csv`, fits |
+| core figs | `02_make_figures.py` | @fig-scaling, @fig-scatter, @fig-hyst, @fig-ts + scaling table |
+| map | `03_make_map.py` | @fig-map (PyGMT DEM + gages + SNOTEL + OPERA + status) |
+| controls | `04_traffic_noise.py` | @fig-traffic |
+| bedload time | `05_bedload_time.py`, `07_fetch_aux_data.py`, `08_b_of_time.py` | @fig-bltime, @fig-blAR, @fig-bt |
+| GIFs | `06_bedload_gif.py`, `13_virtual_q_gif.py` | `bedload_animation.gif`, @fig-vq |
+| attenuation | `09_attenuation.py` | @fig-atten (PNW Q) |
+| early warning | `10_early_warning.py` | @fig-ew |
+| frequency | `11_spectra.py`, `14_bedload_ch.py` | @fig-spec, @fig-edge |
+| virtual Q | `12_virtual_q.py` | @fig-vqval + ratings |
+| threshold | `15_threshold.py` | @fig-thr ($Q_c$) |
+| classification | `16_classify_stations.py` | `station_status.json` (drives hollow markers) |
+| rating | `17_rating.py` | @fig-rating (stage–discharge) |
+| braided source | `18_braided_hysteresis.py` | @fig-braid (geometric-vs-transport diagnostic) |
+
+Run order and parameters are documented in `workflows/README.md`; the single source
+of analysis parameters is `config/analysis.yaml`. The book (manuscript, this roadmap,
+reviews, and figures) is rendered with `pixi run make paper` and auto-deploys to
+GitHub Pages on push.
