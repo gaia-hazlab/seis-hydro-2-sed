@@ -217,7 +217,13 @@ novel precisely because it is *not* established, so we must argue it rigorously,
 cite it as accepted; (ii) confirm Luong et al. (2024/2026) and Nicoletti (2026) do
 not pre-empt the braided framing; (iii) targeted preprint search (EGUsphere/ESurf/
 ESSOAr) for any unindexed seismic+Sentinel braided-river competitor — this is the
-load-bearing novelty claim; (iv) pin where Rainier glacial-outwash bedload actually
-sits vs 25 Hz Nyquist.
+load-bearing novelty claim; (iv) ~~pin where Rainier glacial-outwash bedload sits vs
+25 Hz Nyquist~~ — **resolved (June 2026): grain-size/process-conditional.** Clean-gravel
+saltation impacts stay >100 Hz (even metre boulders ~140–300 Hz) → unsampled at 50 sps;
+**but** coarse boulder rolling/sliding, large wood (forested Cascade catchments), and
+debris-flow/lahar surges (Tahoma/Kautz/Nisqually/upper-Puyallup) radiate to ~2 Hz → the
+*coarse*-transport band extends into the resolvable 1–15 Hz window and is partly sampled,
+though degenerate with turbulence. Written into §Results (frequency evidence) +
+Limitations; reinforces the braided/coarse-source spine.
 
 **Open dependencies that could shift the choice:** March-2026 out-of-sample (tests T5, T7, T8 robustness); ~~PlanetScope pre/post (confirms T9 avulsion)~~ — **done via Sentinel-2/-1 (`@fig-braidsat`), directionally confirmed**; 2026 CH 500-sps (could promote T3/T12 from hypothesis to result).

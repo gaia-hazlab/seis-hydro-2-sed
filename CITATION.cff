@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software or its analysis, please cite it as below."
+title: "Seismic monitoring of glacial-river turbulent flow and braided-reach bedload, Mt. Rainier, December 2025 atmospheric-river floods"
+type: software
+authors:
+  - family-names: Denolle
+    given-names: Marine
+    affiliation: "University of Washington, Earth and Space Sciences"
+    # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"  # add before deposit
+  - family-names: Lipovsky
+    given-names: Bradley P.
+    affiliation: "University of Washington, Earth and Space Sciences"
+repository-code: "https://github.com/gaia-hazlab/seis-hydro-2-sed"
+keywords:
+  - environmental seismology
+  - bedload transport
+  - river discharge
+  - braided rivers
+  - atmospheric river
+  - Mount Rainier
+license: MIT
+# version and Zenodo DOI to be added on archival deposit:
+# doi: 10.5281/zenodo.XXXXXXX

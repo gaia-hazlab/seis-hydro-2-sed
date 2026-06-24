@@ -429,6 +429,30 @@ genuinely low-frequency coarse signatures (debris-flow/lahar boulder fronts to
 
 ![Lower bedload edge (30–50 Hz) from the 100-sps UW broadband stations: flood-vs-quiet spectra and 30–50 Hz vs discharge scaling. UW.LON (Nisqually) shows a tentative high-frequency transport signal.](figures/fig13_bedload_ch.png){#fig-edge width=95%}
 
+**A coarser, wood-rich source lowers the band (a grain-size– and process-conditional
+caveat).** The canonical 30–80 Hz "bedload band" is a convention built on *clean-gravel
+saltation* — where discrete Hertzian grain impacts radiate — and, as above, even metre
+boulders keep that impact corner above ~140 Hz, so individual-grain impacts cannot by
+themselves explain the 5–15 Hz steepening. But glacier-fed Cascade outwash rivers are
+not clean-saltation systems. Their coarse-transport regime is dominated by (i) boulders
+moving by **rolling and sliding** and grain–grain collision rather than ballistic
+saltation, (ii) abundant **large wood** — logs and log jams delivered by the forested
+catchment — and (iii) frequent **hyperconcentrated and debris-flow surges** (Tahoma,
+Kautz, Nisqually, and the upper Puyallup are among Mount Rainier's most debris-flow-prone
+valleys; USGS). All three radiate *lower* frequencies than gravel saltation: debris-flow
+and lahar boulder fronts generate energy down to ~2 Hz, and large, low-stiffness wood is
+an intrinsically long-contact, low-frequency impactor. The coarse-transport seismic band
+in such systems therefore extends **downward**, into the few-Hz–to–tens-of-Hz range that
+overlaps our resolvable 1–15 Hz window — so the 50-sps stations may in fact carry genuine
+coarse-clast and large-wood signatures, not turbulence alone. This is double-edged: the
+same band is spectrally degenerate with turbulence (and with the immobile-boulder
+turbulence of @nativ2025), so the coarse-transport contribution remains *bounded*, not
+isolated. The lesson is that the detectability cutoff is **grain-size– and
+process-conditional**: in coarse, wood-rich proglacial reaches like the braided Puyallup
+source, part of the coarse-transport signal lives *below* 25 Hz and is, in principle,
+sampled — one more reason this reach is a distinct interpretive regime rather than a clean
+line-channel bedload source (§sec-braided).
+
 ## Local sensing and downstream early warning
 
 The seismic signal senses *local* hydraulics, which explains an otherwise puzzling
@@ -570,14 +594,18 @@ forward-looking capability this work demonstrates and recommends.
 
 # Limitations
 
-- **Bedload band unsampled for this event (a data-archival gap, not a permanent one).**
-  For December 2025 only the 50-sps (BH) CC waveforms are archived (25 Hz Nyquist),
-  so the 30–80 Hz band is absent and the 1–15 Hz signal is turbulence-dominated —
-  bedload here is an upper bound, not a measurement (@fig-spec). The 500-sps (CH)
-  upgrade came online in 2026, and its high-rate data are not yet retrievable through
-  FDSN; obtaining them from CVO/PNSN is the route to a direct 30–80 Hz test. For the
-  2025 event the best available probe is the 100-sps UW broadband stations (RER, LON)
-  at the 30–50 Hz lower bedload edge.
+- **Canonical bedload band unsampled; coarse/wood transport partly is (a grain-size–
+  conditional limit).** For December 2025 only the 50-sps (BH) CC waveforms are archived
+  (25 Hz Nyquist), so the canonical *clean-gravel* bedload band (30–80 Hz) is absent and
+  the 1–15 Hz signal is turbulence-dominated — fine-gravel bedload here is an upper bound,
+  not a measurement (@fig-spec). The qualifier is that this cutoff is grain-size– and
+  process-conditional: coarse boulder rolling/sliding, large wood, and debris-flow surges
+  radiate below 25 Hz (to ~2 Hz), so part of the *coarse*-transport signal is in principle
+  sampled — but it is spectrally degenerate with turbulence and cannot be isolated here
+  (§Results, frequency evidence). The 500-sps (CH) upgrade came online in 2026 and its
+  high-rate data are not yet retrievable through FDSN; obtaining them from CVO/PNSN is the
+  route to a direct 30–80 Hz test. For the 2025 event the best available probe is the
+  100-sps UW broadband stations (RER, LON) at the 30–50 Hz lower bedload edge.
 - **No absolute flux inversion.** We report a band-power proxy and scaling
   exponents, not calibrated bedload flux. Absolute inversion requires
   grain-size and impact assumptions [@tsai2012; @bakker2020] not constrained here.

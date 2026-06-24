@@ -2,11 +2,18 @@
 PY=.pixi/envs/default/bin/python
 STATIONS?=CC.PR01,CC.PR02,CC.TRON
 START?=2025-12-01T00:00:00
-END?=2025-12-24T00:00:00
+END?=2026-01-01T00:00:00
 BATCHFLAGS=--use-rss --exclude-earthquakes --clip-impulses --despike-proxy \
   --flow-bands 0.5-2,1-5,2-8 --bedload-bands 5-15,10-30,30-60
 
-.PHONY: discover stations figures paper clean
+# Figure scripts that read ONLY committed results/*.csv + config/*.json (no network).
+# Excludes 03 map (DEM), 11/14 spectra (waveforms), 19 satellite (imagery) — those
+# fetch raw data and live on the full `repro` path.
+FIGSCRIPTS=02_make_figures 05_bedload_time 08_b_of_time 09_attenuation \
+  10_early_warning 12_virtual_q 15_threshold 16_classify_stations 17_rating \
+  18_braided_hysteresis
+
+.PHONY: discover stations figures figures-from-cache repro paper clean
 discover:        ## FDSN + USGS station/gage discovery along the corridor
 	$(PY) workflows/00_discover_stations.py
 
@@ -17,8 +24,21 @@ stations:        ## process each station in STATIONS (comma list)
 	    --focus-seis-key $$s $(BATCHFLAGS) || true; \
 	done
 
-figures:         ## regenerate publication figures + scaling table
+figures:         ## regenerate the core scaling figures + table (workflow 02)
 	$(PY) workflows/02_make_figures.py
+
+figures-from-cache:  ## REPRO PATH A — all offline figures from committed results/*.csv (no network)
+	@for f in $(FIGSCRIPTS); do echo ">>> $$f"; $(PY) workflows/$$f.py || exit 1; done
+
+repro:           ## REPRO PATH B — full pipeline from raw data (network; hours)
+	$(PY) workflows/00_discover_stations.py
+	$(MAKE) stations
+	$(MAKE) figures-from-cache
+	$(PY) workflows/03_make_map.py
+	$(PY) workflows/11_spectra.py
+	$(PY) workflows/14_bedload_ch.py
+	$(PY) workflows/19_braid_optical_change.py
+	$(MAKE) paper
 
 paper:           ## render the full Quarto book to _book/ (quarto is a pixi dep)
 	quarto render

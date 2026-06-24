@@ -28,4 +28,5 @@ lag:
 fit:
   n_mad: 6.0               # robust outlier rejection in log P
   n_boot: 500              # bootstrap CI on slope
+  seed: 0                  # RNG seed for bootstrap + Theil–Sen subsampling (determinism)
   water_baseline: [0.9, 1.4]   # Gimbert 2014 turbulence exponent range
