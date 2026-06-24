@@ -22,7 +22,7 @@ from utils import fetch_usgs_gage_timeseries  # noqa: E402
 
 DATA = ROOT / "notebooks" / "data"
 OUT = ROOT / "config" / "aux_timeseries.json"
-START, END = UTCDateTime("2025-12-01"), UTCDateTime("2025-12-16")
+START, END = UTCDateTime("2025-12-01"), UTCDateTime("2026-01-01")
 
 SNOTEL = {  # triplet -> (name, lon, lat)
     "679:WA:SNTL": ("Paradise", -121.748, 46.783),
@@ -46,7 +46,7 @@ def fetch_snotel() -> dict:
         try:
             r = requests.get(base, params={
                 "stationTriplets": trip, "elements": "PREC", "duration": "HOURLY",
-                "beginDate": "2025-12-01", "endDate": "2025-12-16",
+                "beginDate": "2025-12-01", "endDate": "2026-01-01",
                 "centralTendencyType": "NONE", "returnFlags": "false"}, timeout=60)
             r.raise_for_status()
             js = r.json()
@@ -67,7 +67,8 @@ def fetch_discharge() -> dict:
     out = {}
     for gid, (name, lon, lat) in GAGES.items():
         try:
-            df = fetch_usgs_gage_timeseries(gid, START, END, data_dir=DATA, use_cache=True)
+            df = fetch_usgs_gage_timeseries(gid, START, END, data_dir=DATA,
+                                            source="nwis", use_cache=True)
             col = "discharge_cms" if "discharge_cms" in df.columns else None
             if col is None:
                 print(f"  gage {gid}: no discharge_cms"); continue

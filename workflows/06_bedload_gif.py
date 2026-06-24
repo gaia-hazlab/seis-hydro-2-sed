@@ -38,8 +38,8 @@ CONTROL = "UW.TEHA"               # shown as traffic control
 REGION = [-122.55, -121.55, 46.72, 47.34]
 SUMMIT = (-121.7603, 46.8523)
 PREFLOOD_END = pd.Timestamp("2025-12-08", tz="UTC")
-WIN = (pd.Timestamp("2025-12-05T00", tz="UTC"), pd.Timestamp("2025-12-14T00", tz="UTC"))
-STEP_H = 3
+WIN = (pd.Timestamp("2025-12-03T00", tz="UTC"), pd.Timestamp("2026-01-01T00", tz="UTC"))
+STEP_H = 6
 CLIP = (0.0, 2.5)
 HF_RE = re.compile(r"^(?P<net>[A-Z0-9]+)\.(?P<sta>[A-Z0-9]+)_5\.0-15\.0Hz_timeseries\.csv$")
 AR_COLORS = {"pre-AR": "#999999", "AR1": "#0072B2", "AR2": "#56B4E9", "AR3": "#E69F00"}
@@ -51,8 +51,12 @@ def _series_on(frames, idx, val):
 
 
 def main() -> int:
-    coords = {f'{v["net"]}.{v["sta"]}': v for v in
-              json.loads((ROOT / "config" / "_transect_discovery.json").read_text())["stations"]}
+    # Coords for EVERY analyzed station (all basins incl. Nisqually CC.GTWY/UW.LON
+    # and Carbon CC.CARB) from station_status.json — the Puyallup-only
+    # _transect_discovery dropped the other rivers' stations.
+    coords = {s["station"]: {"lon": s["lon"], "lat": s["lat"]}
+              for s in json.loads((ROOT / "config" / "station_status.json").read_text())
+              if s.get("lon") is not None and s.get("lat") is not None}
     aux = json.loads((ROOT / "config" / "aux_timeseries.json").read_text())
     ars = json.loads((ROOT / "config" / "ar_windows.json").read_text())
     frames = pd.date_range(WIN[0], WIN[1], freq=f"{STEP_H}h")
@@ -65,6 +69,8 @@ def main() -> int:
         if not sid or sid in RIVER_CLEAN or sid not in coords:
             continue
         df = pd.read_csv(f, parse_dates=["time_utc"]).set_index("time_utc")
+        df.index = pd.to_datetime(df.index, utc=True, errors="coerce")
+        df = df[df.index.notna()]
         P = pd.to_numeric(df["proxy"], errors="coerce").dropna()
         base = P[P.index < PREFLOOD_END].median() or P.median()
         s = _series_on(frames, P.index, np.log10((P / base).clip(lower=0.1)).values)
