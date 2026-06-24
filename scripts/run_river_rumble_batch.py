@@ -521,12 +521,15 @@ def main() -> int:
     gauge_ids = sorted(pairs_df["gage_id"].unique().tolist())
     pairings = dict(zip(pairs_df["seis_key"].tolist(), pairs_df["gage_id"].tolist()))
 
-    # Fetch gauges
+    # Fetch gauges. Use authoritative USGS NWIS (not the static GAIA mirror, which
+    # was incomplete for Dec-2025 — e.g. 12092000 stopped at 12-15). Reuses the
+    # NWIS cache populated by workflows/01_fetch_discharge.py when present.
     gauges: dict[str, pd.DataFrame] = {}
     for gid in gauge_ids:
-        print(f"Loading USGS site {gid} (cached if available)…")
+        print(f"Loading USGS site {gid} (NWIS; cached if available)…")
         try:
-            gauges[gid] = fetch_usgs_gage_timeseries(str(gid), start, end, data_dir=data_dir, use_cache=True)
+            gauges[gid] = fetch_usgs_gage_timeseries(
+                str(gid), start, end, data_dir=data_dir, source="nwis", use_cache=True)
         except Exception as e:
             print(f"  Failed site {gid}: {e}")
 

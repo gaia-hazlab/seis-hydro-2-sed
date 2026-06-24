@@ -1,0 +1,65 @@
+{
+  "window": {
+    "start": "2025-12-01",
+    "end": "2026-01-01"
+  },
+  "source": "USGS NWIS IV (00060 discharge, 00065 gage height)",
+  "gages": [
+    {
+      "gage": "12082500",
+      "name": "Nisqually R nr National",
+      "ok": true,
+      "n": 2977,
+      "start": "2025-12-01 01:00:00+00:00",
+      "end": "2026-01-01 01:00:00+00:00"
+    },
+    {
+      "gage": "12092000",
+      "name": "Puyallup R nr Electron",
+      "ok": true,
+      "n": 2977,
+      "start": "2025-12-01 01:00:00+00:00",
+      "end": "2026-01-01 01:00:00+00:00"
+    },
+    {
+      "gage": "12093500",
+      "name": "Puyallup R nr Orting",
+      "ok": true,
+      "n": 2651,
+      "start": "2025-12-01 01:00:00+00:00",
+      "end": "2026-01-01 01:00:00+00:00"
+    },
+    {
+      "gage": "12094000",
+      "name": "Carbon R nr Fairfax",
+      "ok": true,
+      "n": 2977,
+      "start": "2025-12-01 01:00:00+00:00",
+      "end": "2026-01-01 01:00:00+00:00"
+    },
+    {
+      "gage": "12096500",
+      "name": "Puyallup R at Alderton",
+      "ok": true,
+      "n": 2973,
+      "start": "2025-12-01 01:00:00+00:00",
+      "end": "2026-01-01 01:00:00+00:00"
+    },
+    {
+      "gage": "12101500",
+      "name": "Puyallup R at Puyallup",
+      "ok": true,
+      "n": 2977,
+      "start": "2025-12-01 01:00:00+00:00",
+      "end": "2026-01-01 01:00:00+00:00"
+    },
+    {
+      "gage": "12150800",
+      "name": "lowland river, far from bedload source; bedload band r~0 \u2014 confirms high-f is not a generic flow artifact",
+      "ok": true,
+      "n": 2964,
+      "start": "2025-12-01 01:00:00+00:00",
+      "end": "2026-01-01 01:00:00+00:00"
+    }
+  ]
+}

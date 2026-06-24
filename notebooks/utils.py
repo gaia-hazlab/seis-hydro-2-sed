@@ -358,8 +358,8 @@ def fetch_usgs_nwis_iv(
         times = [v.get("dateTime") for v in values]
         vals = [v.get("value") for v in values]
         t = pd.to_datetime(times, utc=True, errors="coerce")
-        x = pd.to_numeric(vals, errors="coerce")
-        s = pd.Series(x.values, index=pd.DatetimeIndex(t, name="time_utc")).dropna()
+        x = pd.to_numeric(vals, errors="coerce")   # ndarray (pd.to_numeric on a list)
+        s = pd.Series(np.asarray(x), index=pd.DatetimeIndex(t, name="time_utc")).dropna()
         if s.empty:
             continue
 
