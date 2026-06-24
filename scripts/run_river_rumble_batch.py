@@ -27,9 +27,13 @@ from obspy import UTCDateTime
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS_DIR = ROOT / "notebooks"
 sys.path.insert(0, str(NOTEBOOKS_DIR))
+sys.path.insert(0, str(ROOT / "src"))
+
+# Fast single-pass multiband proxy (one Welch PSD per window, integrate every
+# band) — ~len(bands)× faster than calling the per-band proxy in a loop.
+from riverseis.fast_proxy import compute_multiband_proxy_from_fdsn  # noqa: E402
 
 from utils import (  # noqa: E402
-    compute_proxy_from_fdsn,
     estimate_constant_lag_seconds,
     fetch_usgs_event_times,
     fetch_usgs_gage_timeseries,
@@ -250,44 +254,43 @@ def run_one_station(
     sta_bands: dict[tuple[float, float], pd.Series] = {}
     all_bands = list(bands.flow) + list(bands.bedload)
 
-    print(f"[{sta_key}] Computing proxies for {len(all_bands)} bands …")
-    for (f1, f2) in all_bands:
-        band = (float(f1), float(f2))
-        sta_bands[band] = compute_proxy_from_fdsn(
-            net,
-            sta,
-            start,
-            end,
-            fmin=band[0],
-            fmax=band[1],
-            win_seconds=int(win_seconds),
-            step_seconds=int(step_seconds),
-            output=str(output),
-            method=str(proxy_method),
-            remove_response=True,
-            combine=combine_mode,
-            components=tuple(components),
-            event_times_utc=ev_times,
-            event_buffer_s=float(eq_buffer_seconds) if exclude_earthquakes else 0.0,
-            clip_impulsive_days=bool(clip_impulses),
-            sta_seconds=float(sta_seconds),
-            lta_seconds=float(lta_seconds),
-            trigger_on=float(trigger_on),
-            trigger_off=float(trigger_off),
-            clip_sigma=float(clip_sigma),
-            clip_mode=str(clip_mode),
-            despike_proxy=bool(despike_proxy),
-            despike_window=str(despike_window),
-            despike_z=float(despike_z),
-            despike_min_periods=int(despike_min_periods),
-            despike_fill=str(despike_fill),
-            client_name=str(client_name),
-            location=str(location),
-            channel=str(channel),
-            attach_response=True,
-            cache_dir=data_dir / "fdsn_cache",
-            use_cache=True,
-        )
+    # Single-pass multiband: one Welch PSD per window, integrate every band at
+    # once (~len(all_bands)× faster than the old per-band loop, which re-read and
+    # re-deconvolved the whole record once per band — the cause of the ~1 h/station
+    # cost). Returns {band: proxy Series}, the same structure the per-band loop built.
+    print(f"[{sta_key}] Computing proxies for {len(all_bands)} bands (single-pass multiband) …")
+    sta_bands = compute_multiband_proxy_from_fdsn(
+        net,
+        sta,
+        start,
+        end,
+        bands=[(float(f1), float(f2)) for (f1, f2) in all_bands],
+        win_seconds=int(win_seconds),
+        step_seconds=int(step_seconds),
+        output=str(output),
+        combine=combine_mode,
+        components=tuple(components),
+        remove_response=True,
+        event_times_utc=ev_times,
+        event_buffer_s=float(eq_buffer_seconds) if exclude_earthquakes else 0.0,
+        clip_impulsive_days=bool(clip_impulses),
+        sta_seconds=float(sta_seconds),
+        lta_seconds=float(lta_seconds),
+        trigger_on=float(trigger_on),
+        trigger_off=float(trigger_off),
+        clip_sigma=float(clip_sigma),
+        clip_mode=str(clip_mode),
+        despike_proxy=bool(despike_proxy),
+        despike_window=str(despike_window),
+        despike_z=float(despike_z),
+        despike_min_periods=int(despike_min_periods),
+        despike_fill=str(despike_fill),
+        client_name=str(client_name),
+        location=str(location),
+        channel=str(channel),
+        cache_dir=data_dir / "fdsn_cache",
+        use_cache=True,
+    )
 
     # Choose tau per station using the best FLOW band
     best_tau_s = None

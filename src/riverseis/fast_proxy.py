@@ -67,8 +67,11 @@ def multiband_bandpower(
             val = float(np.trapz(pxx[m], f[m])) if np.any(m) else float("nan")
             out[b][0].append(val)
             out[b][1].append(ts)
+    def _utc_index(t):
+        idx = pd.DatetimeIndex(t, name="time_utc")
+        return idx.tz_localize("UTC") if idx.tz is None else idx.tz_convert("UTC")
     return {
-        b: pd.Series(v, index=pd.DatetimeIndex(t, name="time_utc")).dropna()
+        b: pd.Series(v, index=_utc_index(t)).dropna()
         for b, (v, t) in out.items()
     }
 
