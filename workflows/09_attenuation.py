@@ -130,7 +130,7 @@ def main() -> int:
     axB.legend(fontsize=8)
     axB.text(0.97, 0.05, "weak observed decay ⇒ band retains\nless-attenuated (lower-f) energy",
              transform=axB.transAxes, ha="right", va="bottom", fontsize=7, color="0.4")
-    fig.suptitle("First-order distance attenuation of the bedload band", x=0.5, y=1.0)
+    # (no figure suptitle — described by the manuscript caption; panel titles kept)
     fig.tight_layout()
     fig.savefig(FIGDIR / "fig9_attenuation.png", dpi=200)
     plt.close(fig)

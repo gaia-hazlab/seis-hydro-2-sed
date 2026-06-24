@@ -132,7 +132,7 @@ def fig_scaling_exponent(items: list[dict]) -> pd.DataFrame:
     ax.tick_params(labelsize=11)
     ax.set_xlabel("band center frequency (Hz)", fontsize=13)
     ax.set_ylabel(r"scaling exponent $b$   ($P \propto Q^{\,b}$)", fontsize=13)
-    ax.set_title("Seismic–discharge scaling vs frequency", loc="left", fontsize=14)
+    # (no figure title — the manuscript caption describes the figure)
     # legend outside, to the right — shows each station's fitted exponent
     ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), frameon=False,
               title="station (fitted exponent)", title_fontsize=12, fontsize=11)
@@ -200,7 +200,6 @@ def fig_hysteresis(items: list[dict]) -> None:
         ax.set_visible(False)
     fig.supxlabel(r"discharge $Q$  (m³ s$^{-1}$)")
     fig.supylabel(r"$\log_{10}\,P$")
-    fig.suptitle("Event hysteresis (clockwise = supply/exhaustion; CCW = delayed/distal delivery)")
     if sc is not None:  # single shared colorbar
         fig.colorbar(sc, ax=axes, label="hours into event", shrink=0.85, aspect=30, pad=0.02)
     fig.savefig(FIGDIR / "fig4_hysteresis.png")
@@ -248,11 +247,19 @@ def fig_event_timeseries(items: list[dict]) -> None:
         fc = (it["band"][0] * it["band"][1]) ** 0.5
         by_sta[it["station"]].append((fc, it))
 
-    # true distance-from-summit per station
+    # true distance-from-summit per station; drop very-distant lanes (CC.TRON at
+    # 35 km + the urban accelerometers at 44–72 km) that stretch the axis and lie
+    # beyond the few-hundred-metre high-frequency seismic reach (§Discussion).
+    FAR_KM = 30.0
     dist = {s: hav(*SUMMIT, *coords[s]) for s in by_sta if s in coords}
+    dropped = sorted(s for s, d in dist.items() if d > FAR_KM)
+    dist = {s: d for s, d in dist.items() if d <= FAR_KM}
     stations = sorted(dist, key=dist.get)
     if not stations:
         return
+    if dropped:
+        print(f"  fig5: dropped {len(dropped)} station(s) >{FAR_KM:.0f} km from summit: "
+              + ", ".join(dropped))
     dgage = hav(*SUMMIT, *GAGE_Q)
 
     # de-cluster: spread stations that fall within 1.6 km of each other
@@ -295,7 +302,6 @@ def fig_event_timeseries(items: list[dict]) -> None:
     ax.set_ylim(dmax + 4, dmin - 4)             # source (small km) at top
     ax.set_ylabel("distance downstream from Mt. Rainier summit (km)")
     ax.set_xlabel("December 2025 (UTC)")
-    ax.set_title("Seismic power vs discharge along the source→downstream transect", loc="left")
 
     sm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
     fig.colorbar(sm, ax=ax, label="distance from summit (km)", shrink=0.8, aspect=30, pad=0.02)

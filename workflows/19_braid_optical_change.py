@@ -1,0 +1,391 @@
+#!/usr/bin/env python3
+"""Optical/SAR change detection of the Puyallup braidplain, and its seismic
+geometrical-spreading consequence for CC.PR01/PR02/PR03.
+
+Motivation
+----------
+The manuscript (§sec-braided) argues that the *anomaly* of CC.PR01 — flattest
+exponent (b=1.19), lowest correlation (r=0.88), sharpest broken-stick break, and
+a coherent +0.2 log-unit baseline drift across AR1->AR3 shared by the whole
+co-located cluster — is most parsimoniously explained not by a bedload onset but
+by the **active braided channel migrating** across the outwash plain, i.e. a
+*geometric* change in the source position relative to each sensor. That is a
+falsifiable prediction: the active thread(s) nearest the cluster should have
+shifted between the pre-flood (Nov 2025) and post-flood (early Jan 2026) states.
+
+This script tests it directly with free, no-auth satellite imagery from the
+**Microsoft Planetary Computer** STAC API (Sentinel-2 L2A optical and
+Sentinel-1 RTC SAR), over an AOI covering both the braidplain and the three
+stations:
+
+  1. Build a cloud-masked Sentinel-2 median composite per epoch; map wetted
+     channel with MNDWI=(green-SWIR)/(green+SWIR) (and NDWI as a cross-check).
+  2. Build a Sentinel-1 RTC median composite per epoch; map smooth open water
+     with VV backscatter (cloud-penetrating confirmation).
+  3. Difference the per-epoch active-water masks -> newly-wet / newly-dry / the
+     net lateral shift of the active braid field.
+  4. For each station, convert the channel geometry into the manuscript's
+     propagation weight  P ∝ r^-1 exp(-r/r_e)  (Tsai 2012; Gimbert 2014; the
+     PNW/Rainier r_e≈780 m from workflows/09_attenuation.py):
+       - nearest active-water distance r_pre, r_post  ->  Δr;
+       - the attenuation-weighted "wetted illumination"
+            W = Σ_pixels  A_pix · r^-1 · exp(-r/r_e)
+         over the active-water field, which captures a *distributed* braided
+         source rather than a single line channel;
+       - the predicted log-power baseline shift Δlog10 P = log10(W_post/W_pre),
+         to be compared with the observed +0.2 log-unit cross-AR drift.
+
+Outputs
+-------
+  paper/figures/fig19_braid_change.png   (composites + change map + geometry)
+  config/braid_optical_change.json       (per-station r, ΔW, predicted Δlog10 P)
+
+This is the satellite test promised in the §sec-braided callout ("PlanetScope
+pre/post imagery, in preparation"); Planetary Computer Sentinel-2/-1 is the
+no-credential, reproducible stand-in.
+
+Usage: pixi run python workflows/19_braid_optical_change.py
+Refs: Tsai et al. 2012 (10.1029/2011GL050255); Gimbert et al. 2014
+(10.1002/2014JF003201); Coppin et al. 2022 (braided-reach array); the Planetary
+Computer S2-L2A and S1-RTC collections.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+import planetary_computer as pc
+import xarray as xr
+from pystac_client import Client
+from odc.stac import load as odc_load
+from scipy import ndimage
+
+ROOT = Path(__file__).resolve().parents[1]
+FIGDIR = ROOT / "paper" / "figures"
+CFGDIR = ROOT / "config"
+
+# ----------------------------------------------------------------------------
+# Configuration
+# ----------------------------------------------------------------------------
+# AOI: covers the braidplain seed the user flagged in Google Earth AND the three
+# co-located stations, with margin. (minlon, minlat, maxlon, maxlat)
+AOI = (-122.070, 46.895, -122.025, 46.935)
+UTM = "EPSG:32610"          # UTM 10N — metres, for distance/area maths
+RES = 10                    # m, target pixel (S2 native green/NIR resolution)
+
+# Co-located Puyallup source cluster (lon, lat, b, r)  [config/station_status.json]
+STATIONS = {
+    "CC.PR03": (-122.0327, 46.9034, 1.66, 0.94),   # 500-sps anchor, on-channel
+    "CC.PR01": (-122.0376, 46.9101, 1.19, 0.88),   # the anomaly: flat b, low r
+    "CC.PR02": (-122.0487, 46.9183, 1.67, 0.94),
+}
+BRAID_SEED = (-122.0562, 46.9269)   # Google-Earth braid point the user supplied
+
+EPOCHS = {
+    "pre":  "2025-11-01/2025-11-30",   # before the Dec 2025 AR floods
+    "post": "2025-12-25/2026-01-20",   # early Jan 2026, after the floods
+}
+
+S2_MAX_CLOUD = 40           # scene-level eo:cloud_cover ceiling (%) before per-pixel SCL mask
+MNDWI_WATER = 0.0           # MNDWI > 0 => water (standard; turbid braids sit near 0)
+S1_VV_DB_WATER = -15.0      # VV < -15 dB => smooth open water (RTC, linear->dB)
+CORRIDOR_M = 500            # keep active water within this buffer of the NHD Puyallup line
+MIN_COMPONENT_PX = 8        # drop connected water blobs smaller than this (speckle/ponds)
+
+# Propagation constants — identical to workflows/09_attenuation.py for consistency
+FC = (5 * 15) ** 0.5                       # 5–15 Hz band centre = 8.66 Hz
+VC0, F0, XI = 1295.0, 1.0, 0.374           # Tsai 2012 Rayleigh phase-velocity dispersion
+VC = VC0 * (FC / F0) ** (-XI)              # ~578 m/s at FC
+Q0_PNW, ETA = 25.0, 0.5                    # PNW/Rainier Q(f)=Q0 f^eta
+Q_PNW = Q0_PNW * FC ** ETA                 # ~73.5
+R_E = VC * Q_PNW / (2 * np.pi * FC)        # e-folding distance ≈ 780 m
+
+STAC = "https://planetarycomputer.microsoft.com/api/stac/v1"
+
+
+def _client():
+    return Client.open(STAC, modifier=pc.sign_inplace)
+
+
+def s2_water(epoch_range: str):
+    """Cloud-masked Sentinel-2 median composite -> (mndwi, ndwi, water_mask, ds)."""
+    cat = _client()
+    items = [it for it in cat.search(collections=["sentinel-2-l2a"], bbox=AOI,
+                                     datetime=epoch_range).items()
+             if it.properties.get("eo:cloud_cover", 100) <= S2_MAX_CLOUD]
+    items.sort(key=lambda it: it.properties.get("eo:cloud_cover", 100))
+    if not items:
+        raise RuntimeError(f"no S2 scenes < {S2_MAX_CLOUD}% cloud for {epoch_range}")
+    ds = odc_load(items, bands=["B03", "B08", "B11", "SCL"], bbox=AOI,
+                  crs=UTM, resolution=RES, chunks={}, groupby="solar_day")
+    # SCL classes to KEEP: 4 veg, 5 bare soil, 6 water, 7 unclassified, 11 snow/ice.
+    # DROP: 0 nodata, 1 saturated, 2 dark, 3 shadow, 8/9/10 cloud, cirrus.
+    keep = ds.SCL.isin([4, 5, 6, 7, 11])
+    g = ds.B03.where(keep).astype("float32")
+    n = ds.B08.where(keep).astype("float32")
+    s = ds.B11.where(keep).astype("float32")
+    mndwi = ((g - s) / (g + s)).median("time")
+    ndwi = ((g - n) / (g + n)).median("time")
+    water = (mndwi > MNDWI_WATER).astype("uint8")
+    return mndwi.compute(), ndwi.compute(), water.compute(), len(items)
+
+
+def s1_water(epoch_range: str):
+    """Sentinel-1 RTC median composite -> (vv_db, water_mask, n)."""
+    cat = _client()
+    items = list(cat.search(collections=["sentinel-1-rtc"], bbox=AOI,
+                            datetime=epoch_range).items())
+    if not items:
+        raise RuntimeError(f"no S1-RTC scenes for {epoch_range}")
+    ds = odc_load(items, bands=["vv"], bbox=AOI, crs=UTM, resolution=RES,
+                  chunks={}, groupby="solar_day")
+    vv = ds.vv.where(ds.vv > 0).median("time")
+    vv_db = (10.0 * np.log10(vv)).compute()
+    water = (vv_db < S1_VV_DB_WATER).astype("uint8")
+    return vv_db, water, len(items)
+
+
+def channel_corridor(grid: xr.DataArray, buffer_m: float = CORRIDOR_M):
+    """Boolean mask of cells within `buffer_m` of the NHD Puyallup centreline,
+    on the grid of `grid`. Isolates the braided mainstem from off-channel ponds."""
+    import rasterio.features
+    import rasterio.warp
+    from shapely.geometry import LineString
+    from shapely.ops import unary_union
+    paths = json.loads((CFGDIR / "nhd_rivers.json").read_text())["Puyallup"]
+    lines = []
+    for path in paths:
+        lon = [p[0] for p in path]
+        lat = [p[1] for p in path]
+        ux, uy = rasterio.warp.transform("EPSG:4326", UTM, lon, lat)
+        if len(ux) > 1:
+            lines.append(LineString(zip(ux, uy)))
+    corridor = unary_union(lines).buffer(buffer_m)
+    x = grid.x.values
+    y = grid.y.values
+    transform = rasterio.transform.from_bounds(
+        x.min() - RES / 2, y.min() - RES / 2, x.max() + RES / 2, y.max() + RES / 2,
+        len(x), len(y))
+    rast = rasterio.features.rasterize(
+        [(corridor, 1)], out_shape=(len(y), len(x)), transform=transform,
+        fill=0, dtype="uint8")
+    # rasterize assumes north-up rows top->bottom; grid.y is descending (origin upper)
+    return xr.DataArray(rast, coords={"y": y, "x": x}, dims=("y", "x"))
+
+
+def clean_channel(active: xr.DataArray, corridor: xr.DataArray):
+    """Restrict to the corridor and drop sub-MIN_COMPONENT_PX blobs (speckle)."""
+    m = (active.values == 1) & (corridor.values == 1)
+    lab, n = ndimage.label(m)
+    if n:
+        sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1))
+        keep = {i + 1 for i, s in enumerate(sizes) if s >= MIN_COMPONENT_PX}
+        m = np.isin(lab, list(keep))
+    return xr.DataArray(m.astype("uint8"), coords=active.coords, dims=active.dims)
+
+
+def station_px(mask: xr.DataArray):
+    """Return {station: (row, col)} in the mask's UTM grid."""
+    import rasterio.warp
+    xs = [lon for lon, lat, *_ in STATIONS.values()]
+    ys = [lat for lon, lat, *_ in STATIONS.values()]
+    ux, uy = rasterio.warp.transform("EPSG:4326", UTM, xs, ys)
+    out = {}
+    xcoord = mask.x.values
+    ycoord = mask.y.values
+    for (name, _), x, y in zip(STATIONS.items(), ux, uy):
+        col = int(np.abs(xcoord - x).argmin())
+        row = int(np.abs(ycoord - y).argmin())
+        out[name] = (row, col, x, y)
+    return out
+
+
+def geometry_metrics(water_pre, water_post):
+    """Per-station nearest-water distance and attenuation-weighted illumination W."""
+    # metres-per-pixel grid coordinates
+    X, Y = np.meshgrid(water_pre.x.values, water_pre.y.values)
+    apix = RES * RES  # pixel area, m^2
+    spx = station_px(water_pre)
+
+    def nearest_dist(mask_np):
+        # distance (m) from every cell to nearest water cell, via EDT on the dry field
+        if mask_np.sum() == 0:
+            return None
+        edt = ndimage.distance_transform_edt(mask_np == 0) * RES
+        return edt
+
+    out = {}
+    masks = {"pre": water_pre.values, "post": water_post.values}
+    edts = {k: nearest_dist(v) for k, v in masks.items()}
+    for name, (row, col, ux, uy) in spx.items():
+        rec = {"utm_x": ux, "utm_y": uy}
+        for k in ("pre", "post"):
+            m = masks[k]
+            r_near = float(edts[k][row, col]) if edts[k] is not None else None
+            # attenuation-weighted wetted illumination W = Σ A r^-1 exp(-r/r_e)
+            r = np.hypot(X - ux, Y - uy)
+            r = np.where(r < RES, RES, r)            # floor at one pixel
+            w = (m == 1) * apix / r * np.exp(-r / R_E)
+            rec[f"r_near_{k}_m"] = r_near
+            rec[f"W_{k}"] = float(w.sum())
+            rec[f"wet_area_{k}_m2"] = float((m == 1).sum() * apix)
+        rec["dr_near_m"] = (rec["r_near_post_m"] - rec["r_near_pre_m"]
+                            if rec["r_near_pre_m"] is not None else None)
+        rec["W_ratio_post_pre"] = (rec["W_post"] / rec["W_pre"]
+                                   if rec["W_pre"] > 0 else None)
+        rec["pred_dlog10P"] = (float(np.log10(rec["W_ratio_post_pre"]))
+                               if rec["W_ratio_post_pre"] else None)
+        out[name] = rec
+    return out, spx
+
+
+def main() -> int:
+    FIGDIR.mkdir(parents=True, exist_ok=True)
+    print(f"r_e (5–15 Hz band centre {FC:.2f} Hz, VC={VC:.0f} m/s, Q={Q_PNW:.0f}) = {R_E:.0f} m")
+
+    data = {}
+    for ep, dr in EPOCHS.items():
+        print(f"[{ep}] {dr}: querying Planetary Computer …")
+        mndwi, ndwi, s2w, n2 = s2_water(dr)
+        vv_db, s1w, n1 = s1_water(dr)
+        # union of optical+SAR water = "active wetted channel" (reconciled, both sensors)
+        # align S1 to the S2 grid (same crs/res/bbox already)
+        s1w_a = s1w.reindex_like(s2w, method="nearest").fillna(0).astype("uint8")
+        active = ((s2w == 1) | (s1w_a == 1)).astype("uint8")
+        data[ep] = dict(mndwi=mndwi, s2w=s2w, vv_db=vv_db, s1w=s1w_a,
+                        active=active, n2=n2, n1=n1)
+        print(f"      S2 scenes={n2}  S1 scenes={n1}  "
+              f"S2-water px={int(s2w.values.sum())}  S1-water px={int(s1w_a.values.sum())}  "
+              f"active px={int(active.values.sum())}")
+
+    # restrict to the braided mainstem corridor + drop speckle, then measure geometry
+    corridor = channel_corridor(data["pre"]["active"])
+    for ep in EPOCHS:
+        data[ep]["channel"] = clean_channel(data[ep]["active"], corridor)
+        print(f"      [{ep}] corridor-cleaned channel px = "
+              f"{int(data[ep]['channel'].values.sum())}")
+    geom, spx = geometry_metrics(data["pre"]["channel"], data["post"]["channel"])
+
+    # Threshold ENSEMBLE — turbid braided water sits near MNDWI 0, so the wetted
+    # area (and W) is threshold-sensitive. Sweep MNDWI to get an honest spread on
+    # each station's predicted drift rather than a single brittle point estimate.
+    THRS = (-0.10, -0.05, 0.0, 0.05, 0.10)
+    ens = {name: {"dr_near_m": [], "pred_dlog10P": []} for name in STATIONS}
+    for thr in THRS:
+        ch = {}
+        for ep in EPOCHS:
+            a = (data[ep]["mndwi"] > thr).astype("uint8")
+            a = ((a == 1) | (data[ep]["s1w"] == 1)).astype("uint8")
+            ch[ep] = clean_channel(a, corridor)
+        g, _ = geometry_metrics(ch["pre"], ch["post"])
+        for name in STATIONS:
+            ens[name]["dr_near_m"].append(g[name]["dr_near_m"])
+            ens[name]["pred_dlog10P"].append(g[name]["pred_dlog10P"])
+    for name in STATIONS:
+        for k in ("dr_near_m", "pred_dlog10P"):
+            v = np.array(ens[name][k], float)
+            geom[name][f"{k}_median"] = float(np.median(v))
+            geom[name][f"{k}_min"] = float(np.min(v))
+            geom[name][f"{k}_max"] = float(np.max(v))
+    print(f"\nThreshold ensemble (MNDWI {THRS[0]:+.2f}..{THRS[-1]:+.2f}):")
+    for name in STATIONS:
+        d = geom[name]
+        print(f"   {name}: Δr median {d['dr_near_m_median']:+5.0f} m "
+              f"[{d['dr_near_m_min']:+.0f},{d['dr_near_m_max']:+.0f}]   "
+              f"pred Δlog10P median {d['pred_dlog10P_median']:+.3f} "
+              f"[{d['pred_dlog10P_min']:+.3f},{d['pred_dlog10P_max']:+.3f}]")
+
+    # ---- report ----
+    print(f"\n{'station':9s} {'r_pre':>7s} {'r_post':>7s} {'Δr':>7s} "
+          f"{'W_post/W_pre':>12s} {'pred Δlog10P':>12s}   (obs b, r)")
+    for name, rec in geom.items():
+        _, _, b, r = STATIONS[name]
+        print(f"{name:9s} {rec['r_near_pre_m']:7.0f} {rec['r_near_post_m']:7.0f} "
+              f"{rec['dr_near_m']:7.0f} {rec['W_ratio_post_pre']:12.3f} "
+              f"{rec['pred_dlog10P']:+12.3f}   (b={b}, r={r})")
+
+    out = {
+        "aoi": AOI, "epochs": EPOCHS, "crs": UTM, "res_m": RES,
+        "r_e_m": R_E, "fc_hz": FC, "vc_ms": VC, "Q_pnw": Q_PNW,
+        "thresholds": {"mndwi_water": MNDWI_WATER, "s1_vv_db_water": S1_VV_DB_WATER,
+                       "s2_max_cloud_pct": S2_MAX_CLOUD},
+        "observed_baseline_drift_log10": 0.2,   # §sec-braided: AR1->AR3, ~1.6x
+        "scenes": {ep: {"s2": data[ep]["n2"], "s1": data[ep]["n1"]} for ep in EPOCHS},
+        "stations": geom,
+    }
+    (CFGDIR / "braid_optical_change.json").write_text(json.dumps(out, indent=2))
+    print(f"\nwrote {CFGDIR/'braid_optical_change.json'}")
+
+    make_figure(data, geom, spx)
+    return 0
+
+
+def make_figure(data, geom, spx):
+    pre, post = data["pre"], data["post"]
+    ext = [float(pre["channel"].x.min()), float(pre["channel"].x.max()),
+           float(pre["channel"].y.min()), float(pre["channel"].y.max())]
+
+    fig, ax = plt.subplots(1, 3, figsize=(15, 5.6), constrained_layout=True)
+
+    def plot_stations(a):
+        for name, (row, col, ux, uy) in spx.items():
+            a.plot(ux, uy, "^", ms=11, mfc="yellow", mec="k", mew=1.3, zorder=5)
+            a.annotate(name.split(".")[1], (ux, uy), color="k", fontsize=8,
+                       xytext=(6, 4), textcoords="offset points", fontweight="bold")
+
+    # (a) MNDWI pre vs water outlines
+    im0 = ax[0].imshow(pre["mndwi"].values, extent=ext, origin="upper",
+                       cmap="BrBG", vmin=-0.6, vmax=0.6)
+    ax[0].contour(post["channel"].values, levels=[0.5], extent=ext, origin="upper",
+                  colors="red", linewidths=0.7)
+    ax[0].set_title("(a) Pre (Nov 2025) MNDWI\nred = post active-channel outline")
+    plot_stations(ax[0])
+    fig.colorbar(im0, ax=ax[0], shrink=0.8, label="MNDWI")
+
+    # (b) change map: newly-wet / newly-dry / persistent (corridor-cleaned channel)
+    pre_a = pre["channel"].values.astype(int)
+    post_a = post["channel"].values.astype(int)
+    chg = np.zeros_like(pre_a)
+    chg[(pre_a == 1) & (post_a == 1)] = 1   # persistent
+    chg[(pre_a == 0) & (post_a == 1)] = 2   # newly wet
+    chg[(pre_a == 1) & (post_a == 0)] = 3   # newly dry
+    from matplotlib.colors import ListedColormap
+    cmap = ListedColormap(["#f7f7f7", "#3690c0", "#e31a1c", "#fdb863"])
+    ax[1].imshow(chg, extent=ext, origin="upper", cmap=cmap, vmin=-0.5, vmax=3.5)
+    ax[1].set_title("(b) Active-channel change (S2∪S1)\n"
+                    "blue=persistent · red=newly wet · orange=newly dry")
+    plot_stations(ax[1])
+
+    # (c) predicted geometric baseline drift per station — ensemble median + spread
+    names = list(geom)
+    x = np.arange(len(names))
+    med = [geom[n]["pred_dlog10P_median"] for n in names]
+    lo = [geom[n]["pred_dlog10P_median"] - geom[n]["pred_dlog10P_min"] for n in names]
+    hi = [geom[n]["pred_dlog10P_max"] - geom[n]["pred_dlog10P_median"] for n in names]
+    colors = ["#e31a1c" if n == "CC.PR01" else "#08519c" for n in names]
+    ax[2].bar(x, med, 0.55, yerr=[lo, hi], capsize=5, color=colors,
+              error_kw=dict(ecolor="0.3", lw=1.3))
+    ax[2].axhline(0.2, ls="--", color="green", lw=1.2)
+    ax[2].annotate("observed cross-AR drift +0.2", (len(names) - 1, 0.2),
+                   color="green", fontsize=8, ha="right", va="bottom")
+    ax[2].axhline(0, color="k", lw=0.8)
+    ax[2].set_xticks(x)
+    ax[2].set_xticklabels([n.split(".")[1] for n in names])
+    ax[2].set_ylabel(r"predicted $\Delta\log_{10}P=\log_{10}(W_{post}/W_{pre})$")
+    ax[2].set_title("(c) Predicted geometric baseline drift (PR01 red)", fontsize=10)
+    ax[2].text(0.5, -0.20, r"$W=\sum A\,r^{-1}e^{-r/r_e}$, "
+               + f"$r_e$={R_E:.0f} m; bars = MNDWI-threshold ensemble (median, range)",
+               transform=ax[2].transAxes, ha="center", fontsize=8, color="0.3")
+
+    out = FIGDIR / "fig19_braid_change.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight")
+    print(f"wrote {out}")
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

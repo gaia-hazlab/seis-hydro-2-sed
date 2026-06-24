@@ -96,7 +96,7 @@ def main() -> int:
         ax.set_visible(False)
     axes.ravel()[0].legend(fontsize=6.5, loc="upper left")
     fig.supylabel("discharge (m³ s⁻¹)"); fig.supxlabel("December 2025 (UTC)")
-    fig.suptitle("Seismic virtual discharge vs co-located gage (turbulence-band rating P∝Q$^b$)")
+    # (no figure suptitle — described by the manuscript caption; per-panel b,r kept)
     fig.tight_layout(); fig.autofmt_xdate()
     fig.savefig(FIGDIR / "fig12_virtual_q.png", dpi=200)
     plt.close(fig)

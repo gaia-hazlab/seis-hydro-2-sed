@@ -65,6 +65,7 @@ provisional and will move as the three open dependencies resolve.
 | `@fig-thr` | [fig14_threshold.png](figures/fig14_threshold.png) | Broken-stick transport-onset threshold Qc |
 | `@fig-rating` | [fig15_rating.png](figures/fig15_rating.png) | Stage–discharge rating Q=C(h−h0)^β at 4 gages |
 | `@fig-braid` | [fig16_braided_hysteresis.png](figures/fig16_braided_hysteresis.png) | Braided-reach onset diagnostic (geometric vs transport) |
+| `@fig-braidsat` | [fig19_braid_change.png](figures/fig19_braid_change.png) | Sentinel-2/-1 braid change Nov→Jan + predicted per-station geometric baseline drift |
 | `@fig-traffic` | [figS_traffic_noise.png](figures/figS_traffic_noise.png) | Traffic-noise contamination control (supplement) |
 | `@fig-vq` | [virtual_q_animation.gif](figures/virtual_q_animation.gif) | **Embedded GIF**: space–time distributed discharge field |
 | — | [bedload_animation.gif](figures/bedload_animation.gif) | Repo-only multidisciplinary GIF (SNOTEL + gage + bedload) |
@@ -133,10 +134,10 @@ Each thread: **Claim** · **Evidence (figs)** · **Key assumptions** · **Streng
 
 ### T9 — Braided-reach: a distributed, non-stationary source (NEW)
 - **Claim:** The Puyallup source cluster sits on an aggrading glacial-outwash braidplain. The single-thread model fails: distributed source, nonlinear stage-partitioning, H^7/3 suppression/flattening, avulsion. PR01's "cleanest Qc" is **geometric (reversible loops, |HI|≤0.06, no supply decay), not bedload**; a coherent +0.2-log baseline drift AR1→AR3 across all 3 stations = channel migration.
-- **Evidence:** `@fig-braid`, supported by `@fig-thr`, `@fig-scaling`, `@fig-vqval`. **PlanetScope pre/post imagery pending** (will test the avulsion prediction directly).
+- **Evidence:** `@fig-braid`, supported by `@fig-thr`, `@fig-scaling`, `@fig-vqval`. **`@fig-braidsat`: Sentinel-2/-1 pre/post (Nov→Jan) confirms the avulsion prediction directionally** — PR01's nearest active thread moved ~50 m closer and PR01 shows the largest predicted geometric drift (median Δlog₁₀P≈+0.28), matching the observed +0.2-log cross-AR drift in sign and rank.
 - **Assumptions:** baseline drift is geometric, not a basin-supply trend; Lawler HI captures the relevant loop sense.
-- **Strength:** **Strong & differentiating.** Recasts T3/T5 and warns T7 — a caution most of the (single-thread) literature has not had to make.
-- **Gap:** PlanetScope confirmation; whether it generalizes to other braided reaches.
+- **Strength:** **Strong & differentiating.** Recasts T3/T5 and warns T7 — a caution most of the (single-thread) literature has not had to make. Now satellite-corroborated.
+- **Gap:** the satellite magnitude is threshold-sensitive at 10 m (sign/order robust, magnitude not) — a ≈3 m or a December time-series (per-AR) test would calibrate it; whether it generalizes to other braided reaches.
 
 ### T10 — The December-2025 compound AR event itself (the narrative spine)
 - **Claim:** A weak pre-AR primed the basin, then three strong pulses; upstream stayed flat while downstream rose monotonically (cumulative wetting + rising freezing level + tributary superposition).
@@ -177,4 +178,4 @@ Spine: T10 as container, hanging T1/T3/T8 off it. A case-study narrative of a dr
 
 **Recommendation:** lead with **A** (distributed virtual-gage network + early warning) as the headline, fold **B**'s rigor (T4, T9) in as the "scope and limits" section that makes A credible, and use **C** (T10) as the framing event. T3/T5/T6/T12 become supporting/discussion. The braided thread (T9) is the credibility hinge between A's ambition and B's honesty — it is why the ratings are reach-specific.
 
-**Open dependencies that could shift the choice:** March-2026 out-of-sample (tests T5, T7, T8 robustness); PlanetScope pre/post (confirms T9 avulsion); 2026 CH 500-sps (could promote T3/T12 from hypothesis to result).
+**Open dependencies that could shift the choice:** March-2026 out-of-sample (tests T5, T7, T8 robustness); ~~PlanetScope pre/post (confirms T9 avulsion)~~ — **done via Sentinel-2/-1 (`@fig-braidsat`), directionally confirmed**; 2026 CH 500-sps (could promote T3/T12 from hypothesis to result).

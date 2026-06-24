@@ -95,7 +95,7 @@ def main() -> int:
     for ax in axes.ravel()[n:]:
         ax.set_visible(False)
     fig.supxlabel(r"$\log_{10} Q$ (m³ s⁻¹)"); fig.supylabel(r"$\log_{10} P$ (5–15 Hz)")
-    fig.suptitle("Transport-onset threshold: broken-stick fit of seismic power vs discharge")
+    # (no figure suptitle — described by the manuscript caption; per-panel b:b1→b2 kept)
     fig.tight_layout()
     fig.savefig(FIGDIR / "fig14_threshold.png", dpi=200)
     plt.close(fig)

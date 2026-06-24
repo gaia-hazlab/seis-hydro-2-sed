@@ -80,7 +80,7 @@ def main() -> int:
     ax.set_yscale("log")
     ax.set_xlabel("gage height / stage  h  (m)")
     ax.set_ylabel("discharge  Q  (m³ s⁻¹)")
-    ax.set_title("Stage–discharge rating  Q = C (h − h₀)$^β$  (Dec 2025)", loc="left")
+    # (no figure title — described by the manuscript caption)
     ax.legend(fontsize=7.5, loc="lower right")
     ax.grid(alpha=0.25, which="both")
     fig.tight_layout()

@@ -146,10 +146,11 @@ def main() -> int:
     a2.axhline(1.0, color="0.5", ls=":", lw=1)
     a2.set_ylabel("bedload-band power / pre-flood median")
     a2.set_xlabel("December 2025 (UTC)")
-    a2.legend(fontsize=7, ncol=2, loc="upper right")
-    a1.set_title("Bedload-band (5–15 Hz) response across the pre-AR and three atmospheric rivers", loc="left")
+    a2.legend(fontsize=7, ncol=1, loc="center left", bbox_to_anchor=(1.01, 0.5),
+              frameon=False)
+    # (no figure title — described by the manuscript caption)
     fig.autofmt_xdate()
-    fig.savefig(FIGDIR / "fig6_bedload_time.png")
+    fig.savefig(FIGDIR / "fig6_bedload_time.png", bbox_inches="tight")
     plt.close(fig)
 
     # ---- fig7: per-AR mean bedload per station ----
@@ -172,8 +173,7 @@ def main() -> int:
     ax.set_xticklabels([f"{s}\n{data[s]['dist']:.0f} km" for s in stations], fontsize=8)
     ax.axhline(1.0, color="0.5", ls=":", lw=1)
     ax.set_ylabel("mean bedload-band power / pre-flood median")
-    ax.set_title("Per-AR average bedload, source → downstream", loc="left")
-    ax.legend()
+    ax.legend(title="AR pulse")
     fig.savefig(FIGDIR / "fig7_bedload_per_AR.png")
     plt.close(fig)
 

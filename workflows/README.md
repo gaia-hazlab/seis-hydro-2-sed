@@ -19,8 +19,9 @@ Run from the repo root inside the pixi env (`pixi shell` or prefix with `pixi ru
 | 16 | `python workflows/16_classify_stations.py` | `config/station_status.json` (drives hollow no-signal markers) |
 | 17 | `python workflows/17_rating.py` | `fig15_rating.png` + `config/rating_fits.json` (stage–discharge) |
 | 18 | `python workflows/18_braided_hysteresis.py` | `fig16_braided_hysteresis.png` + `config/braided_hysteresis.json` |
+| 19 | `python workflows/19_braid_optical_change.py` | `fig19_braid_change.png` + `config/braid_optical_change.json` — Sentinel-2/-1 braid change + geometric drift |
 
-Scripts are standalone and idempotent; most read `notebooks/data/results/` (step 1) plus committed `config/*.json` and write into `paper/figures/`. Steps 3–18 can run in any order after step 1. See [`paper/ROADMAP.md`](../paper/ROADMAP.md) for which figure supports which research thread.
+Scripts are standalone and idempotent; most read `notebooks/data/results/` (step 1) plus committed `config/*.json` and write into `paper/figures/`. Steps 3–18 can run in any order after step 1. **Step 19 is the only one needing network access at run time** (it queries the Microsoft Planetary Computer STAC API for Sentinel-2/-1 imagery — no credentials required). See [`paper/ROADMAP.md`](../paper/ROADMAP.md) for which figure supports which research thread.
 
 Batch over the whole upper transect (all CC stations with gages):
 ```bash

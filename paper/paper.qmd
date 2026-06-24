@@ -318,18 +318,46 @@ non-stationary, attenuation-weighted sum — and must treat braided-reach expone
 thresholds, and ratings as **reach-geometry-dependent and event-specific** rather
 than universal grain-mechanical constants.
 
-::: {.callout-note}
-## PlanetScope pre/post imagery (in preparation)
-The avulsion interpretation of the cross-AR baseline drift makes a falsifiable
-prediction: the active thread(s) nearest CC.PR01/PR02/PR03 should have shifted
-*toward* the stations between the pre-flood and post-flood states. High-cadence
-PlanetScope optical imagery bracketing the December-2025 floods (pre- vs post-event
-channel maps) will be added to test this directly — quantifying wetted-channel
-position relative to each sensor and converting the seismic baseline drift into a
-measured channel-migration distance.
-:::
-
 ![Braided-reach onset diagnostic for the three co-located Puyallup stations. Solid = rising limb, dashed = falling limb of each AR's $P$–$Q$ loop; the Lawler hysteresis index (HI) is annotated. Loops are reversible (HI$\approx$0, not clockwise) and peak power does not decay across ARs — arguing against a supply-limited transport onset — while a coherent positive baseline shift from AR1 to AR3 indicates the active channel migrated toward the cluster.](figures/fig16_braided_hysteresis.png){#fig-braid width=98%}
+
+**Satellite test of the avulsion prediction.** The avulsion reading makes a
+falsifiable, geometric prediction: if the cross-AR baseline drift is the active
+thread migrating *toward* the cluster, then the wetted channel nearest
+CC.PR01/PR02/PR03 should have moved closer between the pre-flood (November 2025)
+and post-flood (early January 2026) states, and the implied change should be
+*largest at the most braidplain-central station*, CC.PR01. We test this directly
+with optical and radar imagery (Sentinel-2 L2A and Sentinel-1 RTC, via the
+Microsoft Planetary Computer), differencing cloud-masked MNDWI wetted-channel maps
+and VV-backscatter water masks between the two epochs within a 500 m corridor of
+the NHD mainstem (@fig-braidsat a,b). We then propagate the resulting channel
+geometry through the manuscript's own attenuation kernel, summing an
+attenuation-weighted "wetted illumination" $W=\sum_i A_i\,r_i^{-1}\exp(-r_i/r_e)$
+over the active-channel pixels at each station ($r_e\approx780$ m, §Discussion),
+and read the predicted baseline shift as $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$.
+
+The result corroborates the avulsion interpretation *in sign and in spatial
+order, but not yet in absolute magnitude*. The active channel reorganized
+markedly across the event; CC.PR01's nearest active thread moved $\approx$50 m
+**closer** (264→214 m), and CC.PR01 shows the **largest** predicted geometric
+drift of the three stations (median $\Delta\log_{10}P\approx+0.28$, vs $+0.07$ at
+the on-channel anchor CC.PR03), the same rank order and the same positive sign as
+the observed $+0.2$-log cross-AR drift (@fig-braidsat c). That the flattest-exponent,
+lowest-correlation station is also the one the imagery says was most geometrically
+reworked is independent support that CC.PR01's anomaly — and the shared baseline
+drift — is a moving-source effect, not a bed-mechanical one. The magnitude,
+however, is not robust: because turbid braided water sits near MNDWI$\approx$0,
+sweeping the water threshold spreads the predicted drift across roughly
+$[-0.6,+1.0]$ log units (error bars, @fig-braidsat c), and part of the larger
+post-flood wetted area is seasonal winter baseflow rather than avulsion. At the
+10 m resolution of Sentinel the test therefore confirms the *direction and
+localization* of the channel-migration effect while leaving its calibrated
+magnitude — the conversion of seismic baseline drift into a metric channel-migration
+distance — for higher-resolution (≈3 m) imagery. The qualitative verdict stands:
+on a braided reach the seismic virtual-discharge rating is reach-geometry-dependent
+and can drift between events as the channel moves, exactly the caution §sec-braided
+raises.
+
+![Satellite test of the braided-source avulsion prediction. (a) Pre-flood (Nov 2025) Sentinel-2 MNDWI with the post-flood (early Jan 2026) active-channel outline (red); yellow triangles are the three co-located stations. (b) Active-channel change within the NHD mainstem corridor (Sentinel-2 optical $\cup$ Sentinel-1 SAR): blue = persistent water, red = newly wet, orange = newly dry. (c) Predicted geometric baseline drift $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$ per station from the attenuation-weighted wetted illumination $W=\sum A\,r^{-1}e^{-r/r_e}$ ($r_e\approx780$ m); bars are the median over a MNDWI-threshold ensemble and whiskers its range. CC.PR01 (red) shows the largest drift, matching the observed $+0.2$-log cross-AR shift (green dashed) in sign and rank; the threshold spread shows the magnitude is not yet robust at 10 m resolution.](figures/fig19_braid_change.png){#fig-braidsat width=98%}
 
 ## Time-dependent bedload across the atmospheric rivers
 
@@ -599,6 +627,7 @@ writing a figure and/or a `config/*.json` it consumes downstream:
 | classification | `16_classify_stations.py` | `station_status.json` (drives hollow markers) |
 | rating | `17_rating.py` | @fig-rating (stage–discharge) |
 | braided source | `18_braided_hysteresis.py` | @fig-braid (geometric-vs-transport diagnostic) |
+| braid satellite | `19_braid_optical_change.py` | @fig-braidsat (Sentinel-2/-1 channel change + geometric drift) |
 
 Run order and parameters are documented in `workflows/README.md`; the single source
 of analysis parameters is `config/analysis.yaml`. The book (manuscript, this roadmap,
