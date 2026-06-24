@@ -32,17 +32,18 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from riverseis.analysis import (  # noqa: E402
-    WATER_BASELINE, event_window, fit_scaling, lawler_hysteresis_index, load_timeseries,
+    WATER_BASELINE, clip_event, event_window, fit_scaling, lawler_hysteresis_index,
+    load_timeseries,
 )
 
 RESULTS = ROOT / "notebooks" / "data" / "results"
 FIGDIR = ROOT / "paper" / "figures"
 FIGDIR.mkdir(parents=True, exist_ok=True)
 
+from riverseis.figstyle import paper_style  # noqa: E402
+paper_style()                                # legible fonts + tight bbox (group standard)
 plt.rcParams.update({
-    "font.size": 9, "axes.titlesize": 9.5, "axes.labelsize": 9,
-    "legend.fontsize": 7.5, "xtick.labelsize": 8, "ytick.labelsize": 8,
-    "figure.dpi": 150, "savefig.dpi": 300, "savefig.bbox": "tight",
+    "savefig.dpi": 300,
     "axes.grid": True, "grid.alpha": 0.22, "axes.axisbelow": True,
     "axes.spines.top": False, "axes.spines.right": False,
     "figure.constrained_layout.use": True,   # auto spacing — no overlapping labels
@@ -92,7 +93,7 @@ def fig_scaling_exponent(items: list[dict]) -> pd.DataFrame:
     for it in items:
         if it["band"] is None:
             continue
-        j = load_timeseries(it["path"])
+        j = clip_event(load_timeseries(it["path"]))   # fit on the flood window
         fit = fit_scaling(j, it["station"], it["band"])
         ev = event_window(j)
         x, y, _ = (np.log10(ev["Q"].clip(lower=1e-6)).values,
@@ -155,7 +156,7 @@ def fig_pq_scatter(items: list[dict]) -> None:
                              squeeze=False, sharex=True, sharey=True)
     flat = axes.ravel()
     for ax, it in zip(flat, banded):
-        j = load_timeseries(it["path"])
+        j = clip_event(load_timeseries(it["path"]))   # fit on the flood window
         fit = fit_scaling(j, it["station"], it["band"])
         lq = np.log10(j["Q"].clip(lower=1e-6))
         lp = np.log10(j["P"].clip(lower=1e-30))

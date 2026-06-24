@@ -21,6 +21,28 @@ import pandas as pd
 WATER_BASELINE = (0.9, 1.4)
 
 
+def event_bounds(config_root: Path | None = None) -> tuple[pd.Timestamp, pd.Timestamp]:
+    """(start, end) UTC of the flood/event window, from config/transect_puyallup.yaml."""
+    import yaml
+    root = config_root or Path(__file__).resolve().parents[2]
+    e = yaml.safe_load((root / "config" / "transect_puyallup.yaml").read_text())["event"]
+    return (pd.Timestamp(e["start_utc"], tz="UTC"), pd.Timestamp(e["end_utc"], tz="UTC"))
+
+
+def clip_event(j: pd.DataFrame) -> pd.DataFrame:
+    """Clip a proxy/discharge series to the flood/event window for scaling fits.
+
+    The raw CSVs now extend past the event (to the post-flood, snow-dominated
+    quiet tail) for the time-series and warm-AR figures, but the P∝Q^b *fit* must
+    characterize the flood turbulent-flow response — not the runoff-poor cold
+    aftermath, which is a different regime and dilutes the fit. So every
+    single-value scaling fit (b, r, Qc, virtual-Q rating, classification) clips to
+    this window; the time-series figures keep the full record.
+    """
+    a, b = event_bounds()
+    return j.loc[(j.index >= a) & (j.index <= b)]
+
+
 @dataclass
 class ScalingFit:
     station: str

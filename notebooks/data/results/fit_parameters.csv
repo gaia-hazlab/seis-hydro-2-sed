@@ -1,0 +1,3 @@
+seis_key,network,station,gage_id,gage_distance_km,proxy_method,use_rss,components,band_fmin,band_fmax,tau_s,tau_hours,gauge_col,n_pairs,corr_log10,beta,a,timeseries_csv
+CC.GTWY,CC,GTWY,12082500,12.78020724082844,bandpower,True,"Z,N,E",2.0,8.0,-4800.0,-1.3333333333333333,discharge_cms,2975,0.8969726609225848,1.4438399127631512,-15.386678373044347,CC.GTWY_2.0-8.0Hz_timeseries.csv
+CC.GTWY,CC,GTWY,12082500,12.78020724082844,bandpower,True,"Z,N,E",5.0,15.0,-4800.0,-1.3333333333333333,discharge_cms,2975,0.7711844995015963,1.4282261051101637,-15.079418618266144,CC.GTWY_5.0-15.0Hz_timeseries.csv

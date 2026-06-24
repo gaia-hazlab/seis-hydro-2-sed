@@ -26,6 +26,9 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "notebooks" / "data" / "results"
+
+import sys; sys.path.insert(0, str(ROOT / "src"))
+from riverseis.analysis import clip_event  # noqa: E402
 FIGDIR = ROOT / "paper" / "figures"
 EXCLUDE = {"UW.BHW", "UW.TEHA"}
 RE = re.compile(r"^(?P<sid>[A-Z0-9]+\.[A-Z0-9]+)_5\.0-15\.0Hz_timeseries\.csv$")
@@ -38,7 +41,7 @@ def load(path):
     P = pd.to_numeric(df["proxy"], errors="coerce"); Q = pd.to_numeric(df["gauge"], errors="coerce")
     j = pd.concat([P.rename("P"), Q.rename("Q")], axis=1).sort_index()
     j["Q"] = j["Q"].interpolate("linear", limit=12)
-    j = j.dropna()
+    j = clip_event(j.dropna())   # breakpoint fit on the flood window
     lp = np.log10(j["P"].clip(lower=1e-30)); lq = np.log10(j["Q"].clip(lower=1e-6))
     med = lp.median(); mad = 1.4826 * (lp - med).abs().median()
     k = (lp - med).abs() < 6 * max(mad, 1e-9)

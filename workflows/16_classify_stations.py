@@ -20,6 +20,9 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "notebooks" / "data" / "results"
+
+import sys; sys.path.insert(0, str(ROOT / "src"))
+from riverseis.analysis import clip_event, fit_scaling, load_timeseries  # noqa: E402
 CONTROL = {"UW.BHW", "UW.TEHA"}
 FLOW_PREF = ["5.0-15.0", "2.0-8.0", "1.0-5.0"]   # best -> fallback flow band
 FN = re.compile(r"^(?P<sid>[A-Z0-9]+\.[A-Z0-9]+)_(?P<band>[\d.]+-[\d.]+)Hz_timeseries\.csv$")
@@ -33,16 +36,14 @@ def best_r(sid):
             bands[m["band"]] = f
     for b in FLOW_PREF:
         if b in bands:
-            df = pd.read_csv(bands[b], parse_dates=["time_utc"]).set_index("time_utc")
-            df.index = pd.to_datetime(df.index, utc=True, errors="coerce")
-            df = df[df.index.notna()]
-            P = pd.to_numeric(df["proxy"], errors="coerce"); Q = pd.to_numeric(df["gauge"], errors="coerce")
-            j = pd.concat([np.log10(P.clip(lower=1e-30)).rename("p"),
-                           np.log10(Q.clip(lower=1e-6)).rename("q")], axis=1)
-            j["q"] = j["q"].interpolate("linear", limit=12); j = j.dropna()
+            # Use the SAME robust, flood-windowed fit as the scaling table (02) so
+            # the classification r matches the reported b/r exactly (a plain
+            # corrcoef here diverged once NWIS data introduced a few outliers).
+            j = clip_event(load_timeseries(bands[b]))
             if len(j) > 80:
-                r = float(j["p"].corr(j["q"])); b_fit = float(np.polyfit(j["q"], j["p"], 1)[0])
-                return b, r, b_fit, len(j)
+                lo, hi = b.split("-")
+                fit = fit_scaling(j, sid, (float(lo), float(hi)))
+                return b, float(fit.r), float(fit.b_ols), int(fit.n)
     return None, np.nan, np.nan, 0
 
 

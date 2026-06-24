@@ -1,78 +1,78 @@
 {
   "CC.PR01": {
-    "b_pooled": 1.19,
+    "b_pooled": 1.11,
     "per_AR": [
       {
         "AR": "AR1",
-        "HI": -0.028,
+        "HI": -0.031,
         "peak_logP": -12.353,
-        "baseline_offset": -0.046,
+        "baseline_offset": 0.04,
         "n": 649
       },
       {
         "AR": "AR2",
-        "HI": 0.015,
+        "HI": 0.016,
         "peak_logP": -12.239,
-        "baseline_offset": 0.124,
+        "baseline_offset": 0.23,
         "n": 373
       },
       {
         "AR": "AR3",
-        "HI": 0.041,
+        "HI": 0.026,
         "peak_logP": -12.638,
-        "baseline_offset": 0.06,
+        "baseline_offset": 0.123,
         "n": 505
       }
     ]
   },
   "CC.PR02": {
-    "b_pooled": 1.67,
+    "b_pooled": 1.83,
     "per_AR": [
       {
         "AR": "AR1",
-        "HI": -0.057,
+        "HI": -0.06,
         "peak_logP": -11.321,
-        "baseline_offset": -0.193,
-        "n": 649
-      },
-      {
-        "AR": "AR2",
-        "HI": -0.005,
-        "peak_logP": -11.179,
-        "baseline_offset": 0.036,
-        "n": 373
-      },
-      {
-        "AR": "AR3",
-        "HI": 0.014,
-        "peak_logP": -11.412,
-        "baseline_offset": 0.144,
-        "n": 505
-      }
-    ]
-  },
-  "CC.PR03": {
-    "b_pooled": 1.66,
-    "per_AR": [
-      {
-        "AR": "AR1",
-        "HI": -0.037,
-        "peak_logP": -11.103,
-        "baseline_offset": -0.212,
+        "baseline_offset": -0.008,
         "n": 649
       },
       {
         "AR": "AR2",
         "HI": -0.004,
-        "peak_logP": -10.843,
-        "baseline_offset": -0.005,
+        "peak_logP": -11.179,
+        "baseline_offset": 0.183,
         "n": 373
       },
       {
         "AR": "AR3",
-        "HI": 0.036,
+        "HI": 0.008,
+        "peak_logP": -11.412,
+        "baseline_offset": 0.278,
+        "n": 505
+      }
+    ]
+  },
+  "CC.PR03": {
+    "b_pooled": 1.51,
+    "per_AR": [
+      {
+        "AR": "AR1",
+        "HI": -0.04,
+        "peak_logP": -11.103,
+        "baseline_offset": -0.031,
+        "n": 649
+      },
+      {
+        "AR": "AR2",
+        "HI": -0.003,
+        "peak_logP": -10.843,
+        "baseline_offset": 0.194,
+        "n": 373
+      },
+      {
+        "AR": "AR3",
+        "HI": 0.017,
         "peak_logP": -11.313,
-        "baseline_offset": 0.169,
+        "baseline_offset": 0.251,
         "n": 505
       }
     ]

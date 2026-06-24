@@ -22,6 +22,9 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "notebooks" / "data" / "results"
+
+import sys; sys.path.insert(0, str(ROOT / "src"))
+from riverseis.analysis import clean_loglog, clip_event, fit_scaling  # noqa: E402
 FIGDIR = ROOT / "paper" / "figures"
 EXCLUDE = {"UW.BHW", "UW.TEHA"}
 BAND_RE = re.compile(r"^(?P<sid>[A-Z0-9]+\.[A-Z0-9]+)_5\.0-15\.0Hz_timeseries\.csv$")
@@ -37,7 +40,7 @@ def load(path):
     Q = pd.to_numeric(df["gauge"], errors="coerce")
     j = pd.concat([P.rename("P"), Q.rename("Q")], axis=1).sort_index()
     j["Q"] = j["Q"].interpolate("linear", limit=12)
-    return j.dropna()
+    return clip_event(j.dropna())   # rating fit on the flood window
 
 
 def b_of_time(lq, lp):
@@ -64,12 +67,17 @@ def main() -> int:
         if len(j) < 100:
             continue
         lq = np.log10(j["Q"].clip(lower=1e-6)); lp = np.log10(j["P"].clip(lower=1e-30))
-        b, a = np.polyfit(lq.values, lp.values, 1)          # log10 P = a + b log10 Q
-        r = float(np.corrcoef(lq, lp)[0, 1])
-        q_seis = 10 ** ((lp - a) / b)                       # invert -> virtual discharge
-        # Nash–Sutcliffe of virtual vs real (log space, robust)
-        resid = (np.log10(q_seis.clip(lower=1e-6)) - lq)
-        nse = 1 - float(np.nansum(resid ** 2) / np.nansum((lq - lq.mean()) ** 2))
+        # Robust fit, identical to the scaling table (02) / classification (16) so
+        # b, r match everywhere; a plain polyfit here diverged once NWIS data
+        # introduced a few outliers (it drove NSE negative).
+        fit = fit_scaling(j, sid, (5.0, 15.0))
+        a, b, r = fit.intercept, fit.b_ols, fit.r           # log10 P = a + b log10 Q
+        q_seis = 10 ** ((lp - a) / b)                       # full series -> virtual discharge (figure)
+        # Nash–Sutcliffe of virtual vs real on the robust inliers (log space)
+        lqi, lpi, _ = clean_loglog(j)
+        qsi = 10 ** ((lpi - a) / b)
+        resid = np.log10(np.clip(qsi, 1e-6, None)) - lqi
+        nse = 1 - float(np.nansum(resid ** 2) / np.nansum((lqi - lqi.mean()) ** 2))
         bt = b_of_time(lq, lp)
         rows.append(dict(station=sid, a=round(float(a), 3), b=round(float(b), 3), r=round(r, 3),
                          nse_logQ=round(nse, 3), b_t_mean=round(float(bt.mean()), 3) if len(bt) else None,
