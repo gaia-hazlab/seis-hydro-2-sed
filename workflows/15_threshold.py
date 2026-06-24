@@ -83,18 +83,43 @@ def main() -> int:
         x0, b1, b2, a, sse, sse_lin = broken_stick(x, y)
         Qc = 10 ** x0
         improve = 1 - sse / sse_lin                          # variance reduction vs single line
-        steepens = b2 > b1 + 0.15 and improve > 0.02
+        # Model comparison: single line (k=2: a,b) vs continuous broken-stick
+        # (k=4: a,b1,Δslope,x0). Consecutive 10-min flood samples are strongly
+        # autocorrelated, so the raw n hugely overstates independent information
+        # and would make every break "significant". Use an effective sample size
+        # from the lag-1 autocorrelation of the (time-ordered) broken-stick
+        # residuals: n_eff = n·(1−ρ)/(1+ρ). ΔBIC>10 then = very strong evidence
+        # for two segments (Kass & Raftery 1995).
+        nx = len(x)
+        yhat = a + b1 * x + (b2 - b1) * np.maximum(0.0, x - x0)   # x,y are time-ordered
+        resid = y - yhat
+        rho = float(np.corrcoef(resid[:-1], resid[1:])[0, 1]) if nx > 3 else 0.0
+        rho = min(max(rho, 0.0), 0.999)
+        n_eff = max(5.0, nx * (1.0 - rho) / (1.0 + rho))
+        bic_lin = n_eff * np.log(sse_lin / nx) + 2 * np.log(n_eff)
+        bic_bs = n_eff * np.log(sse / nx) + 4 * np.log(n_eff)
+        aic_lin = n_eff * np.log(sse_lin / nx) + 2 * 2
+        aic_bs = n_eff * np.log(sse / nx) + 2 * 4
+        dBIC = bic_lin - bic_bs
+        dAIC = aic_lin - aic_bs
+        significant = bool(dBIC > 10 and abs(b2 - b1) > 0.3)
+        direction = "steepening" if b2 > b1 + 0.3 else ("flattening" if b2 < b1 - 0.3 else "none")
+        steepens = significant and direction == "steepening"
         rows.append(dict(station=sid, Qc_cms=round(float(Qc), 1), b_below=round(b1, 2),
                          b_above=round(b2, 2), dslope=round(b2 - b1, 2),
-                         var_reduction=round(improve, 3), onset=bool(steepens)))
+                         var_reduction=round(improve, 3), dBIC=round(float(dBIC), 1),
+                         dAIC=round(float(dAIC), 1), n_eff=round(float(n_eff), 0),
+                         rho=round(float(rho), 3), significant_break=significant,
+                         direction=direction, onset=bool(steepens)))
         ax.scatter(x, y, s=3, alpha=0.25, color="0.5")
         xs = np.linspace(x.min(), x.max(), 100)
         yhat = a + b1 * xs + (b2 - b1) * np.maximum(0, xs - x0)
         ax.plot(xs, yhat, "r-", lw=1.8)
-        if steepens:
+        if significant:
             ax.axvline(x0, color="#0072B2", ls="--", lw=1.2)
             ax.text(x0, ax.get_ylim()[1], f" Qc≈{Qc:.0f}", color="#0072B2", fontsize=7, va="top")
-        ax.set_title(f"{sid}  b:{b1:.2f}→{b2:.2f}" + ("" if steepens else "  (no break)"), fontsize=8)
+        tag = f"  ΔBIC={dBIC:.0f}" if significant else "  (no break)"
+        ax.set_title(f"{sid}  b:{b1:.2f}→{b2:.2f}{tag}", fontsize=8)
     for ax in axes.ravel()[n:]:
         ax.set_visible(False)
     fig.supxlabel(r"$\log_{10} Q$ (m³ s⁻¹)"); fig.supylabel(r"$\log_{10} P$ (5–15 Hz)")

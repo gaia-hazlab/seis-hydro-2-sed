@@ -106,16 +106,26 @@ def fig_scaling_exponent(items: list[dict]) -> pd.DataFrame:
     if df.empty:
         return df
 
-    fig, ax = plt.subplots(figsize=(7.8, 4.6))
+    fig, ax = plt.subplots(figsize=(8.8, 5.0))
     ax.axhspan(*WATER_BASELINE, color="0.6", alpha=0.18,
                label=f"turbulence baseline (b≈{WATER_BASELINE[0]}–{WATER_BASELINE[1]})")
     ax.axhline(1.0, color="0.5", ls=":", lw=1)
     # Exclude the 0.5-2 Hz oceanic-microseism band: it is not river turbulence
     # (it can be anti-correlated with discharge) and distorts the b(f) trend.
-    # station signal status: none-signal stations drawn hollow/grey (documented, not hidden)
+    # none-signal stations drawn hollow/grey (documented, not hidden); a distinct
+    # marker SYMBOL per station so they are identifiable without relying on colour.
     sp = ROOT / "config" / "station_status.json"
     status = {s["station"]: s["status"] for s in json.loads(sp.read_text())} if sp.exists() else {}
+    # BIC/AIC-significant P–Q breaks from the threshold analysis (fig14): for these
+    # stations a two-exponent fit (b below / above Qc) beats a single line, so we
+    # report both exponents and star the station here.
+    tp = ROOT / "config" / "threshold_qc.json"
+    breaks = ({r["station"]: r for r in json.loads(tp.read_text()) if r.get("significant_break")}
+              if tp.exists() else {})
+    MARKERS = ["o", "s", "^", "D", "v", "P", "X", "h", "<", ">", "*", "p", "d"]
     plot_df = df[df["fc"] >= 1.5]
+    markmap = {s: MARKERS[i % len(MARKERS)]
+               for i, s in enumerate(sorted(plot_df["station"].unique()))}
     for sta, g in plot_df.groupby("station"):
         g = g.sort_values("fc")
         yerr = np.vstack([g["b"] - g["b_lo"], g["b_hi"] - g["b"]])
@@ -123,20 +133,25 @@ def fig_scaling_exponent(items: list[dict]) -> pd.DataFrame:
         nosig = status.get(sta) in ("none", "control")
         fit_lbl = (f"b={bvals[0]:.2f}" if len(bvals) == 1
                    else "b=" + "→".join(f"{v:.2f}" for v in bvals))
+        brk = breaks.get(sta)
+        if brk:
+            arr = "↑" if brk["direction"] == "steepening" else "↓"
+            fit_lbl += f"  ·  Qc{brk['Qc_cms']:.0f}: {brk['b_below']:.1f}→{brk['b_above']:.1f}{arr}"
         tag = "  (no signal)" if nosig else ""
-        ax.errorbar(g["fc"], g["b"], yerr=yerr, marker="o", ms=7, capsize=3,
+        ax.errorbar(g["fc"], g["b"], yerr=yerr, marker=markmap[sta], ms=8.5, capsize=3,
                     lw=1.2 if nosig else 1.8, ls=":" if nosig else "-",
                     color="0.6" if nosig else _color(sta),
                     markerfacecolor="none" if nosig else _color(sta),
-                    label=f"{sta}   {fit_lbl}{tag}")
+                    markeredgecolor="k" if brk else ("0.6" if nosig else _color(sta)),
+                    markeredgewidth=1.7 if brk else 0.7,
+                    label=f"{'★ ' if brk else ''}{sta}   {fit_lbl}{tag}")
     ax.set_xscale("log")
     ax.tick_params(labelsize=11)
     ax.set_xlabel("band center frequency (Hz)", fontsize=13)
     ax.set_ylabel(r"scaling exponent $b$   ($P \propto Q^{\,b}$)", fontsize=13)
-    # (no figure title — the manuscript caption describes the figure)
-    # legend outside, to the right — shows each station's fitted exponent
     ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), frameon=False,
-              title="station (fitted exponent)", title_fontsize=12, fontsize=11)
+              title=r"station — b vs band;  ★ = BIC-significant Q-break (b$_{<Q_c}\!\to$b$_{>Q_c}$)",
+              title_fontsize=10, fontsize=10)
     fig.savefig(FIGDIR / "fig2_scaling_exponent.png")
     plt.close(fig)
     return df

@@ -82,13 +82,35 @@ AOI = (-122.070, 46.895, -122.025, 46.935)
 UTM = "EPSG:32610"          # UTM 10N — metres, for distance/area maths
 RES = 10                    # m, target pixel (S2 native green/NIR resolution)
 
-# Co-located Puyallup source cluster (lon, lat, b, r)  [config/station_status.json]
-STATIONS = {
-    "CC.PR03": (-122.0327, 46.9034, 1.66, 0.94),   # 500-sps anchor, on-channel
-    "CC.PR01": (-122.0376, 46.9101, 1.19, 0.88),   # the anomaly: flat b, low r
-    "CC.PR02": (-122.0487, 46.9183, 1.67, 0.94),
+# Region registry. Each: AOI (minlon,minlat,maxlon,maxlat), station cluster
+# (lon, lat, b, r), NHD river key, on-channel anchor, and whether the stations
+# are co-located closely enough for the relative-to-anchor December series.
+REGIONS = {
+    "puyallup": dict(
+        aoi=(-122.070, 46.895, -122.025, 46.935),
+        stations={
+            "CC.PR03": (-122.0327, 46.9034, 1.77, 0.97),   # on-channel anchor
+            "CC.PR01": (-122.0376, 46.9101, 0.97, 0.78),   # braidplain anomaly
+            "CC.PR02": (-122.0487, 46.9183, 1.80, 0.96),
+        },
+        nhd="Puyallup", anchor="CC.PR03", co_located=True, figtag="",
+        json="braid_optical_change.json"),
+    # UW.LON reach only (tight AOI; the full LON+GTWY box is too large for one
+    # STAC load). UW.LON has the steepest scaling (b=2.24) and the most extreme
+    # Q-break (1.2->4.3) — the prime candidate for a braided/anabranching reach.
+    "nisqually": dict(
+        aoi=(-121.828, 46.738, -121.792, 46.764),
+        stations={
+            "UW.LON": (-121.8096, 46.7506, 2.24, 0.91),    # steepest b; Qc-break 1.2->4.3
+        },
+        nhd="Nisqually", anchor="UW.LON", co_located=False, figtag="_nisqually",
+        json="braid_optical_change_nisqually.json"),
 }
-BRAID_SEED = (-122.0562, 46.9269)   # Google-Earth braid point the user supplied
+# Module-level state (overwritten by select_region() in main()); defaults = Puyallup.
+AOI = REGIONS["puyallup"]["aoi"]
+STATIONS = REGIONS["puyallup"]["stations"]
+NHD_KEY, ANCHOR, CO_LOCATED = "Puyallup", "CC.PR03", True
+FIGTAG, JSON_NAME = "", "braid_optical_change.json"
 
 EPOCHS = {
     "pre":  "2025-11-01/2025-11-30",   # before the Dec 2025 AR floods
@@ -170,7 +192,7 @@ def channel_corridor(grid: xr.DataArray, buffer_m: float = CORRIDOR_M):
     import rasterio.warp
     from shapely.geometry import LineString
     from shapely.ops import unary_union
-    paths = json.loads((CFGDIR / "nhd_rivers.json").read_text())["Puyallup"]
+    paths = json.loads((CFGDIR / "nhd_rivers.json").read_text())[NHD_KEY]
     lines = []
     for path in paths:
         lon = [p[0] for p in path]
@@ -291,7 +313,7 @@ def december_series(corridor, spx):
     NOTE: the Dec 9–12 epoch captures peak inundation (transient flood water,
     not just the active braid) — flagged in the figure, not removed.
     """
-    ANCHOR = "CC.PR03"   # on-channel, geometrically stable reference
+    other = next(n for n in STATIONS if n != ANCHOR)   # a non-anchor station for the print
     print("\nDecember SAR-led channel-migration series (Sentinel-1 min-composite):")
     labels, flood, Wt = [], [], {n: [] for n in STATIONS}
     for lab, dr, is_peak in DEC_EPOCHS:
@@ -309,7 +331,7 @@ def december_series(corridor, spx):
         for n in STATIONS:
             Wt[n].append(W[n])
         print(f"   {lab:20s} S1={n1:2d}  channel px={int(ch.values.sum()):4d}  "
-              f"W(PR01)/W(PR03)={W['CC.PR01']/W[ANCHOR]:.2f}")
+              f"W({other.split('.')[1]})/W({ANCHOR.split('.')[1]})={W[other]/W[ANCHOR]:.2f}")
     if len(labels) < 3:
         print("   too few usable SAR epochs — skipping December series figure")
         return None
@@ -345,13 +367,29 @@ def december_series(corridor, spx):
                   r"$[\,W_i/W_{\mathrm{PR03}}\,]$, normalised to Nov", fontsize=11.5)
     ax.tick_params(labelsize=11)
     ax.legend(title="station", fontsize=10, title_fontsize=10, loc="upper left")
-    out = FIGDIR / "fig20_braid_timeseries.png"
+    out = FIGDIR / f"fig20_braid_timeseries{FIGTAG}.png"
     fig.savefig(out, dpi=150)
     print(f"wrote {out}")
     return {"labels": labels, "anchor": ANCHOR, "rel_to_anchor_norm": rel}
 
 
+def select_region(name: str):
+    """Set module-level AOI/STATIONS/NHD_KEY/ANCHOR/etc. for the chosen region."""
+    global AOI, STATIONS, NHD_KEY, ANCHOR, CO_LOCATED, FIGTAG, JSON_NAME
+    reg = REGIONS[name]
+    AOI = reg["aoi"]; STATIONS = reg["stations"]; NHD_KEY = reg["nhd"]
+    ANCHOR = reg["anchor"]; CO_LOCATED = reg["co_located"]
+    FIGTAG = reg["figtag"]; JSON_NAME = reg["json"]
+    print(f"region={name}  AOI={AOI}  stations={list(STATIONS)}  nhd={NHD_KEY}")
+
+
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--region", default="puyallup", choices=list(REGIONS))
+    args = ap.parse_args()
+    select_region(args.region)
+
     FIGDIR.mkdir(parents=True, exist_ok=True)
     print(f"r_e (5–15 Hz band centre {FC:.2f} Hz, VC={VC:.0f} m/s, Q={Q_PNW:.0f}) = {R_E:.0f} m")
 
@@ -416,10 +454,11 @@ def main() -> int:
               f"{rec['dr_near_m']:7.0f} {rec['W_ratio_post_pre']:12.3f} "
               f"{rec['pred_dlog10P']:+12.3f}   (b={b}, r={r})")
 
-    dec = december_series(corridor, spx)
+    # Relative-to-anchor December series only for a co-located cluster (Puyallup).
+    dec = december_series(corridor, spx) if CO_LOCATED else None
 
     out = {
-        "aoi": AOI, "epochs": EPOCHS, "crs": UTM, "res_m": RES,
+        "region": NHD_KEY, "aoi": AOI, "epochs": EPOCHS, "crs": UTM, "res_m": RES,
         "december_series_W": dec,
         "r_e_m": R_E, "fc_hz": FC, "vc_ms": VC, "Q_pnw": Q_PNW,
         "thresholds": {"mndwi_water": MNDWI_WATER, "s1_vv_db_water": S1_VV_DB_WATER,
@@ -428,8 +467,8 @@ def main() -> int:
         "scenes": {ep: {"s2": data[ep]["n2"], "s1": data[ep]["n1"]} for ep in EPOCHS},
         "stations": geom,
     }
-    (CFGDIR / "braid_optical_change.json").write_text(json.dumps(out, indent=2))
-    print(f"\nwrote {CFGDIR/'braid_optical_change.json'}")
+    (CFGDIR / JSON_NAME).write_text(json.dumps(out, indent=2))
+    print(f"\nwrote {CFGDIR/JSON_NAME}")
 
     make_figure(data, geom, spx)
     return 0
@@ -492,7 +531,7 @@ def make_figure(data, geom, spx):
                + f"$r_e$={R_E:.0f} m; bars = MNDWI-threshold ensemble (median, range)",
                transform=ax[2].transAxes, ha="center", fontsize=8, color="0.3")
 
-    out = FIGDIR / "fig19_braid_change.png"
+    out = FIGDIR / f"fig19_braid_change{FIGTAG}.png"
     fig.savefig(out, dpi=150, bbox_inches="tight")
     print(f"wrote {out}")
 

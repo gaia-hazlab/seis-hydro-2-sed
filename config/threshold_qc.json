@@ -6,7 +6,13 @@
     "b_above": 0.8,
     "dslope": 1.25,
     "var_reduction": 0.093,
-    "onset": true
+    "dBIC": 1.3,
+    "dAIC": 6.8,
+    "n_eff": 111.0,
+    "rho": 0.967,
+    "significant_break": false,
+    "direction": "steepening",
+    "onset": false
   },
   {
     "station": "CC.GTWY",
@@ -15,6 +21,12 @@
     "b_above": 3.47,
     "dslope": 2.8,
     "var_reduction": 0.338,
+    "dBIC": 64.0,
+    "dAIC": 70.4,
+    "n_eff": 180.0,
+    "rho": 0.947,
+    "significant_break": true,
+    "direction": "steepening",
     "onset": true
   },
   {
@@ -24,6 +36,12 @@
     "b_above": 1.56,
     "dslope": 1.71,
     "var_reduction": 0.419,
+    "dBIC": 158.9,
+    "dAIC": 166.4,
+    "n_eff": 314.0,
+    "rho": 0.904,
+    "significant_break": true,
+    "direction": "steepening",
     "onset": true
   },
   {
@@ -33,6 +51,12 @@
     "b_above": 1.83,
     "dslope": 1.88,
     "var_reduction": 0.013,
+    "dBIC": -8.0,
+    "dAIC": -1.4,
+    "n_eff": 206.0,
+    "rho": 0.929,
+    "significant_break": false,
+    "direction": "steepening",
     "onset": false
   },
   {
@@ -42,6 +66,12 @@
     "b_above": 1.64,
     "dslope": -0.23,
     "var_reduction": 0.024,
+    "dBIC": -6.0,
+    "dAIC": 0.3,
+    "n_eff": 177.0,
+    "rho": 0.947,
+    "significant_break": false,
+    "direction": "none",
     "onset": false
   },
   {
@@ -51,7 +81,13 @@
     "b_above": 1.87,
     "dslope": 1.08,
     "var_reduction": 0.043,
-    "onset": true
+    "dBIC": -5.6,
+    "dAIC": -1.9,
+    "n_eff": 47.0,
+    "rho": 0.986,
+    "significant_break": false,
+    "direction": "steepening",
+    "onset": false
   },
   {
     "station": "CC.STYX",
@@ -60,6 +96,12 @@
     "b_above": 1.26,
     "dslope": -1.69,
     "var_reduction": 0.156,
+    "dBIC": 18.0,
+    "dAIC": 24.3,
+    "n_eff": 167.0,
+    "rho": 0.949,
+    "significant_break": true,
+    "direction": "flattening",
     "onset": false
   },
   {
@@ -69,6 +111,12 @@
     "b_above": 1.44,
     "dslope": 1.77,
     "var_reduction": 0.334,
+    "dBIC": 48.9,
+    "dAIC": 54.8,
+    "n_eff": 145.0,
+    "rho": 0.956,
+    "significant_break": true,
+    "direction": "steepening",
     "onset": true
   },
   {
@@ -78,6 +126,12 @@
     "b_above": 4.29,
     "dslope": 3.07,
     "var_reduction": 0.43,
+    "dBIC": 21.1,
+    "dAIC": 25.0,
+    "n_eff": 52.0,
+    "rho": 0.975,
+    "significant_break": true,
+    "direction": "steepening",
     "onset": true
   }
 ]
