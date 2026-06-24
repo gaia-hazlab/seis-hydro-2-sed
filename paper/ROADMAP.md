@@ -105,12 +105,12 @@ Each thread: **Claim** · **Evidence (figs)** · **Key assumptions** · **Streng
 - **Strength:** **Strong & important.** This is the rigor that reframes the whole paper turbulence-led.
 - **Gap:** the 2026 CH (500 sps) archive would settle it — not available via FDSN for 2025.
 
-### T5 — Transport-onset threshold Qc
-- **Claim:** Broken-stick fits find a slope-steepening Qc (≈35 m³/s upper Puyallup; ≈70–90 Nisqually/Carbon), matching slope-dependent critical Shields stress.
-- **Evidence:** `@fig-thr`.
-- **Assumptions:** the break is a *transport* onset. **Now contested by T9** — at PR01 it is geometric, not bedload.
-- **Strength:** **Medium, partly undermined.** Physically motivated but mechanism-ambiguous.
-- **Gap:** out-of-sample recurrence test (March 2026, running); geometric-vs-transport separation (done for PR cluster, T9).
+### T5 — Two-regime scaling: the P–Q break and what it means (UPGRADED)
+- **Claim:** An AIC/BIC test (autocorrelation-corrected $n_\text{eff}$) finds a **significant break at 5 of 8 river stations** — four steepen (PR01 ΔBIC≈159, TRON, GTWY 0.7→3.5, **UW.LON 1.2→4.3**), STYX flattens (3.0→1.3); PR03/PR02 are clean single laws. The break is a **fluvial regime transition** (entrainment / geometric anabranch / overbank / H^7/3 suppression), *not necessarily* a bedload onset.
+- **Evidence:** `@fig-thr` (two exponents + ΔBIC), `@fig-scaling` (★ break markers), discriminated by `@fig-braid` (hysteresis) + `@fig-braidsat` (satellite).
+- **Assumptions:** broken-stick is the right two-regime form; $n_\text{eff}$ from lag-1 residual autocorrelation is adequate.
+- **Strength:** **Strong & now the candidate spine** (with T9). Was "medium, undermined"; the BIC rigor + mechanism-discrimination framework upgrades it from a vulnerable "transport onset" claim into a network-scale diagnostic.
+- **Gap:** mechanism is satellite-confirmed only at PR01; the steep Nisqually (UW.LON) break needs its own SAR test (workflow 19 `--region nisqually`, pending PC API); out-of-sample March-2026.
 
 ### T6 — Attenuation correction (PNW Q)
 - **Claim:** Using PNW-inferred Q(f)=Q0 f^η (Q0≈25, η≈0.5 → Q(10Hz)≈74–80) gives e-folding r_e≈780 m, far larger than Tsai's Q=20 (210 m) — sets how far a station "sees."
@@ -139,6 +139,13 @@ Each thread: **Claim** · **Evidence (figs)** · **Key assumptions** · **Streng
 - **Assumptions:** baseline drift is geometric, not a basin-supply trend; Lawler HI captures the relevant loop sense.
 - **Strength:** **Strong & differentiating.** Recasts T3/T5 and warns T7 — a caution most of the (single-thread) literature has not had to make. Now satellite-corroborated.
 - **Gap:** the satellite magnitude is threshold-sensitive at 10 m (sign/order robust, magnitude not) — a ≈3 m or a December time-series (per-AR) test would calibrate it; whether it generalizes to other braided reaches.
+
+### T13 — Warm-AR thermal control (rain-on-snow vs cold snow accumulation) (NEW)
+- **Claim:** The floods were flood-productive because the ARs were *warm*: at high-elevation SNOTEL (Paradise 1563 m, Mowich) the AR pulses sat near/above the 0 °C freezing line → **rain on snow**, while late December dropped to −9.6 °C and precipitation **accumulated as snow** (Paradise SWE ≈8→26 cm) and produced little runoff. The flood-generating window is *thermally* defined.
+- **Evidence:** `@fig-warmsnow` (SNOTEL temperature + SWE), the post-flood quiet tail in `@fig-ts`/`@fig-bltime`.
+- **Assumptions:** Paradise/Mowich represent the freezing level over the drainage tops.
+- **Strength:** **Strong as framing.** Explains *why* the seismic–discharge coupling is evaluated over the warm-AR window (the flood-window fit decision) and why late-Dec quiet is a different regime — ties the meteorology to the scaling analysis.
+- **Gap:** two stations; a freezing-level/rain-snow-line product would generalize it.
 
 ### T10 — The December-2025 compound AR event itself (the narrative spine)
 - **Claim:** A weak pre-AR primed the basin, then three strong pulses; upstream stayed flat while downstream rose monotonically (cumulative wetting + rising freezing level + tributary superposition).
@@ -211,6 +218,76 @@ it grain-size-conditional — in some systems bedload sits at 5–15 Hz, below t
 25 Hz Nyquist), and keep the **~36 h lead** (T8) as the applied *payoff*. T3/T5/T6
 and all technical tests move to supplementary. The braided thread is no longer a
 "credibility hinge" for someone else's headline — it **is** the headline.
+
+---
+
+## June-2026 re-evaluation (after the NWIS / flood-window / two-regime work)
+
+*What changed this session, and how it moves the spine.*
+
+**New evidence since the survey.** (1) **Complete NWIS discharge** to 12/31 —
+peaks corrected (Electron 323, Nisqually 425, Puyallup@Puy 1257), and the
+virtual-gage rating *improved* (NSE PR03/PR02 0.95/0.92 vs the old 0.88/0.86).
+(2) **Flood-windowed robust fits** — the post-flood snow-quiet tail is a different
+regime and excluded from the fit; the qualitative story is unchanged but every
+number is now authoritative. (3) **NEW — two-regime breaks across the network**:
+an AIC/BIC test (with an autocorrelation-corrected effective $n$) finds a
+**statistically significant $P$–$Q$ break at 5 of 8 river stations** — four
+*steepen* (CC.PR01 ΔBIC≈159, CC.TRON, and the two Nisqually stations CC.GTWY
+0.7→3.5 and **UW.LON 1.2→4.3, the steepest in the network**) and **CC.STYX
+*flattens*** (3.0→1.3); the clean source anchors CC.PR03/PR02 do *not* break.
+(4) **NEW — grain-size/process-conditional bedload band** (boulders, large wood,
+debris-flow surges radiate to ~2 Hz). (5) **NEW — warm-AR thermal control**
+(SNOTEL: rain-on-snow flood window vs cold late-Dec snow accumulation; new thread
+**T13**). (6) **Satellite braided test** (`@fig-braidsat`, directional).
+
+**Physics re-evaluation — a two-level picture.**
+1. *Backbone (unchanged, robust):* band-limited seismic power tracks **turbulent
+   flow**, hence discharge: $P\propto Q^{b}$, $b\approx1.4$–1.8 at clean source
+   stations (near Gimbert 2014).
+2. *The new physics — the break:* above a critical discharge $Q_c$ the scaling
+   **changes regime**, and the sign+mechanism of that change is the contribution.
+   A **steepening** break admits three non-exclusive mechanisms — bed-mechanical
+   **entrainment** (excess Shields stress), **geometric / anabranch activation**
+   (a broad, close, or newly-wetted braided thread switches on *without* the bed
+   mobilizing), or an **overbank** transition; a **flattening** break (STYX) is
+   **hydraulic-geometry suppression** ($P\propto H^{7/3}$ falls as a given $Q$
+   spreads over a wider, shallower section). Crucially, the break is **not
+   necessarily a bedload onset** — the reading the bedload-seismology literature
+   reflexively applies — and we can **discriminate geometric from bed-mechanical**
+   with two tools that literature lacks: **hysteresis reversibility** and
+   **satellite channel-change**. The braided Puyallup source (PR01) is the
+   satellite-confirmed *geometric* end-member.
+3. *Bounds:* the resolvable ≤25 Hz band is turbulence-dominated; the canonical
+   30–80 Hz bedload band is unsampled, though coarse boulder/wood/debris transport
+   leaks into 1–15 Hz (degenerate with turbulence). Attenuation gives $r_e\approx
+   780$ m (bedload recoverable only ≲1 km).
+
+**Re-evaluated spine — generalize the braided breakdown to a network diagnostic.**
+The survey's "braided source-model breakdown" is correct but **too narrow**: it is
+one reach. The two-regime-break result lets us tell the *same* story at network
+scale and with a sharper, more general thesis:
+
+> **The seismic power–discharge scaling breaks at a critical discharge across a
+> glacial-river network, but the break diagnoses a *fluvial regime transition* —
+> bed-mechanical entrainment, geometric/braided channel reorganization, or
+> hydraulic-geometry suppression — *not* (necessarily) the "bedload onset" the
+> field routinely infers. Seismic hysteresis and satellite channel-change tell
+> them apart; the braided Puyallup source is the satellite-confirmed geometric
+> end-member, the steep Nisqually (UW.LON) and the flattening STYX are contrasting
+> regimes.**
+
+This **subsumes T5 (threshold) + T9 (braided) and generalizes across T2 (two
+basins)**; it keeps T1 as the backbone, T4 as the bounding caveat, T7 as the
+network platform, T8 as the payoff, and T13 (warm-AR) as the framing of *why* the
+flood window is the evaluation period. It is more novel than the narrow braided
+spine (a network-wide, multi-mechanism *discrimination framework*, not a single
+anomaly) and it directly corrects a routine over-claim in the field — a
+high-impact, JGR-ES-shaped contribution.
+
+*Spine in one line:* **"Where, when, and *why* the seismic–discharge scaling breaks
+— a network diagnostic that separates geometric channel reorganization from
+bed-mechanical transport on Mt. Rainier's glacial rivers."**
 
 *Survey caveats to resolve before drafting:* (i) several "the single-thread model
 is known to break down" claims were **refuted** in verification — the breakdown is
