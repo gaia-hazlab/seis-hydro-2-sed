@@ -669,6 +669,7 @@ writing a figure and/or a `config/*.json` it consumes downstream:
 | Step | Script | Produces |
 |---|---|---|
 | discovery | `00_discover_stations.py` | station↔gage transect (river-km) |
+| discharge | `01_fetch_discharge.py` | USGS-NWIS discharge/stage for all corridor gages (authoritative; complete to event end) |
 | proxy + fit | `scripts/run_river_rumble_batch.py` | per-station `results/*_timeseries.csv`, fits |
 | core figs | `02_make_figures.py` | @fig-scaling, @fig-scatter, @fig-hyst, @fig-ts + scaling table |
 | map | `03_make_map.py` | @fig-map (PyGMT DEM + gages + SNOTEL + OPERA + status) |
@@ -684,6 +685,7 @@ writing a figure and/or a `config/*.json` it consumes downstream:
 | rating | `17_rating.py` | @fig-rating (stage–discharge) |
 | braided source | `18_braided_hysteresis.py` | @fig-braid (geometric-vs-transport diagnostic) |
 | braid satellite | `19_braid_optical_change.py` | @fig-braidsat (Sentinel-2/-1 channel change + geometric drift) |
+| warm-AR snow | `20_warm_ar_snotel.py` | @fig-warmsnow (SNOTEL temperature/SWE: warm rain-on-snow vs cold late-Dec) |
 
 Run order and parameters are documented in `workflows/README.md`; the single source
 of analysis parameters is `config/analysis.yaml`. The book (manuscript, this roadmap,

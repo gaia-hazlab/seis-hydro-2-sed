@@ -66,6 +66,7 @@ provisional and will move as the three open dependencies resolve.
 | `@fig-rating` | [fig15_rating.png](figures/fig15_rating.png) | Stage–discharge rating Q=C(h−h0)^β at 4 gages |
 | `@fig-braid` | [fig16_braided_hysteresis.png](figures/fig16_braided_hysteresis.png) | Braided-reach onset diagnostic (geometric vs transport) |
 | `@fig-braidsat` | [fig19_braid_change.png](figures/fig19_braid_change.png) | Sentinel-2/-1 braid change Nov→Jan + predicted per-station geometric baseline drift |
+| `@fig-warmsnow` | [fig21_warm_ar_snow.png](figures/fig21_warm_ar_snow.png) | High-elevation SNOTEL temperature + SWE: warm rain-on-snow ARs vs cold late-Dec snow accumulation |
 | `@fig-traffic` | [figS_traffic_noise.png](figures/figS_traffic_noise.png) | Traffic-noise contamination control (supplement) |
 | `@fig-vq` | [virtual_q_animation.gif](figures/virtual_q_animation.gif) | **Embedded GIF**: space–time distributed discharge field |
 | — | [bedload_animation.gif](figures/bedload_animation.gif) | Repo-only multidisciplinary GIF (SNOTEL + gage + bedload) |

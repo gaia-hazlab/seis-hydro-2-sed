@@ -5,7 +5,8 @@ Run from the repo root inside the pixi env (`pixi shell` or prefix with `pixi ru
 | Step | Script | Output |
 |---|---|---|
 | 0 | `python workflows/00_discover_stations.py` | `config/_transect_discovery.json` — stations + river-km along the corridor |
-| 1 | `python scripts/run_river_rumble_batch.py --focus-seis-key CC.PR03 --use-rss --exclude-earthquakes --clip-impulses --despike-proxy` | `notebooks/data/results/*_timeseries.csv`, `fit_parameters.csv` |
+| 0b | `python workflows/01_fetch_discharge.py` | USGS-NWIS discharge for every corridor gage (authoritative; the GAIA mirror was incomplete for Dec-2025) + `config/discharge_manifest.json` |
+| 1 | `python scripts/run_river_rumble_batch.py --focus-seis-key CC.PR03 --use-rss --exclude-earthquakes --clip-impulses --despike-proxy` | `notebooks/data/results/*_timeseries.csv`, `fit_parameters.csv` (single-pass multiband proxy; NWIS gages) |
 | 2 | `python workflows/02_make_figures.py` | `fig1..5` (scaling, scatter, hysteresis, event ts) + `scaling_table.csv` |
 | 3 | `python workflows/03_make_map.py` | `fig1_transect_map.png` (PyGMT DEM + gages + SNOTEL + OPERA + station status) |
 | 4 | `python workflows/04_traffic_noise.py` | `figS_traffic_noise.png` (contamination control) |
@@ -20,6 +21,7 @@ Run from the repo root inside the pixi env (`pixi shell` or prefix with `pixi ru
 | 17 | `python workflows/17_rating.py` | `fig15_rating.png` + `config/rating_fits.json` (stage–discharge) |
 | 18 | `python workflows/18_braided_hysteresis.py` | `fig16_braided_hysteresis.png` + `config/braided_hysteresis.json` |
 | 19 | `python workflows/19_braid_optical_change.py` | `fig19_braid_change.png`, `fig20_braid_timeseries.png` + `config/braid_optical_change.json` — Sentinel-2/-1 braid change, geometric drift, + SAR December series |
+| 20 | `python workflows/20_warm_ar_snotel.py` | `fig21_warm_ar_snow.png` + `config/warm_ar_snotel.json` — high-elevation SNOTEL temperature/SWE: warm rain-on-snow ARs vs cold late-Dec snow accumulation |
 
 Scripts are standalone and idempotent; most read `notebooks/data/results/` (step 1) plus committed `config/*.json` and write into `paper/figures/`. Steps 3–18 can run in any order after step 1. **Step 19 is the only one needing network access at run time** (it queries the Microsoft Planetary Computer STAC API for Sentinel-2/-1 imagery — no credentials required). See [`paper/ROADMAP.md`](../paper/ROADMAP.md) for which figure supports which research thread.
 
