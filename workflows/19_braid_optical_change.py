@@ -69,6 +69,10 @@ ROOT = Path(__file__).resolve().parents[1]
 FIGDIR = ROOT / "paper" / "figures"
 CFGDIR = ROOT / "config"
 
+import sys; sys.path.insert(0, str(ROOT / "src"))
+from riverseis.figstyle import paper_style  # noqa: E402
+paper_style()
+
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
@@ -135,8 +139,16 @@ def s2_water(epoch_range: str):
     return mndwi.compute(), ndwi.compute(), water.compute(), len(items)
 
 
-def s1_water(epoch_range: str):
-    """Sentinel-1 RTC median composite -> (vv_db, water_mask, n)."""
+def s1_water(epoch_range: str, composite: str = "median"):
+    """Sentinel-1 RTC composite -> (vv_db, water_mask, n).
+
+    composite='median' is robust for the Nov/Jan bracket (many scenes).
+    composite='min' (lowest backscatter seen in any pass) is more *sensitive* —
+    needed for the short December windows where a median over 2–4 passes misses
+    shallow braided water — but its absolute pixel count scales with scene count,
+    so December results must use a scene-count-robust *relative* metric (see
+    december_series), not absolute wetted area.
+    """
     cat = _client()
     items = list(cat.search(collections=["sentinel-1-rtc"], bbox=AOI,
                             datetime=epoch_range).items())
@@ -144,7 +156,8 @@ def s1_water(epoch_range: str):
         raise RuntimeError(f"no S1-RTC scenes for {epoch_range}")
     ds = odc_load(items, bands=["vv"], bbox=AOI, crs=UTM, resolution=RES,
                   chunks={}, groupby="solar_day")
-    vv = ds.vv.where(ds.vv > 0).median("time")
+    vv = ds.vv.where(ds.vv > 0)
+    vv = vv.min("time") if composite == "min" else vv.median("time")
     vv_db = (10.0 * np.log10(vv)).compute()
     water = (vv_db < S1_VV_DB_WATER).astype("uint8")
     return vv_db, water, len(items)
@@ -244,6 +257,100 @@ def geometry_metrics(water_pre, water_post):
     return out, spx
 
 
+# Weekly-ish windows Nov->Dec 31, SAR-led: PNW optical is cloud-blind through the
+# flood (0 clear Sentinel-2 scenes Dec 1–20), so the December channel-migration
+# time-series can only be built from cloud-penetrating Sentinel-1.
+DEC_EPOCHS = [
+    ("Nov 16–30", "2025-11-16/2025-11-30", False),
+    ("Dec 1–8",   "2025-12-01/2025-12-08", False),
+    ("Dec 9–12 (AR peak)", "2025-12-09/2025-12-12", True),
+    ("Dec 13–20", "2025-12-13/2025-12-20", False),
+    ("Dec 21–31", "2025-12-21/2025-12-31", False),
+]
+
+
+def illumination_W(mask: xr.DataArray, spx):
+    """Attenuation-weighted wetted illumination W per station for one mask."""
+    X, Y = np.meshgrid(mask.x.values, mask.y.values)
+    apix = RES * RES
+    m = mask.values == 1
+    out = {}
+    for name, (row, col, ux, uy) in spx.items():
+        r = np.hypot(X - ux, Y - uy)
+        r = np.where(r < RES, RES, r)
+        out[name] = float((m * apix / r * np.exp(-r / R_E)).sum())
+    return out
+
+
+def december_series(corridor, spx):
+    """SAR-led weekly channel-migration series through 12/31 (the AR1->AR3 test).
+
+    Tracks each station's wetted illumination W(t) over the flood sequence; a
+    rising W at the braidplain-central station (CC.PR01) contemporaneous with the
+    seismic +0.2-log baseline drift is the time-resolved avulsion signal.
+    NOTE: the Dec 9–12 epoch captures peak inundation (transient flood water,
+    not just the active braid) — flagged in the figure, not removed.
+    """
+    ANCHOR = "CC.PR03"   # on-channel, geometrically stable reference
+    print("\nDecember SAR-led channel-migration series (Sentinel-1 min-composite):")
+    labels, flood, Wt = [], [], {n: [] for n in STATIONS}
+    for lab, dr, is_peak in DEC_EPOCHS:
+        try:
+            _, s1w, n1 = s1_water(dr, composite="min")
+            ch = clean_channel(s1w, corridor)
+            W = illumination_W(ch, spx)
+        except Exception as e:                       # noqa: BLE001
+            print(f"   {lab}: skipped ({e})")
+            continue
+        if W[ANCHOR] <= 0:
+            print(f"   {lab}: anchor illumination zero — skipped")
+            continue
+        labels.append(lab); flood.append(is_peak)
+        for n in STATIONS:
+            Wt[n].append(W[n])
+        print(f"   {lab:20s} S1={n1:2d}  channel px={int(ch.values.sum()):4d}  "
+              f"W(PR01)/W(PR03)={W['CC.PR01']/W[ANCHOR]:.2f}")
+    if len(labels) < 3:
+        print("   too few usable SAR epochs — skipping December series figure")
+        return None
+
+    # Confound-resistant metric: each station's illumination RELATIVE to the
+    # on-channel anchor PR03, normalised to the first epoch. A per-epoch common
+    # bias (scene count, overall wetness, flood inundation) cancels in the ratio;
+    # what survives is the geometric *redistribution* between stations — a rising
+    # PR01/PR03 through the ARs is the active braid migrating toward PR01.
+    fig, ax = plt.subplots(figsize=(7.8, 4.4), constrained_layout=True)
+    x = np.arange(len(labels))
+    Wanchor = np.array(Wt[ANCHOR], float)
+    for i, is_peak in enumerate(flood):
+        if is_peak:
+            ax.axvspan(i - 0.5, i + 0.5, color="#cfe3f2", alpha=0.7, zorder=0)
+            ax.text(i, 1.02, "flood peak", ha="center", va="bottom", fontsize=9,
+                    color="#2166ac", transform=ax.get_xaxis_transform())
+    rel = {}
+    for n in STATIONS:
+        if n == ANCHOR:
+            continue
+        r = np.array(Wt[n], float) / Wanchor
+        r = r / r[0]
+        rel[n] = r.tolist()
+        is_anom = (n == "CC.PR01")
+        ax.plot(x, r, marker="o", ms=8, lw=2.6 if is_anom else 1.6,
+                color="#e31a1c" if is_anom else "#888888",
+                zorder=5 if is_anom else 3,
+                label=n.split(".")[1] + (" (braidplain-central)" if is_anom else ""))
+    ax.axhline(1.0, color="0.6", lw=0.9, ls=":")
+    ax.set_xticks(x); ax.set_xticklabels(labels, rotation=18, ha="right", fontsize=11)
+    ax.set_ylabel(r"illumination relative to anchor PR03" "\n"
+                  r"$[\,W_i/W_{\mathrm{PR03}}\,]$, normalised to Nov", fontsize=11.5)
+    ax.tick_params(labelsize=11)
+    ax.legend(title="station", fontsize=10, title_fontsize=10, loc="upper left")
+    out = FIGDIR / "fig20_braid_timeseries.png"
+    fig.savefig(out, dpi=150)
+    print(f"wrote {out}")
+    return {"labels": labels, "anchor": ANCHOR, "rel_to_anchor_norm": rel}
+
+
 def main() -> int:
     FIGDIR.mkdir(parents=True, exist_ok=True)
     print(f"r_e (5–15 Hz band centre {FC:.2f} Hz, VC={VC:.0f} m/s, Q={Q_PNW:.0f}) = {R_E:.0f} m")
@@ -309,8 +416,11 @@ def main() -> int:
               f"{rec['dr_near_m']:7.0f} {rec['W_ratio_post_pre']:12.3f} "
               f"{rec['pred_dlog10P']:+12.3f}   (b={b}, r={r})")
 
+    dec = december_series(corridor, spx)
+
     out = {
         "aoi": AOI, "epochs": EPOCHS, "crs": UTM, "res_m": RES,
+        "december_series_W": dec,
         "r_e_m": R_E, "fc_hz": FC, "vc_ms": VC, "Q_pnw": Q_PNW,
         "thresholds": {"mndwi_water": MNDWI_WATER, "s1_vv_db_water": S1_VV_DB_WATER,
                        "s2_max_cloud_pct": S2_MAX_CLOUD},

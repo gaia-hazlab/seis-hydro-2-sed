@@ -32,6 +32,14 @@ Compiled June 2026. DOIs marked *(unverified)* must be confirmed before submissi
 - **Rickenmann et al. (2025)**, *ESPL* 50(5), doi:10.1002/esp.70059 — long-term multi-site impact-plate bedload synthesis (calibration backbone).
 - **Nicoletti et al. (2026)**, arXiv:2604.17913 — full numerical waveform synthesis from grain-scale dynamics + turbulence.
 
+### Added from the June-2026 positioning survey (competitors to differentiate)
+
+- **Ogiso, Uchida & et al. (2021)**, *Prog. Earth Planet. Sci.* 8, 50, doi:10.1186/s40645-021-00448-1 — **the key prior art for our virtual-discharge framing.** Seismic noise as a *virtual gage for ungauged basins*; single-station power law $Q=A(E-E_0)^b$, validated on three floods incl. Typhoon Hagibis (Oct 2019), 1–2 Hz optimal after transient/background removal. *Our distinction: a **distributed multi-station field**, not single-station — network density is the contribution, not the P–Q concept.*
+- **Gangemi et al. (2026)**, *EGUsphere* preprint egusphere-2026-1534 — **the closest competitor.** Opportunistic permanent stations on the **braided Tagliamento**; applies the single-thread Tsai/Gimbert framework *qualitatively only* (correlation/hysteresis/polarization) and explicitly states a braided source model "remains speculative and needs further investigation." *Cite to show the braided source-model gap is open; we occupy it with the satellite corroboration they lack.* (Preprint — track toward publication.)
+- **Cook et al. (2021)**, *Science* 374, 87, doi:10.1126/science.abj1227 — Chamoli: regional seismic network detected/tracked the catastrophic flow; ~min-scale downstream lead. Early-warning precedent (different mechanism: debris flow).
+- **Eibl et al. (2020)**, *Nature Comms* 11, 2504 (PMC7237689) — subglacial jökulhlaup tremor leads gage stage by **>20 h** in all four Skáftá cases. Early-warning precedent (different mechanism: outburst). *Together these cap "early warning" as a standalone novelty — deploy our ~36 h AR-flood lead as an applied payoff, not the spine.*
+- **McLaughlin et al. (2024/2025)**, *JGR-ES* doi:10.1029/2024JF008159 (Arroyo de los Pinos) — bedload band 30–80 Hz; bedload dominates only for $r<100$ m, $f>30$ Hz. Supports the Nyquist caveat — but note the band is **grain-size/site-dependent** (Taiwan typhoon systems saw bedload at 5–15 Hz), so state #3 as *grain-size-conditional*, not a hard universal cap.
+
 ## 4. Sediment pulses & hysteresis (the "tracking" theme)
 
 - **Roth et al. (2014)**, *EPSL* 404, 144, doi:10.1016/j.epsl.2014.07.019 *(unverified)* — **THE blocking citation.** Multi-station array along Chijiawan R. (Taiwan), hysteresis metric Ψ tracks a **downstream-migrating coarse sediment pulse** after dam removal. Must distinguish our work from this.
@@ -107,7 +115,18 @@ is attenuated with distance from the channel.
 | **Cascades glacial-river** bedload seismology | **Strong** | Rainier debris-flow *detection* (USGS/PNSN) | Distinguish continuous **bedload quantification** from catastrophic mass-flow *detection*. |
 | Frequency-dependent scaling-exponent diagnostic | **Weak** | Bakker 2020; Gimbert 2014; Tagliamento 2026 preprint | Frame as **field-validation/application at transect scale**, not invention. |
 
-**Lead framing:** *first transect-scale bedload seismology on Cascades glacial rivers during a named atmospheric-river flood.* Combination (b)+(c)+scale is the contribution.
+**Lead framing (June-2026 survey-revised):** *single-thread fluvial-seismology
+source-model **breakdown in a braided glacial-outwash reach**, diagnosed by
+hysteresis reversibility + cross-flood baseline drift and corroborated by
+Sentinel-2/-1 channel-migration imagery* — a seismic+satellite joint
+channel-change diagnosis no 2023–2026 paper has published. The distributed
+virtual-gage field is the network framing device (Ogiso 2021 owns the
+single-station concept); the Nyquist/bedload limit is a grain-size-conditional
+bounding caveat; the ~36 h lead is the applied payoff.
+*(Superseded earlier lead: "first transect-scale bedload seismology on Cascades
+glacial rivers during a named AR flood" — still true, but transect/AR-first is
+weaker than braided-breakdown-first given Ogiso 2021 and the saturation of the
+virtual-gage and early-warning niches.)*
 
 **Three reviewer objections to pre-empt:**
 1. *"Just Gimbert 2014 + Bakker 2020."* → We add the transect, the AR/Rainier system, and a multi-station β(f) map; we field-calibrate the water baseline per station rather than assuming it.

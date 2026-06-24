@@ -359,6 +359,18 @@ raises.
 
 ![Satellite test of the braided-source avulsion prediction. (a) Pre-flood (Nov 2025) Sentinel-2 MNDWI with the post-flood (early Jan 2026) active-channel outline (red); yellow triangles are the three co-located stations. (b) Active-channel change within the NHD mainstem corridor (Sentinel-2 optical $\cup$ Sentinel-1 SAR): blue = persistent water, red = newly wet, orange = newly dry. (c) Predicted geometric baseline drift $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$ per station from the attenuation-weighted wetted illumination $W=\sum A\,r^{-1}e^{-r/r_e}$ ($r_e\approx780$ m); bars are the median over a MNDWI-threshold ensemble and whiskers its range. CC.PR01 (red) shows the largest drift, matching the observed $+0.2$-log cross-AR shift (green dashed) in sign and rank; the threshold spread shows the magnitude is not yet robust at 10 m resolution.](figures/fig19_braid_change.png){#fig-braidsat width=98%}
 
+A time-resolved corollary, limited to the cloud-penetrating Sentinel-1 record
+(optical is cloud-blind through the flood — zero clear Sentinel-2 scenes 1–20 Dec),
+tracks each off-channel station's wetted illumination *relative to the on-channel
+anchor CC.PR03* through the AR sequence (@fig-braidsat-ts). The braidplain-central
+CC.PR01 is preferentially illuminated as flow rises, peaking during the AR maximum —
+the geometric flow-front response in time — although SAR's under-detection of
+shallow braided water at 10 m leaves the inter-epoch trend noisy and the net
+permanent migration better measured by the Nov→Jan bracket above. We treat this as
+supporting, not primary, evidence.
+
+![*(Supplementary, exploratory.)* Sentinel-1 (SAR) channel-migration series through the December-2025 ARs: each off-channel station's attenuation-weighted wetted illumination relative to the on-channel anchor CC.PR03 (normalised to mid-November), a ratio that cancels per-epoch scene-count and overall-wetness biases. CC.PR01 (braidplain-central) is preferentially illuminated during the flood peak (shaded) — the geometric flow-front response — then relaxes. SAR under-detects shallow braided water at 10 m, so absolute wetted area is not used; only the between-station ratio.](figures/fig20_braid_timeseries.png){#fig-braidsat-ts width=80%}
+
 ## Time-dependent bedload across the atmospheric rivers
 
 The compound event delivered a weak pre-AR (06 Dec ≈50 m³/s) followed by three

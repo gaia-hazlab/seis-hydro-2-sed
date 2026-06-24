@@ -176,6 +176,48 @@ Spine: T4→T9→T5→T11. Headline = the frequency-sampling and braided-source 
 Spine: T10 as container, hanging T1/T3/T8 off it. A case-study narrative of a dramatic compound event.
 *Most accessible, least novel methodologically. Figures: map+OPERA, timeseries, bedload-time, early warning.*
 
-**Recommendation:** lead with **A** (distributed virtual-gage network + early warning) as the headline, fold **B**'s rigor (T4, T9) in as the "scope and limits" section that makes A credible, and use **C** (T10) as the framing event. T3/T5/T6/T12 become supporting/discussion. The braided thread (T9) is the credibility hinge between A's ambition and B's honesty — it is why the ratings are reach-specific.
+### Recommended spine — updated by the June-2026 literature survey
+
+A targeted 2023–2026 literature survey (deep-research, 16 sources, 25 claims
+adversarially verified) **overturns the earlier "lead with A" recommendation.**
+The distributed virtual-gage idea (A) turns out to be the *most saturated* of the
+four: **Ogiso et al. (2021, Prog. Earth Planet. Sci.)** already established
+seismic noise as a virtual gage for ungauged basins (power law $Q=A(E-E_0)^b$,
+validated on Typhoon Hagibis 2019), so our novelty there is only network *density*,
+not the concept. DAS distributed sensing is taken (Roth et al. 2025); seismic
+flood early-warning is Science/Nature-tier territory (Cook et al. 2021 Chamoli;
+Eibl et al. 2020 jökulhlaups, >20 h lead). The genuinely **open gap** — published
+by no 2023–2026 paper in the surveyed corpus — is the one this session's satellite
+work created:
+
+> **Single-thread fluvial-seismology source-model breakdown in a braided
+> glacial-outwash reach, diagnosed jointly by (a) hysteresis reversibility, (b) a
+> cross-flood baseline drift, and (c) independent Sentinel-2/-1 channel-migration
+> imagery** showing the active braid moved toward the most anomalous station.
+
+The closest competitor, **Gangemi et al. (2026, Tagliamento — itself a braided
+river)**, applies the canonical single-thread Tsai/Gimbert framework only
+qualitatively and *explicitly declines* to develop a braided source model — it
+leaves this gap open. JGR-ES specifically rewards process / source-model /
+geomorphic-coupling advances (vs GRL brevity, Seismica methods, WRR hydrology),
+so this is also the best journal fit.
+
+**New recommended spine (T9-led):** lead with the **braided-reach source-model
+breakdown** (T9 + `@fig-braid`/`@fig-braidsat`), use the **distributed virtual-gage
+field** (T1/T2/T7) as the network-scale *framing device* that makes the anomaly
+legible, deploy the **frequency/Nyquist limit** (T4) as a *bounding caveat* (state
+it grain-size-conditional — in some systems bedload sits at 5–15 Hz, below the
+25 Hz Nyquist), and keep the **~36 h lead** (T8) as the applied *payoff*. T3/T5/T6
+and all technical tests move to supplementary. The braided thread is no longer a
+"credibility hinge" for someone else's headline — it **is** the headline.
+
+*Survey caveats to resolve before drafting:* (i) several "the single-thread model
+is known to break down" claims were **refuted** in verification — the breakdown is
+novel precisely because it is *not* established, so we must argue it rigorously, not
+cite it as accepted; (ii) confirm Luong et al. (2024/2026) and Nicoletti (2026) do
+not pre-empt the braided framing; (iii) targeted preprint search (EGUsphere/ESurf/
+ESSOAr) for any unindexed seismic+Sentinel braided-river competitor — this is the
+load-bearing novelty claim; (iv) pin where Rainier glacial-outwash bedload actually
+sits vs 25 Hz Nyquist.
 
 **Open dependencies that could shift the choice:** March-2026 out-of-sample (tests T5, T7, T8 robustness); ~~PlanetScope pre/post (confirms T9 avulsion)~~ — **done via Sentinel-2/-1 (`@fig-braidsat`), directionally confirmed**; 2026 CH 500-sps (could promote T3/T12 from hypothesis to result).
