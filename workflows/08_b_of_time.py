@@ -24,6 +24,11 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "notebooks" / "data" / "results"
 FIGDIR = ROOT / "paper" / "figures"
+
+import sys; sys.path.insert(0, str(ROOT / "src"))
+from riverseis.figstyle import paper_style  # noqa: E402
+paper_style()
+
 EXCLUDE = {"UW.BHW", "UW.TEHA"}
 BASELINE = (0.9, 1.4)
 WIN = pd.Timedelta("24h")

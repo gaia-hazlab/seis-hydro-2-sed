@@ -30,6 +30,10 @@ from scipy.signal import find_peaks
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "notebooks" / "data" / "results"
 FIGDIR = ROOT / "paper" / "figures"
+
+import sys; sys.path.insert(0, str(ROOT / "src"))
+from riverseis.figstyle import paper_style  # noqa: E402
+paper_style()
 EXCLUDE = {"UW.BHW", "UW.TEHA"}
 SUMMIT = (-121.7603, 46.8523)
 PREFLOOD_END = pd.Timestamp("2025-12-08", tz="UTC")
@@ -131,26 +135,30 @@ def main() -> int:
         data[s]["norm"] = P / (base if base and np.isfinite(base) else P.median())
 
     # ---- fig6: discharge + bedload time series ----
-    fig, (a1, a2) = plt.subplots(2, 1, figsize=(9, 6), sharex=True,
-                                 gridspec_kw=dict(height_ratios=[1, 1.7]))
-    a1.plot(q.index, q.values, color="k", lw=1.2)
-    a1.set_ylabel("discharge (m³ s⁻¹)")
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(8.6, 5.2), sharex=True,
+                                 gridspec_kw=dict(height_ratios=[1, 2.1], hspace=0.06))
+    a1.plot(q.index, q.values, color="k", lw=1.5)
+    a1.set_ylabel("discharge\n(m³ s⁻¹)", fontsize=12)
+    a1.tick_params(labelsize=11)
     labels = [w[3] for w in ars]
     for (s0, pk, s1, lab) in ars:
         for a in (a1, a2):
-            a.axvspan(s0, s1, color=AR_COLORS.get(lab, "#999999"), alpha=0.18, zorder=0)
-        a1.text(pk, a1.get_ylim()[1] * 0.92, lab, ha="center", fontsize=9, fontweight="bold")
+            a.axvspan(s0, s1, color=AR_COLORS.get(lab, "#999999"), alpha=0.22, zorder=0)
+        a1.text(pk, a1.get_ylim()[1] * 0.86, lab, ha="center", fontsize=11, fontweight="bold")
     for s in stations:
-        a2.semilogy(data[s]["norm"].index, data[s]["norm"].values, lw=1.0, color=col[s],
+        a2.semilogy(data[s]["norm"].index, data[s]["norm"].values, lw=1.4, color=col[s],
                     label=f"{s} ({data[s]['dist']:.0f} km)")
     a2.axhline(1.0, color="0.5", ls=":", lw=1)
-    a2.set_ylabel("bedload-band power / pre-flood median")
-    a2.set_xlabel("December 2025 (UTC)")
-    a2.legend(fontsize=7, ncol=1, loc="center left", bbox_to_anchor=(1.01, 0.5),
-              frameon=False)
-    # (no figure title — described by the manuscript caption)
+    # emphasize the AR-driven excursions: clip the empty low tail, pad just above peak
+    ymax = max(np.nanmax(data[s]["norm"].values) for s in stations)
+    a2.set_ylim(0.5, ymax * 1.4)
+    a2.set_ylabel("bedload-band power /\npre-flood median", fontsize=12)
+    a2.set_xlabel("December 2025 (UTC)", fontsize=12)
+    a2.tick_params(labelsize=11)
+    # legend inside, over the quiet pre-flood (upper-left), away from the AR spikes
+    a2.legend(fontsize=8.5, ncol=2, loc="upper left", framealpha=0.9, borderpad=0.4)
     fig.autofmt_xdate()
-    fig.savefig(FIGDIR / "fig6_bedload_time.png", bbox_inches="tight")
+    fig.savefig(FIGDIR / "fig6_bedload_time.png", dpi=200, bbox_inches="tight")
     plt.close(fig)
 
     # ---- fig7: per-AR mean bedload per station ----
