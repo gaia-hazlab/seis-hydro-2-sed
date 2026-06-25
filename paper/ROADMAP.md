@@ -109,7 +109,7 @@ Each thread: **Claim** · **Evidence (figs)** · **Key assumptions** · **Streng
 - **Gap:** the 2026 CH (500 sps) archive would settle it — not available via FDSN for 2025.
 
 ### T5 — Two-regime scaling: the P–Q break and what it means (UPGRADED)
-- **Claim:** An AIC/BIC test (autocorrelation-corrected $n_\text{eff}$) finds a **significant break at 5 of 8 river stations** — four steepen (PR01 ΔBIC≈159, TRON, GTWY 0.7→3.5, **UW.LON 1.2→4.3**), STYX flattens (3.0→1.3); PR03/PR02 are clean single laws. The break is a **fluvial regime transition** (entrainment / geometric anabranch / overbank / H^7/3 suppression), *not necessarily* a bedload onset.
+- **Claim:** An AIC/BIC test (autocorrelation-corrected $n_\text{eff}$) finds a **significant break at 5 of 8 river stations** — four steepen (PR01 ΔBIC≈159, TRON, GTWY 0.7→3.5, **UW.LON 1.1→5.0**), STYX flattens (3.0→1.3); PR03/PR02 are clean single laws. The break is a **fluvial regime transition** (entrainment / geometric anabranch / overbank / H^7/3 suppression), *not necessarily* a bedload onset.
 - **Evidence:** `@fig-thr` (two exponents + ΔBIC), `@fig-scaling` (★ break markers), discriminated by `@fig-braid` (hysteresis) + `@fig-braidsat` (satellite).
 - **Assumptions:** broken-stick is the right two-regime form; $n_\text{eff}$ from lag-1 residual autocorrelation is adequate.
 - **Strength:** **Strong & now the candidate spine** (with T9). Was "medium, undermined"; the BIC rigor + mechanism-discrimination framework upgrades it from a vulnerable "transport onset" claim into a network-scale diagnostic.
@@ -274,7 +274,7 @@ number is now authoritative. (3) **NEW — two-regime breaks across the network*
 an AIC/BIC test (with an autocorrelation-corrected effective $n$) finds a
 **statistically significant $P$–$Q$ break at 5 of 8 river stations** — four
 *steepen* (CC.PR01 ΔBIC≈159, CC.TRON, and the two Nisqually stations CC.GTWY
-0.7→3.5 and **UW.LON 1.2→4.3, the steepest in the network**) and **CC.STYX
+0.7→3.5 and **UW.LON 1.1→5.0, the steepest in the network**) and **CC.STYX
 *flattens*** (3.0→1.3); the clean source anchors CC.PR03/PR02 do *not* break.
 (4) **NEW — grain-size/process-conditional bedload band** (boulders, large wood,
 debris-flow surges radiate to ~2 Hz). (5) **NEW — warm-AR thermal control**

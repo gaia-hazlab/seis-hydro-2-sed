@@ -21,8 +21,8 @@
   "method": "matched-discharge crossings, first-rising-limb-referenced; logistic step fit with bootstrap CI; reversibility from sign(\u0394)/R\u00b2",
   "stations": {
     "UW.LON": {
-      "b_pooled": 2.86,
-      "n_crossings": 102,
+      "b_pooled": 2.85,
+      "n_crossings": 276,
       "lag_correction": {
         "lag_min": -180,
         "lag_xcorr_r": 0.9,
@@ -30,30 +30,30 @@
         "applied": true,
         "implied_celerity_m_s": 1.93
       },
-      "persistent_offset_log10": -0.467,
+      "persistent_offset_log10": -0.462,
       "direction": null,
       "onset_utc": "2025-12-10 15:20:00+00:00",
       "onset_lag_h": 1.1,
-      "step_t50_utc": "2025-12-10 15:12:03.196496004+00:00",
-      "step_t50_lag_vs_Qpeak_h": 1.0,
+      "step_t50_utc": "2025-12-12 12:33:31.158563387+00:00",
+      "step_t50_lag_vs_Qpeak_h": 46.3,
       "step_t50_lag_CI_h": [
-        0.0,
-        3.9
+        45.3,
+        47.0
       ],
-      "transition_width_h": 10.2,
+      "transition_width_h": 6.0,
       "tau_CI_h": [
         1.5,
-        3.3
+        1.5
       ],
-      "magnitude_log10": 0.624,
+      "magnitude_log10": -0.388,
       "magnitude_CI": [
-        0.46,
-        0.776
+        -0.471,
+        -0.309
       ],
-      "r2": 0.45,
+      "r2": 0.15,
       "character": "stepwise",
       "reversible": true,
-      "supply_shutoff_decline_log10": null,
+      "supply_shutoff_decline_log10": -0.22,
       "supply_confounded": false
     },
     "CC.GTWY": {
@@ -74,17 +74,17 @@
       "step_t50_lag_vs_Qpeak_h": 0.0,
       "step_t50_lag_CI_h": [
         0.0,
-        11.2
+        11.1
       ],
       "transition_width_h": 70.2,
       "tau_CI_h": [
         1.5,
-        25.2
+        25.9
       ],
       "magnitude_log10": -0.56,
       "magnitude_CI": [
-        -0.773,
-        -0.339
+        -0.757,
+        -0.337
       ],
       "r2": 0.39,
       "character": "gradual",

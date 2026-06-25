@@ -1,5 +1,5 @@
 ---
-title: "Event-scale timing of braided-channel reorganization resolved by river seismology — and the reach geometry that bounds it: the December 2025 Mt. Rainier atmospheric-river floods"
+title: "Event-scale timing of braided-channel reorganization resolved by seismology"
 author:
   - name: Marine Denolle
     affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
@@ -306,7 +306,7 @@ UW.RER (high on the edifice, far from its gage), and the urban UW.UPS. We plot t
 no-signal stations alongside the rest (hollow/grey) rather than hide them, and mark
 them on the map (@fig-map, hollow triangles) to document *where river seismology was
 attempted and did not work* — itself a useful deployment guide. Notably, the
-steepest scaling is on the Nisqually (UW.LON $b\approx2.24$), exceeding the Puyallup
+steepest scaling is on the Nisqually (UW.LON $b\approx1.98$), exceeding the Puyallup
 source ($b\approx1.77$).
 
 ## Transport-onset threshold and two-regime scaling
@@ -322,7 +322,7 @@ we report as **two exponents** ($b_{<Q_c}\!\to\!b_{>Q_c}$; starred in @fig-scali
 Four **steepen** — CC.PR01 ($Q_c\approx29$ m³/s, $b\!:\!-0.15\!\to\!1.56$,
 $\Delta\mathrm{BIC}\approx159$), CC.TRON ($Q_c\approx60$, $-0.33\!\to\!1.44$), and
 both Nisqually stations CC.GTWY ($Q_c\approx97$, $0.68\!\to\!3.47$) and UW.LON
-($Q_c\approx89$, $1.22\!\to\!4.29$ — the steepest above-threshold slope in the
+($Q_c\approx109$, $1.10\!\to\!5.05$ — the steepest above-threshold slope in the
 network) — while CC.STYX **flattens** ($Q_c\approx22$, $2.95\!\to\!1.26$). The clean
 source anchor CC.PR03 and CC.PR02 show **no** significant break: a single power law
 suffices. The steeper onsets on the Nisqually match the slope-dependent critical
@@ -343,7 +343,7 @@ power scales as $H^{7/3}$, spreading a given discharge across a wider, shallower
 section *suppresses* the exponent. Because the resolvable band is
 turbulence-dominated, every breakpoint is a **candidate** onset — geometric or
 bed-mechanical — separated by the satellite channel-change test, which finds the
-two satellite-tested breaks (CC.PR01 and the steep Nisqually CC.UW.LON) to be
+two satellite-tested breaks (CC.PR01 and the steep Nisqually UW.LON) to be
 substantially **geometric**, with the channel migration scaling with the break
 steepness (§sec-braided, @fig-braidsat, @fig-braidsat-nis), and to be retested
 out-of-sample on the March-2026 event.
@@ -475,10 +475,10 @@ migrated **$\approx$240 m toward the station** between November and January
 (robustly inward across all water thresholds; the nearest active thread reaches
 the station footprint by January), versus $\approx$50 m at the Puyallup CC.PR01.
 This matters because UW.LON has the **steepest $P$–$Q$ break in the network**
-($b\!:\!1.2\!\to\!4.3$, §threshold) — far steeper than CC.PR01's
+($b\!:\!1.1\!\to\!5.0$, §threshold) — far steeper than CC.PR01's
 ($-0.15\!\to\!1.56$). Across the two satellite-tested reaches, then, the *amount of
 channel migration tracks the steepness of the break* (CC.PR01: $\Delta r\approx-50$
-m, $\Delta b\approx+1.7$; UW.LON: $\Delta r\approx-240$ m, $\Delta b\approx+3.1$) —
+m, $\Delta b\approx+1.7$; UW.LON: $\Delta r\approx-240$ m, $\Delta b\approx+4.0$) —
 the relationship expected if these breaks are **geometric channel-reorganization
 signatures rather than bed-mechanical transport onsets**. The Nisqually's large
 migration partly reflects post-flood (early-January) seasonal wetting and the
@@ -487,7 +487,7 @@ its order across basins are robust, and they extend the braided-source
 interpretation — and the caution it implies for virtual-discharge ratings — beyond
 the Puyallup to a second, independent glacial-river network.
 
-![Satellite braided-source test extended to the Nisqually at UW.LON (panels as in @fig-braidsat). (a) Pre-flood MNDWI with the post-flood active-channel outline (red) over a visibly multi-thread reach; (b) active-channel change (S2$\cup$S1) — extensive newly-wet braids; (c) predicted geometric baseline drift. The active channel migrated $\approx$240 m toward UW.LON (Nov→Jan), the largest in the satellite-tested set and consistent with this station's extreme $P$–$Q$ steepening ($b\!:\!1.2\!\to\!4.3$) being substantially geometric.](figures/fig19_braid_change_nisqually.png){#fig-braidsat-nis width=98%}
+![Satellite braided-source test extended to the Nisqually at UW.LON (panels as in @fig-braidsat). (a) Pre-flood MNDWI with the post-flood active-channel outline (red) over a visibly multi-thread reach; (b) active-channel change (S2$\cup$S1) — extensive newly-wet braids; (c) predicted geometric baseline drift. The active channel migrated $\approx$240 m toward UW.LON (Nov→Jan), the largest in the satellite-tested set and consistent with this station's extreme $P$–$Q$ steepening ($b\!:\!1.1\!\to\!5.0$) being substantially geometric.](figures/fig19_braid_change_nisqually.png){#fig-braidsat-nis width=98%}
 
 ### The event-scale *timing* of reorganization {#sec-reorg}
 
@@ -667,7 +667,7 @@ plain the seismic $P$–$Q$ scaling steepens at a critical discharge, but revers
 hysteresis, the absence of supply decay, and independent satellite channel-change
 identify that break as a **geometric channel reorganization, not a bedload onset** —
 and the continuous record *times* it, placing the reorganization on the flood
-**recession** (onset $\sim$13 h after peak; the persistent step a few days later) in
+**recession** (onset $ \sim$ 13 h after peak; the persistent step a few days later) in
 discrete, stepwise switches rather than a gradual ramp. This converts the braided
 reach from a *caveat* on someone else's discharge rating into the object of study: a
 sub-daily view of a braided river rearranging itself during a flood, at a cadence

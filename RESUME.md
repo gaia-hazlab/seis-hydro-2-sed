@@ -11,7 +11,7 @@ when the laptop sleeps, so this is the manual relaunch plan.
 > hydraulic-geometry suppression) — *not* necessarily the "bedload onset" the field
 > routinely infers. Seismic hysteresis + satellite channel-change tell them apart;
 > the braided Puyallup source (PR01) is the satellite-confirmed geometric
-> end-member, the steep Nisqually (UW.LON 1.2→4.3) and the flattening STYX are
+> end-member, the steep Nisqually (UW.LON 1.1→5.0) and the flattening STYX are
 > contrasting regimes.**
 
 Full reasoning, the physics re-evaluation, and the updated thread table (T5 upgraded
