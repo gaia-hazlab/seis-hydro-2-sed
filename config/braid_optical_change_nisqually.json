@@ -1,0 +1,57 @@
+{
+  "region": "Nisqually",
+  "aoi": [
+    -121.828,
+    46.738,
+    -121.792,
+    46.764
+  ],
+  "epochs": {
+    "pre": "2025-11-01/2025-11-30",
+    "post": "2025-12-25/2026-01-20"
+  },
+  "crs": "EPSG:32610",
+  "res_m": 10,
+  "december_series_W": null,
+  "r_e_m": 780.9588245297944,
+  "fc_hz": 8.660254037844387,
+  "vc_ms": 577.6081496028798,
+  "Q_pnw": 73.5707739095678,
+  "thresholds": {
+    "mndwi_water": 0.0,
+    "s1_vv_db_water": -15.0,
+    "s2_max_cloud_pct": 40
+  },
+  "observed_baseline_drift_log10": 0.2,
+  "scenes": {
+    "pre": {
+      "s2": 3,
+      "s1": 12
+    },
+    "post": {
+      "s2": 4,
+      "s1": 9
+    }
+  },
+  "stations": {
+    "UW.LON": {
+      "utm_x": 590920.7154536269,
+      "utm_y": 5178137.8024453595,
+      "r_near_pre_m": 240.20824298928628,
+      "W_pre": 190.8424751196235,
+      "wet_area_pre_m2": 249200.0,
+      "r_near_post_m": 0.0,
+      "W_post": 624.1480009858575,
+      "wet_area_post_m2": 503400.0,
+      "dr_near_m": -240.20824298928628,
+      "W_ratio_post_pre": 3.2704878753780067,
+      "pred_dlog10P": 0.5146125434186989,
+      "dr_near_m_median": -240.20824298928628,
+      "dr_near_m_min": -322.41540277189324,
+      "dr_near_m_max": -10.0,
+      "pred_dlog10P_median": 0.5146125434186989,
+      "pred_dlog10P_min": -0.215962046989792,
+      "pred_dlog10P_max": 1.5860601987721643
+    }
+  }
+}

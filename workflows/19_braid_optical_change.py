@@ -516,7 +516,10 @@ def make_figure(data, geom, spx):
     med = [geom[n]["pred_dlog10P_median"] for n in names]
     lo = [geom[n]["pred_dlog10P_median"] - geom[n]["pred_dlog10P_min"] for n in names]
     hi = [geom[n]["pred_dlog10P_max"] - geom[n]["pred_dlog10P_median"] for n in names]
-    colors = ["#e31a1c" if n == "CC.PR01" else "#08519c" for n in names]
+    # highlight the braidplain-anomaly station in red (PR01 on the Puyallup);
+    # for a single-station region (Nisqually/UW.LON) just use one colour.
+    hilite = "CC.PR01" if "CC.PR01" in names else (names[0] if len(names) == 1 else None)
+    colors = ["#e31a1c" if n == hilite else "#08519c" for n in names]
     ax[2].bar(x, med, 0.55, yerr=[lo, hi], capsize=5, color=colors,
               error_kw=dict(ecolor="0.3", lw=1.3))
     ax[2].axhline(0.2, ls="--", color="green", lw=1.2)
@@ -526,7 +529,7 @@ def make_figure(data, geom, spx):
     ax[2].set_xticks(x)
     ax[2].set_xticklabels([n.split(".")[1] for n in names])
     ax[2].set_ylabel(r"predicted $\Delta\log_{10}P=\log_{10}(W_{post}/W_{pre})$")
-    ax[2].set_title("(c) Predicted geometric baseline drift (PR01 red)", fontsize=10)
+    ax[2].set_title("(c) Predicted geometric baseline drift", fontsize=10)
     ax[2].text(0.5, -0.20, r"$W=\sum A\,r^{-1}e^{-r/r_e}$, "
                + f"$r_e$={R_E:.0f} m; bars = MNDWI-threshold ensemble (median, range)",
                transform=ax[2].transAxes, ha="center", fontsize=8, color="0.3")

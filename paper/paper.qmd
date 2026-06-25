@@ -289,9 +289,11 @@ $Q_c$ the flow widens and shallows (or supply saturates), and because turbulent
 power scales as $H^{7/3}$, spreading a given discharge across a wider, shallower
 section *suppresses* the exponent. Because the resolvable band is
 turbulence-dominated, every breakpoint is a **candidate** onset — geometric or
-bed-mechanical — to be separated by the satellite channel-change test (§sec-braided;
-and, for the steep Nisqually onset, @fig-braidsat extended to that reach) and an
-out-of-sample March-2026 event.
+bed-mechanical — separated by the satellite channel-change test, which finds the
+two satellite-tested breaks (CC.PR01 and the steep Nisqually CC.UW.LON) to be
+substantially **geometric**, with the channel migration scaling with the break
+steepness (§sec-braided, @fig-braidsat, @fig-braidsat-nis), and to be retested
+out-of-sample on the March-2026 event.
 
 ![Transport-onset threshold: continuous broken-stick fit of $\log_{10}P$ vs $\log_{10}Q$ (5–15 Hz), with the AIC/BIC-justified breakpoint $Q_c$ (blue dashed) and the two exponents $b_{<Q_c}\!\to\!b_{>Q_c}$ in each panel title (ΔBIC on autocorrelation-corrected $n_\text{eff}$). Most stations steepen above $Q_c$; CC.STYX flattens; the clean source anchor CC.PR03 shows no significant break.](figures/fig14_threshold.png){#fig-thr width=95%}
 
@@ -412,6 +414,27 @@ permanent migration better measured by the Nov→Jan bracket above. We treat thi
 supporting, not primary, evidence.
 
 ![*(Supplementary, exploratory.)* Sentinel-1 (SAR) channel-migration series through the December-2025 ARs: each off-channel station's attenuation-weighted wetted illumination relative to the on-channel anchor CC.PR03 (normalised to mid-November), a ratio that cancels per-epoch scene-count and overall-wetness biases. CC.PR01 (braidplain-central) is preferentially illuminated during the flood peak (shaded) — the geometric flow-front response — then relaxes. SAR under-detects shallow braided water at 10 m, so absolute wetted area is not used; only the between-station ratio.](figures/fig20_braid_timeseries.png){#fig-braidsat-ts width=80%}
+
+**The geometric mechanism generalizes to a second basin — and scales with the
+break.** The same satellite test, run on the Nisqually reach at UW.LON
+(@fig-braidsat-nis), finds a *much larger* reorganization: the active channel
+migrated **$\approx$240 m toward the station** between November and January
+(robustly inward across all water thresholds; the nearest active thread reaches
+the station footprint by January), versus $\approx$50 m at the Puyallup CC.PR01.
+This matters because UW.LON has the **steepest $P$–$Q$ break in the network**
+($b\!:\!1.2\!\to\!4.3$, §threshold) — far steeper than CC.PR01's
+($-0.15\!\to\!1.56$). Across the two satellite-tested reaches, then, the *amount of
+channel migration tracks the steepness of the break* (CC.PR01: $\Delta r\approx-50$
+m, $\Delta b\approx+1.7$; UW.LON: $\Delta r\approx-240$ m, $\Delta b\approx+3.1$) —
+the relationship expected if these breaks are **geometric channel-reorganization
+signatures rather than bed-mechanical transport onsets**. The Nisqually's large
+migration partly reflects post-flood (early-January) seasonal wetting and the
+magnitude is threshold-sensitive, as on the Puyallup; but the *inward sense* and
+its order across basins are robust, and they extend the braided-source
+interpretation — and the caution it implies for virtual-discharge ratings — beyond
+the Puyallup to a second, independent glacial-river network.
+
+![Satellite braided-source test extended to the Nisqually at UW.LON (panels as in @fig-braidsat). (a) Pre-flood MNDWI with the post-flood active-channel outline (red) over a visibly multi-thread reach; (b) active-channel change (S2$\cup$S1) — extensive newly-wet braids; (c) predicted geometric baseline drift. The active channel migrated $\approx$240 m toward UW.LON (Nov→Jan), the largest in the satellite-tested set and consistent with this station's extreme $P$–$Q$ steepening ($b\!:\!1.2\!\to\!4.3$) being substantially geometric.](figures/fig19_braid_change_nisqually.png){#fig-braidsat-nis width=98%}
 
 ## Time-dependent bedload across the atmospheric rivers
 
