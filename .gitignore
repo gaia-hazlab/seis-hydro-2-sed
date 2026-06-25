@@ -87,3 +87,12 @@ paper/_freeze/
 
 # March-2026 second-event working dir (large)
 notebooks/data_march/
+
+# COMMITTED offline-rebuild caches. notebooks/data/ is ignored above, but two
+# subtrees are force-added (git keeps tracking them once added, like
+# notebooks/data/results/*.csv): they let the paper rebuild from scratch without
+# re-pulling slow seismic data or the flaky Planetary Computer API.
+#   notebooks/data/results/      seismic band-power timeseries (CSV)
+#   notebooks/data/braid_cache/  derived Sentinel mndwi/channel rasters (npz) +
+#                                station pixels (json) + December series (csv)
+# To (re)track after adding a new file: git add -f notebooks/data/braid_cache/

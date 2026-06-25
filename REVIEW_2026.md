@@ -419,9 +419,16 @@ Status: ✅ current · ⚠ needs refresh to the NWIS/flood-window/lag numbers ·
 | fig16 braided hysteresis | ⚠ supersede/extend with the new timing view (fig22) |
 | fig19 braid satellite | ⚠ add the Nisqually panel (UW.LON W ×3.3) beside Puyallup |
 | fig21 warm-AR snow | ⚠ retitle to the **rain→snow supply-shutoff** mechanism; tie to fig22 confound |
-| ➕ **fig22 reorg-timing** | ➕ NEW (×2 basins) — lead the geomorphic-dynamics result |
-| ➕ **fig23 (proposed)** | ➕ the two-basin **domain-of-applicability** panel (width × gage-distance × elevation → clean/confounded) |
+| ➕ **fig22 reorg-timing** | ✅ DONE (×2 basins) + flood-wave lag correction — lead the geomorphic-dynamics result |
+| ➕ **fig23 domain panel** | ✅ DONE — two-basin **domain-of-applicability** (gage-distance × channel-width × elevation → clean/confounded); `workflows/22_domain_panel.py` |
 | figS traffic / GIFs | ✅ supplement |
+
+**Reproducibility hardening (done this pass).** `figures-from-cache` now rebuilds **every**
+figure offline, including the satellite fig19/fig20: workflow 19 caches its derived Sentinel
+mndwi/active-channel rasters to committed `notebooks/data/braid_cache/*.npz` (+ station pixels
+json, December-series csv) and replays them with `--from-cache`, so the flaky Planetary Computer
+API is never needed to rebuild the paper. Workflows 21 (both basins) + 22 are wired into the
+offline Makefile path. Only raw seismic (slow) and a live PC refresh remain on the `repro` path.
 
 ### 10b. Thread disposition (all 13 ship)
 - **Spine-eligible (lead candidates):** T9 braided source-model breakdown · **NEW reorg-timing**

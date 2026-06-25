@@ -68,10 +68,76 @@ from scipy import ndimage
 ROOT = Path(__file__).resolve().parents[1]
 FIGDIR = ROOT / "paper" / "figures"
 CFGDIR = ROOT / "config"
+# Committed satellite-artefact cache so fig19/fig20 rebuild OFFLINE (no Planetary
+# Computer): the figure only needs the derived mndwi + active-channel rasters and
+# the station pixels, not the source imagery. A live run saves the cache; a
+# --from-cache run replays it. (The per-station geometry + December W series live
+# in config/braid_optical_change*.json; a CSV mirror of the latter is written too.)
+CACHE = ROOT / "notebooks" / "data" / "braid_cache"
 
 import sys; sys.path.insert(0, str(ROOT / "src"))
 from riverseis.figstyle import paper_style  # noqa: E402
 paper_style()
+
+
+def _save_cache(region: str, data: dict, spx: dict) -> None:
+    """Persist the fig19 rasters (mndwi+channel per epoch) + station pixels."""
+    CACHE.mkdir(parents=True, exist_ok=True)
+    pre, post = data["pre"], data["post"]
+    arrs = dict(
+        x=pre["mndwi"].x.values.astype("float64"),
+        y=pre["mndwi"].y.values.astype("float64"),
+        mndwi_pre=pre["mndwi"].values.astype("float32"),
+        mndwi_post=post["mndwi"].values.astype("float32"),
+        channel_pre=pre["channel"].values.astype("uint8"),
+        channel_post=post["channel"].values.astype("uint8"),
+    )
+    np.savez_compressed(CACHE / f"{region}_rasters.npz", **arrs)
+    spx_ser = {k: [int(v[0]), int(v[1]), float(v[2]), float(v[3])]
+               for k, v in spx.items()}
+    (CACHE / f"{region}_spx.json").write_text(json.dumps(spx_ser, indent=2))
+    print(f"   cached satellite artefacts -> {CACHE}/{region}_rasters.npz (+_spx.json)")
+
+
+def _load_cache(region: str):
+    """Rebuild (data, geom, spx) for fig19 from the committed cache (no network)."""
+    z = np.load(CACHE / f"{region}_rasters.npz")
+    coords = {"y": z["y"], "x": z["x"]}
+    def _da(a):
+        return xr.DataArray(a, coords=coords, dims=("y", "x"))
+    data = {"pre": dict(mndwi=_da(z["mndwi_pre"]), channel=_da(z["channel_pre"])),
+            "post": dict(mndwi=_da(z["mndwi_post"]), channel=_da(z["channel_post"]))}
+    spx = {k: (v[0], v[1], v[2], v[3])
+           for k, v in json.loads((CACHE / f"{region}_spx.json").read_text()).items()}
+    geom = json.loads((CFGDIR / JSON_NAME).read_text())["stations"]
+    return data, geom, spx
+
+
+def plot_december_from_json() -> None:
+    """Redraw fig20 (December series) from the committed config JSON, no network."""
+    cfg = json.loads((CFGDIR / JSON_NAME).read_text())
+    dec = cfg.get("december_series_W")
+    if not dec:
+        return
+    labels, anchor, rel = dec["labels"], dec["anchor"], dec["rel_to_anchor_norm"]
+    fig, ax = plt.subplots(figsize=(7.8, 4.4), constrained_layout=True)
+    x = np.arange(len(labels))
+    for i, lab in enumerate(labels):
+        if "peak" in lab.lower():
+            ax.axvspan(i - 0.5, i + 0.5, color="#cfe3f2", alpha=0.7, zorder=0)
+    for n, r in rel.items():
+        is_anom = n == "CC.PR01"
+        ax.plot(x, r, marker="o", ms=8, lw=2.6 if is_anom else 1.6,
+                color="#e31a1c" if is_anom else "#888888", zorder=5 if is_anom else 3,
+                label=n.split(".")[1] + (" (braidplain-central)" if is_anom else ""))
+    ax.axhline(1.0, color="0.6", lw=0.9, ls=":")
+    ax.set_xticks(x); ax.set_xticklabels(labels, rotation=18, ha="right", fontsize=11)
+    ax.set_ylabel(r"illumination relative to anchor " f"{anchor.split('.')[1]}" "\n"
+                  r"normalised to Nov", fontsize=11.5)
+    ax.legend(title="station", fontsize=10, title_fontsize=10, loc="upper left")
+    out = FIGDIR / f"fig20_braid_timeseries{FIGTAG}.png"
+    fig.savefig(out, dpi=150)
+    print(f"wrote {out} (from cache)")
 
 # ----------------------------------------------------------------------------
 # Configuration
@@ -387,10 +453,23 @@ def main() -> int:
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--region", default="puyallup", choices=list(REGIONS))
+    ap.add_argument("--from-cache", action="store_true",
+                    help="rebuild fig19/fig20 from the committed npz/JSON cache (no network)")
     args = ap.parse_args()
     select_region(args.region)
-
     FIGDIR.mkdir(parents=True, exist_ok=True)
+
+    if args.from_cache:
+        if not (CACHE / f"{args.region}_rasters.npz").exists():
+            print(f"no cache for {args.region}; run live once to populate "
+                  f"{CACHE}/{args.region}_rasters.npz")
+            return 1
+        data, geom, spx = _load_cache(args.region)
+        make_figure(data, geom, spx)
+        plot_december_from_json()
+        print(f"rebuilt fig19/fig20 for {args.region} from cache (no network)")
+        return 0
+
     print(f"r_e (5–15 Hz band centre {FC:.2f} Hz, VC={VC:.0f} m/s, Q={Q_PNW:.0f}) = {R_E:.0f} m")
 
     data = {}
@@ -470,7 +549,20 @@ def main() -> int:
     (CFGDIR / JSON_NAME).write_text(json.dumps(out, indent=2))
     print(f"\nwrote {CFGDIR/JSON_NAME}")
 
+    # CSV mirror of the (tabular) December illumination series for offline rebuild
+    if dec:
+        CACHE.mkdir(parents=True, exist_ok=True)
+        import csv
+        with (CACHE / f"{args.region}_december_series.csv").open("w", newline="") as fh:
+            w = csv.writer(fh)
+            w.writerow(["epoch_label", *[f"{n.split('.')[1]}_rel_to_{dec['anchor'].split('.')[1]}"
+                                         for n in dec["rel_to_anchor_norm"]]])
+            for i, lab in enumerate(dec["labels"]):
+                w.writerow([lab, *[f"{dec['rel_to_anchor_norm'][n][i]:.4f}"
+                                   for n in dec["rel_to_anchor_norm"]]])
+
     make_figure(data, geom, spx)
+    _save_cache(args.region, data, spx)        # persist artefacts for offline rebuild
     return 0
 
 

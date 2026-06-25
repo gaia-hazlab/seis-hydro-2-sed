@@ -9,8 +9,17 @@ reproduction paths** — pick by how much you want to recompute.
 | **B — full pipeline from raw data** | network (IRIS FDSN, USGS NWIS, Planetary Computer) | hours | `pixi run make repro` |
 
 Path A reproduces every manuscript figure from small, version-controlled
-analysis tables without touching the network. Path B re-derives those tables
-from the raw seismic/discharge/imagery archives.
+artefacts without touching the network — including the satellite braid-change
+figures (fig19/fig20), which replay committed derived rasters
+(`notebooks/data/braid_cache/*.npz`) instead of querying the Planetary Computer.
+Path B re-derives those tables and refreshes the cache from the raw
+seismic/discharge/imagery archives.
+
+Why the satellite artefacts are cached, not re-fetched: the Planetary Computer
+STAC API is intermittently unavailable and slow, and a published paper must
+rebuild deterministically. Workflow 19 therefore saves the *derived* mndwi /
+active-channel rasters once (`--region X` live) and replays them
+(`--region X --from-cache`); the source imagery is never needed for the figures.
 
 ## Environment (pinned)
 
@@ -45,7 +54,7 @@ All inputs are public; query parameters are pinned in version control:
 |---|---|---|
 | Seismic waveforms | IRIS FDSN (networks CC, UW, PB) | `config/transect_puyallup.yaml` (stations, channels), `config/analysis.yaml` (window) |
 | Discharge / stage | USGS NWIS IV (gage IDs) | `config/transect_puyallup.yaml` |
-| Satellite optical/SAR | Microsoft Planetary Computer STAC (sentinel-2-l2a, sentinel-1-rtc) | `workflows/19_braid_optical_change.py` (AOI, dates, collections) — **no credentials** |
+| Satellite optical/SAR | Microsoft Planetary Computer STAC (sentinel-2-l2a, sentinel-1-rtc) | `workflows/19_braid_optical_change.py` (AOI, dates, collections) — **no credentials**; derived rasters cached in `notebooks/data/braid_cache/` for offline `--from-cache` rebuild |
 | Earthquake catalog | USGS (M≥3.5, 500 km) | `config/analysis.yaml` |
 
 Large raw caches (`notebooks/data/fdsn_cache/*.mseed`, NWIS pulls) are
@@ -57,9 +66,11 @@ network.
 ## What is and isn't in git
 
 - **In git:** code, `config/*` parameters, `results/*.csv` analysis tables,
-  generated figures, the rendered-book source.
-- **Zenodo (pending DOI):** raw waveform cache, raw NWIS/SNOTEL pulls, satellite
-  scene cache — too large for git, fully re-fetchable from the manifest above.
+  `notebooks/data/braid_cache/*` derived satellite artefacts (npz/json/csv),
+  generated figures, the rendered-book source. These together make Path A fully
+  offline for **every** figure.
+- **Zenodo (pending DOI):** raw waveform cache, raw NWIS/SNOTEL pulls, raw
+  satellite scenes — too large for git, fully re-fetchable from the manifest above.
 
 ## Continuous integration
 
