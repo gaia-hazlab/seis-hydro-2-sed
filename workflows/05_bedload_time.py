@@ -152,7 +152,7 @@ def main() -> int:
     # emphasize the AR-driven excursions: clip the empty low tail, pad just above peak
     ymax = max(np.nanmax(data[s]["norm"].values) for s in stations)
     a2.set_ylim(0.5, ymax * 1.4)
-    a2.set_ylabel("bedload-band power /\npre-flood median", fontsize=12)
+    a2.set_ylabel("5–15 Hz power / pre-flood median\n(turbulence + low-freq bedload)", fontsize=11)
     a2.set_xlabel("December 2025 (UTC)", fontsize=12)
     a2.tick_params(labelsize=11)
     # legend inside, over the quiet pre-flood (upper-left), away from the AR spikes

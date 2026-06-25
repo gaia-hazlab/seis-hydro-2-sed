@@ -201,6 +201,41 @@ intervals on $b$), and quantify event hysteresis with the Lawler index. The
 0.5–2 Hz band is excluded from the turbulence baseline because it is dominated by
 the oceanic secondary microseism rather than river flow.
 
+**Matched-discharge baseline and the event-scale timing of channel
+reorganization.** On the braided source reaches the source position is
+non-stationary, so we separate channel geometry from flow as the residual of the
+rating, $r(t)=\log_{10}P(t)-(a+b\log_{10}Q)$. Because $r(t)$ still mixes geometry
+with within-event hysteresis and rating curvature (a function of $Q$ alone), we
+track it at **matched discharge**: for a set of reference discharges that the
+compound hydrograph crosses repeatedly during the event (its inter-pulse troughs
+and limbs), we sample $r$ at each crossing and reference every level to its first
+(rising-limb) crossing, so the resulting baseline $c(t)$ is a sequence of
+same-stage "snapshots" whose changes are source geometry, not discharge. We detect
+the onset of reorganization as the first sustained $2\sigma$ departure of $c(t)$
+from the rising-limb band; fit the dominant step with a logistic
+$c_0+\Delta/(1+e^{-(t-t_{50})/\tau})$ — midpoint $t_{50}$ giving the lead/lag
+relative to peak $Q$, width $4\tau$ distinguishing a stepwise from a gradual
+transition, magnitude $\Delta$ its size — and bound $t_{50},\tau,\Delta$ with a
+moving bootstrap; an end-state offset that returns to zero flags a *reversible*
+(non-persistent) excursion rather than an irreversible reorganization.
+
+**Flood-wave lag for far-downstream gages.** Where a station's gage is not
+co-located, gage $Q$ lags the discharge actually passing the station by the
+flood-wave travel time, inflating the matched-discharge loops. We estimate a
+constant $P$–$Q$ lag per station by cross-correlating the limb-timescale (36-h
+high-passed) components of $\log_{10}P$ and $\log_{10}Q$ — the high pass removes the
+multi-day storm trend that otherwise locks the correlation onto spurious large lags
+— and apply it only where a real travel time exists (gage $\gtrsim$3 km away; a
+co-located gage returns sub-resolution noise). For the Nisqually stations (gage
+13–21 km downstream) the implied celerities are $\approx$2 m s⁻¹, physical
+flood-wave speeds that validate the correction; a *constant* lag cannot fully align
+a multi-kilometre path whose celerity varies with stage, which intrinsically limits
+matched-discharge timing at a far-gaged reach. Finally, because the post-flood
+rain→snow transition shuts off runoff and the sediment it carries — lowering $P$ at
+fixed $Q$ for a *supply*, not geometric, reason — we flag any negative
+matched-discharge drift that coincides with this basin-wide post-event decline as
+supply-confounded.
+
 **Frequency sampling — an important caveat.** Turbulent flow dominates the
 seismic wavefield at ~1–20 Hz and bedload impacts at higher frequencies, with the
 bedload band conventionally placed at **30–80 Hz** (Tsai et al. 2012; @bakker2020).

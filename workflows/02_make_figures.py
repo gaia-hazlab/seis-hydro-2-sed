@@ -319,6 +319,23 @@ def fig_event_timeseries(items: list[dict]) -> None:
     ax.axhline(dgage, color="0.6", lw=0.6, ls=":", zorder=0)
     hd, = ax.plot(j0.index, dgage - AMP * qn, color="black", lw=1.4, ls="--", zorder=6)
 
+    # AR pulses (shaded) + the warm-AR vs cold snow-accumulating tail (the supply
+    # shutoff that quiets the post-event signal; @fig-warmsnow / @fig-reorg)
+    arf = ROOT / "config" / "ar_windows.json"
+    if arf.exists():
+        ar_col = {"AR1": "#0072B2", "AR2": "#56B4E9", "AR3": "#E69F00"}
+        for w in json.loads(arf.read_text()):
+            if w["label"] in ar_col:
+                ax.axvspan(pd.Timestamp(w["start"]), pd.Timestamp(w["end"]),
+                           color=ar_col[w["label"]], alpha=0.10, zorder=0)
+                ax.text(pd.Timestamp(w["peak"]), dmin - 3.6, w["label"], ha="center",
+                        va="top", fontsize=9, fontweight="bold", color=ar_col[w["label"]])
+        ax.axvspan(pd.Timestamp("2025-12-13T00:00:00+00:00"), j0.index[-1],
+                   color="0.6", alpha=0.06, zorder=0)
+        ax.text(pd.Timestamp("2025-12-21T00:00:00+00:00"), dmax + 3.2,
+                "cold tail — snow accumulation, runoff & supply shut off",
+                ha="center", va="bottom", fontsize=8, style="italic", color="0.35")
+
     for s in stations:
         c = cmap(norm(dist[s]))
         y0 = lane[s]

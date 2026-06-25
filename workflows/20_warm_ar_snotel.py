@@ -121,6 +121,10 @@ def main() -> int:
     a2.set_xlabel("December 2025 (UTC)")
     a2.legend(loc="upper left", fontsize=9, ncol=2)
 
+    fig.suptitle("Warm rain-on-snow ARs drive the floods; the cold late-December "
+                 "rain→snow transition shuts off\nrunoff and sediment supply — the "
+                 "supply shutoff that quiets the post-event matched-Q baseline (fig22)",
+                 fontsize=11)
     fig.autofmt_xdate()
     out = FIGDIR / "fig21_warm_ar_snow.png"
     fig.savefig(out, dpi=200, bbox_inches="tight")

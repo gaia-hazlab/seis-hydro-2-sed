@@ -100,6 +100,13 @@ def main() -> int:
         rr = next(x for x in rows if x["station"] == sid)
         ax.set_title(f"{sid}  b={rr['b']:.2f} r={rr['r']:.2f}", fontsize=8)
         ax.set_yscale("log")
+        # caveat the Nisqually virtual gages: gage is 13–21 km downstream (flood-wave
+        # lag) and the reach is a migrating braidplain (rating drifts between events)
+        if sid in ("UW.LON", "CC.GTWY"):
+            ax.text(0.04, 0.04, "⚠ far gage (lag) +\nbraided-drift rating",
+                    transform=ax.transAxes, fontsize=6, va="bottom", ha="left",
+                    color="#B22222",
+                    bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="#B22222", alpha=0.8))
     for ax in axes.ravel()[n:]:
         ax.set_visible(False)
     axes.ravel()[0].legend(fontsize=6.5, loc="upper left")
