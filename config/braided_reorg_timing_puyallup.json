@@ -1,0 +1,149 @@
+{
+  "basin": "puyallup",
+  "gage": "Puyallup nr Electron 12092000",
+  "band": "5.0-15.0Hz",
+  "q_peak_utc": "2025-12-09 03:30:00+00:00",
+  "ref_levels_m3s": [
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150,
+    160
+  ],
+  "method": "matched-discharge crossings, first-rising-limb-referenced; logistic step fit with bootstrap CI; reversibility from sign(\u0394)/R\u00b2",
+  "stations": {
+    "CC.PR01": {
+      "b_pooled": 1.74,
+      "n_crossings": 106,
+      "lag_correction": {
+        "lag_min": -45,
+        "lag_xcorr_r": 0.8,
+        "station_gage_km": 0.7,
+        "applied": false,
+        "implied_celerity_m_s": null
+      },
+      "persistent_offset_log10": -0.015,
+      "direction": null,
+      "onset_utc": "2025-12-09 16:25:00+00:00",
+      "onset_lag_h": 12.9,
+      "step_t50_utc": "2025-12-12 04:59:35.657698161+00:00",
+      "step_t50_lag_vs_Qpeak_h": 73.5,
+      "step_t50_lag_CI_h": [
+        72.3,
+        76.9
+      ],
+      "transition_width_h": 6.0,
+      "tau_CI_h": [
+        1.5,
+        1.8
+      ],
+      "magnitude_log10": 0.198,
+      "magnitude_CI": [
+        0.129,
+        0.265
+      ],
+      "r2": 0.34,
+      "character": "stepwise",
+      "reversible": true,
+      "supply_shutoff_decline_log10": -1.16,
+      "supply_confounded": false
+    },
+    "CC.PR02": {
+      "b_pooled": 2.01,
+      "n_crossings": 106,
+      "lag_correction": {
+        "lag_min": -10,
+        "lag_xcorr_r": 0.87,
+        "station_gage_km": 1.9,
+        "applied": false,
+        "implied_celerity_m_s": null
+      },
+      "persistent_offset_log10": 0.299,
+      "direction": "positive",
+      "onset_utc": "2025-12-09 16:25:00+00:00",
+      "onset_lag_h": 12.9,
+      "step_t50_utc": "2025-12-12 01:31:27.575801333+00:00",
+      "step_t50_lag_vs_Qpeak_h": 70.0,
+      "step_t50_lag_CI_h": [
+        68.8,
+        71.7
+      ],
+      "transition_width_h": 10.6,
+      "tau_CI_h": [
+        1.5,
+        3.9
+      ],
+      "magnitude_log10": 0.293,
+      "magnitude_CI": [
+        0.245,
+        0.36
+      ],
+      "r2": 0.66,
+      "character": "stepwise",
+      "reversible": false,
+      "supply_shutoff_decline_log10": -1.08,
+      "supply_confounded": false
+    },
+    "CC.PR03": {
+      "b_pooled": 1.84,
+      "n_crossings": 106,
+      "lag_correction": {
+        "lag_min": 10,
+        "lag_xcorr_r": 0.87,
+        "station_gage_km": 0.2,
+        "applied": false,
+        "implied_celerity_m_s": null
+      },
+      "persistent_offset_log10": 0.214,
+      "direction": "positive",
+      "onset_utc": "2025-12-09 23:50:00+00:00",
+      "onset_lag_h": 20.3,
+      "step_t50_utc": "2025-12-12 05:06:30.304525619+00:00",
+      "step_t50_lag_vs_Qpeak_h": 73.6,
+      "step_t50_lag_CI_h": [
+        72.3,
+        75.2
+      ],
+      "transition_width_h": 11.5,
+      "tau_CI_h": [
+        2.3,
+        3.7
+      ],
+      "magnitude_log10": 0.496,
+      "magnitude_CI": [
+        0.405,
+        0.597
+      ],
+      "r2": 0.72,
+      "character": "stepwise",
+      "reversible": false,
+      "supply_shutoff_decline_log10": -1.58,
+      "supply_confounded": false
+    }
+  },
+  "propagation": {
+    "persistent_stations": [
+      "CC.PR02",
+      "CC.PR03"
+    ],
+    "order_earliest_first": [
+      "CC.PR02",
+      "CC.PR03"
+    ],
+    "pairs": [
+      {
+        "from_": "CC.PR02",
+        "to": "CC.PR03",
+        "dt_h": 3.6,
+        "separation_m": 2055,
+        "apparent_celerity_m_per_s": 0.159
+      }
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "basin": "nisqually",
+  "gage": "Nisqually nr National 12082500",
+  "band": "5.0-15.0Hz",
+  "q_peak_utc": "2025-12-10 14:15:00+00:00",
+  "ref_levels_m3s": [
+    70,
+    90,
+    110,
+    130,
+    150,
+    170,
+    190,
+    210,
+    230,
+    250,
+    270,
+    290,
+    310
+  ],
+  "method": "matched-discharge crossings, first-rising-limb-referenced; logistic step fit with bootstrap CI; reversibility from sign(\u0394)/R\u00b2",
+  "stations": {
+    "UW.LON": {
+      "b_pooled": 2.86,
+      "n_crossings": 102,
+      "lag_correction": {
+        "lag_min": -180,
+        "lag_xcorr_r": 0.9,
+        "station_gage_km": 20.9,
+        "applied": true,
+        "implied_celerity_m_s": 1.93
+      },
+      "persistent_offset_log10": -0.467,
+      "direction": null,
+      "onset_utc": "2025-12-10 15:20:00+00:00",
+      "onset_lag_h": 1.1,
+      "step_t50_utc": "2025-12-10 15:12:03.196496004+00:00",
+      "step_t50_lag_vs_Qpeak_h": 1.0,
+      "step_t50_lag_CI_h": [
+        0.0,
+        3.9
+      ],
+      "transition_width_h": 10.2,
+      "tau_CI_h": [
+        1.5,
+        3.3
+      ],
+      "magnitude_log10": 0.624,
+      "magnitude_CI": [
+        0.46,
+        0.776
+      ],
+      "r2": 0.45,
+      "character": "stepwise",
+      "reversible": true,
+      "supply_shutoff_decline_log10": null,
+      "supply_confounded": false
+    },
+    "CC.GTWY": {
+      "b_pooled": 1.66,
+      "n_crossings": 118,
+      "lag_correction": {
+        "lag_min": -105,
+        "lag_xcorr_r": 0.88,
+        "station_gage_km": 12.8,
+        "applied": true,
+        "implied_celerity_m_s": 2.03
+      },
+      "persistent_offset_log10": -0.569,
+      "direction": "negative",
+      "onset_utc": "2025-12-10 18:05:00+00:00",
+      "onset_lag_h": 3.8,
+      "step_t50_utc": "2025-12-10 14:15:00.000000684+00:00",
+      "step_t50_lag_vs_Qpeak_h": 0.0,
+      "step_t50_lag_CI_h": [
+        0.0,
+        11.2
+      ],
+      "transition_width_h": 70.2,
+      "tau_CI_h": [
+        1.5,
+        25.2
+      ],
+      "magnitude_log10": -0.56,
+      "magnitude_CI": [
+        -0.773,
+        -0.339
+      ],
+      "r2": 0.39,
+      "character": "gradual",
+      "reversible": false,
+      "supply_shutoff_decline_log10": -0.7,
+      "supply_confounded": true
+    }
+  },
+  "propagation": {
+    "persistent_stations": [
+      "CC.GTWY"
+    ],
+    "order_earliest_first": [
+      "CC.GTWY"
+    ],
+    "pairs": []
+  }
+}
