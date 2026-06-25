@@ -12,7 +12,7 @@
 event:
   name: "December 2025 Pacific Northwest atmospheric-river floods"
   start_utc: "2025-12-01T00:00:00"
-  end_utc:   "2025-12-24T00:00:00"
+  end_utc:   "2026-01-01T00:00:00"
   peak_utc:  "2025-12-09T03:30:00"   # Puyallup nr Electron discharge peak (recomputed)
 
 bands:

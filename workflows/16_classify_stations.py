@@ -36,7 +36,7 @@ def best_r(sid):
             bands[m["band"]] = f
     for b in FLOW_PREF:
         if b in bands:
-            # Use the SAME robust, flood-windowed fit as the scaling table (02) so
+            # Use the SAME robust, entire-month fit as the scaling table (02) so
             # the classification r matches the reported b/r exactly (a plain
             # corrcoef here diverged once NWIS data introduced a few outliers).
             j = clip_event(load_timeseries(bands[b]))

@@ -30,14 +30,15 @@ def event_bounds(config_root: Path | None = None) -> tuple[pd.Timestamp, pd.Time
 
 
 def clip_event(j: pd.DataFrame) -> pd.DataFrame:
-    """Clip a proxy/discharge series to the flood/event window for scaling fits.
+    """Clip a proxy/discharge series to the analysis window (the whole month).
 
-    The raw CSVs now extend past the event (to the post-flood, snow-dominated
-    quiet tail) for the time-series and warm-AR figures, but the P∝Q^b *fit* must
-    characterize the flood turbulent-flow response — not the runoff-poor cold
-    aftermath, which is a different regime and dilutes the fit. So every
-    single-value scaling fit (b, r, Qc, virtual-Q rating, classification) clips to
-    this window; the time-series figures keep the full record.
+    Every single-value metric (b, r, Qc, virtual-Q rating, classification) is
+    computed over the **entire December record** — the flood AND the post-flood
+    low-runoff (cold, snow-accumulating) period — so all stations are treated
+    consistently and the flood vs. no-flood regimes can be contrasted (the
+    two-regime P∝Q^b break is itself part of that contrast). The window
+    (config/transect_puyallup.yaml) spans the full month; per-station data simply
+    end where each record ends.
     """
     a, b = event_bounds()
     return j.loc[(j.index >= a) & (j.index <= b)]

@@ -268,9 +268,11 @@ and all technical tests move to supplementary. The braided thread is no longer a
 **New evidence since the survey.** (1) **Complete NWIS discharge** to 12/31 —
 peaks corrected (Electron 323, Nisqually 425, Puyallup@Puy 1257), and the
 virtual-gage rating *improved* (NSE PR03/PR02 0.95/0.92 vs the old 0.88/0.86).
-(2) **Flood-windowed robust fits** — the post-flood snow-quiet tail is a different
-regime and excluded from the fit; the qualitative story is unchanged but every
-number is now authoritative. (3) **NEW — two-regime breaks across the network**:
+(2) **Entire-month robust fits** — every single-value metric is now computed over
+the whole December record (flood AND post-flood low-runoff quiet) at every station,
+so all stations are treated identically and the flood vs. no-flood regimes can be
+contrasted (superseding the earlier flood-window-only decision; the qualitative
+story is unchanged but every number is now authoritative and consistent). (3) **NEW — two-regime breaks across the network**:
 an AIC/BIC test (with an autocorrelation-corrected effective $n$) finds a
 **statistically significant $P$–$Q$ break at 5 of 8 river stations** — four
 *steepen* (CC.PR01 ΔBIC≈159, CC.TRON, and the two Nisqually stations CC.GTWY
