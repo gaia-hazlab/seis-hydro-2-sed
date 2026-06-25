@@ -117,6 +117,25 @@ def main() -> int:
             fig.text(x=lon, y=lat, text=sid, font="7p,Helvetica-Bold,black",
                      offset="0.0c/0.30c", justify="BC")
 
+    # Gage→station geometry (load-bearing for the matched-Q method): the Puyallup
+    # gage is co-located with the PR cluster (clean), but the Nisqually gage is
+    # 13–21 km downstream of UW.LON/GTWY, so gage Q lags the discharge passing the
+    # station by the flood-wave travel time. Draw the far connectors + distances.
+    def _km(a, b):
+        from math import radians, sin, cos, asin, sqrt
+        la1, lo1, la2, lo2 = map(radians, (a[1], a[0], b[1], b[0]))
+        h = sin((la2 - la1) / 2) ** 2 + cos(la1) * cos(la2) * sin((lo2 - lo1) / 2) ** 2
+        return 2 * 6371 * asin(sqrt(h))
+    NATIONAL = (-122.0837, 46.7526)            # Nisqually nr National 12082500
+    ELECTRON = (-122.0351, 46.9037)            # Puyallup nr Electron 12092000 (≈PR cluster)
+    for sid, pt in (("UW.LON", (-121.8096, 46.7506)), ("CC.GTWY", (-121.917, 46.7402))):
+        fig.plot(x=[pt[0], NATIONAL[0]], y=[pt[1], NATIONAL[1]], pen="1.1p,red,dashed")
+        fig.text(x=(pt[0] + NATIONAL[0]) / 2, y=(pt[1] + NATIONAL[1]) / 2 - 0.012,
+                 text=f"{_km(pt, NATIONAL):.0f} km to gage", font="7p,Helvetica-Bold,red2",
+                 justify="TC", fill="white@30")
+    fig.text(x=ELECTRON[0], y=ELECTRON[1] + 0.02, text="gage co-located",
+             font="7p,Helvetica-Bold,seagreen", justify="BC", fill="white@30")
+
     fig.legend(spec=_legend(), position="jBL+o0.2c", box="+gwhite@15+p0.5p")
     fig.colorbar(cmap=str(elev_cpt), frame=["x+lelevation", "y+lm"], position="JMR+o0.6c/0c+w8c")
     fig.savefig(FIG, dpi=300)

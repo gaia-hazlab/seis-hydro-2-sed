@@ -404,10 +404,10 @@ Status: ✅ current · ⚠ needs refresh to the NWIS/flood-window/lag numbers ·
 
 | Fig | Update needed |
 |---|---|
-| fig1 map | ⚠ add the gage→station distance annotation (co-located vs 13–21 km) — it is now load-bearing |
-| fig2 scaling-b | ⚠ confirm break markers + b values match the final flood-window fits (UW.LON 2.7, GTWY 1.6) |
-| fig3 P–Q scatter | ⚠ apply the per-station lag to the Nisqually scatter; re-fit |
-| fig4 hysteresis | ⚠ re-draw Nisqually loops lag-corrected (the raw loops are inflated by the 20 km lag) |
+| fig1 map | ✅ DONE — gage→station connectors + distance labels ("gage co-located" at Puyallup; "13/21 km to gage" for GTWY/UW.LON) |
+| fig2 scaling-b | ✅ confirmed lag-robust — applying the far-gage lag moves UW.LON/GTWY b by <0.05 (within CI), so the break markers + b values stand uncorrected |
+| fig3 P–Q scatter | ✅ DONE — far-gage (UW.LON/GTWY) Q lag-aligned before the fit; panel title tags the shift; slope essentially unchanged |
+| fig4 hysteresis | ✅ DONE — Nisqually loops re-drawn lag-corrected (this is where the 13–21 km lag mattered most) |
 | fig5 event timeseries | ✅ keep; annotate AR1/AR2/AR3 + warm/cold tail |
 | fig6/7/8 bedload(t), per-AR, b(t) | ⚠ re-confirm against complete NWIS; label band as turbulence+low-bedload |
 | fig9 attenuation | ✅ supporting |
@@ -417,11 +417,17 @@ Status: ✅ current · ⚠ needs refresh to the NWIS/flood-window/lag numbers ·
 | fig14 threshold Qc | ✅ two-exponent + ΔBIC |
 | fig15 rating | ✅ |
 | fig16 braided hysteresis | ⚠ supersede/extend with the new timing view (fig22) |
-| fig19 braid satellite | ⚠ add the Nisqually panel (UW.LON W ×3.3) beside Puyallup |
+| fig19 braid satellite | ✅ DONE — both regions cached + offline-rebuildable; the Nisqually-beside-Puyallup view is now its own figure (fig24) |
 | fig21 warm-AR snow | ⚠ retitle to the **rain→snow supply-shutoff** mechanism; tie to fig22 confound |
 | ➕ **fig22 reorg-timing** | ✅ DONE (×2 basins) + flood-wave lag correction — lead the geomorphic-dynamics result |
 | ➕ **fig23 domain panel** | ✅ DONE — two-basin **domain-of-applicability** (gage-distance × channel-width × elevation → clean/confounded); `workflows/22_domain_panel.py` |
+| ➕ **fig24 two-region braid** | ✅ DONE — Puyallup (compact incised) vs Nisqually (wide braidplain) change maps side-by-side, offline from cache; `workflows/23_braid_two_region.py` |
 | figS traffic / GIFs | ✅ supplement |
+
+**Spine LOCKED (2026-06-25):** the dynamics-led **Spine 1** is now the chosen spine (see
+`paper/ROADMAP.md` → "✅ SPINE LOCKED"). Remaining ⚠ items (fig5/6/7/8/10/12/16/21 refreshes)
+are cosmetic/labelling against already-correct numbers; the load-bearing figures (fig1, fig3,
+fig4, fig22, fig23, fig24) are done.
 
 **Reproducibility hardening (done this pass).** `figures-from-cache` now rebuilds **every**
 figure offline, including the satellite fig19/fig20: workflow 19 caches its derived Sentinel

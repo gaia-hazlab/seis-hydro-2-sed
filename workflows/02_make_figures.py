@@ -32,8 +32,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from riverseis.analysis import (  # noqa: E402
-    WATER_BASELINE, clip_event, event_window, fit_scaling, lawler_hysteresis_index,
-    load_timeseries,
+    WATER_BASELINE, clip_event, event_window, fit_scaling, lag_correct,
+    lawler_hysteresis_index, load_timeseries,
 )
 
 RESULTS = ROOT / "notebooks" / "data" / "results"
@@ -70,6 +70,23 @@ EXCLUDE_STATIONS = {"UW.BHW", "UW.TEHA"}
 # Fixed log10(power) y-range for the per-station panels (fig 3, fig 4) so they
 # are not vertically squeezed.
 P_YLIM = (-15, -11)
+
+# Stations whose USGS gage is FAR downstream, so gage Q lags the discharge passing
+# the station by the flood-wave travel time and must be re-aligned before the P–Q
+# scatter / hysteresis loop is meaningful. The Nisqually gage (National) sits
+# 13–21 km below UW.LON/GTWY; every other station here is at/near its gage (lag is
+# sub-resolution noise) so a blanket data-driven shift would only add error.
+FAR_GAGE_STATIONS = {"UW.LON", "CC.GTWY"}
+
+
+def _aligned(it: dict, clip=None):
+    """Load a product, optionally clip, and lag-correct it iff it is a far-gage station."""
+    j = load_timeseries(it["path"])
+    if clip is not None:
+        j = clip(j)
+    if it["station"] in FAR_GAGE_STATIONS:
+        return lag_correct(j, min_abs_min=30)
+    return j, 0
 
 
 def discover() -> list[dict]:
@@ -171,14 +188,15 @@ def fig_pq_scatter(items: list[dict]) -> None:
                              squeeze=False, sharex=True, sharey=True)
     flat = axes.ravel()
     for ax, it in zip(flat, banded):
-        j = clip_event(load_timeseries(it["path"]))   # fit on the flood window
+        j, lag = _aligned(it, clip=clip_event)        # fit on the flood window; far-gage lag-aligned
         fit = fit_scaling(j, it["station"], it["band"])
         lq = np.log10(j["Q"].clip(lower=1e-6))
         lp = np.log10(j["P"].clip(lower=1e-30))
         ax.scatter(lq, lp, s=3, alpha=0.25, color="0.55", rasterized=True)
         xs = np.linspace(lq.quantile(0.02), lq.quantile(0.98), 50)
         ax.plot(xs, fit.intercept + fit.b_ols * xs, color=_color(it["station"]), lw=2)
-        ax.set_title(f'{it["station"]}  {it["band"][0]:g}–{it["band"][1]:g} Hz')
+        tag = f"  (Q lag {lag:+d}′)" if lag else ""
+        ax.set_title(f'{it["station"]}  {it["band"][0]:g}–{it["band"][1]:g} Hz{tag}')
         # fit stats as an unobtrusive text box (no legend handle to overlap data)
         ax.text(0.04, 0.96, f"b={fit.b_ols:.2f} [{fit.b_lo:.2f}, {fit.b_hi:.2f}]\nr={fit.r:.2f}",
                 transform=ax.transAxes, va="top", ha="left", fontsize=7,
@@ -203,14 +221,15 @@ def fig_hysteresis(items: list[dict]) -> None:
     flat = axes.ravel()
     sc = None
     for ax, it in zip(flat, banded):
-        j = load_timeseries(it["path"])
+        j, lag = _aligned(it)                          # far-gage Q re-aligned to station
         ev = event_window(j)
         t = (ev.index - ev.index[0]).total_seconds() / 3600.0
         sc = ax.scatter(ev["Q"], np.log10(ev["P"].clip(lower=1e-30)), c=t, s=9,
                         cmap="viridis", edgecolor="none")
         hi = lawler_hysteresis_index(ev["Q"].values, np.log10(ev["P"].clip(lower=1e-30)).values)
         sense = "clockwise" if hi > 0.02 else ("counter-clockwise" if hi < -0.02 else "≈single-valued")
-        ax.set_title(f'{it["station"]} {it["band"][0]:g}–{it["band"][1]:g} Hz\nHI={hi:+.2f} ({sense})')
+        tag = f"  (Q lag {lag:+d}′)" if lag else ""
+        ax.set_title(f'{it["station"]} {it["band"][0]:g}–{it["band"][1]:g} Hz{tag}\nHI={hi:+.2f} ({sense})')
         ax.set_ylim(*P_YLIM)   # fixed range so panels are not vertically squeezed
     for ax in flat[len(banded):]:
         ax.set_visible(False)

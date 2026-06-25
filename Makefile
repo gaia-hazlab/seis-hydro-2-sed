@@ -40,6 +40,8 @@ figures-from-cache:  ## REPRO PATH A — all offline figures from committed cach
 	@echo ">>> 19_braid_optical_change --from-cache (both regions; satellite artefacts)"
 	$(PY) workflows/19_braid_optical_change.py --region puyallup --from-cache
 	$(PY) workflows/19_braid_optical_change.py --region nisqually --from-cache
+	@echo ">>> 23_braid_two_region (fig24; from the satellite cache)"
+	$(PY) workflows/23_braid_two_region.py
 
 repro:           ## REPRO PATH B — full pipeline from raw data (network; hours)
 	$(PY) workflows/00_discover_stations.py

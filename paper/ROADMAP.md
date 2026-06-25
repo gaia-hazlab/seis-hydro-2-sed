@@ -67,6 +67,9 @@ provisional and will move as the three open dependencies resolve.
 | `@fig-braid` | [fig16_braided_hysteresis.png](figures/fig16_braided_hysteresis.png) | Braided-reach onset diagnostic (geometric vs transport) |
 | `@fig-braidsat` | [fig19_braid_change.png](figures/fig19_braid_change.png) | Sentinel-2/-1 braid change Nov→Jan + predicted per-station geometric baseline drift |
 | `@fig-warmsnow` | [fig21_warm_ar_snow.png](figures/fig21_warm_ar_snow.png) | High-elevation SNOTEL temperature + SWE: warm rain-on-snow ARs vs cold late-Dec snow accumulation |
+| `@fig-reorg` | [fig22_braided_reorg_timing.png](figures/fig22_braided_reorg_timing.png) | **Event-scale reorganization TIMING** (×2 basins, lag-corrected): matched-Q baseline, logistic step, onset/lead-lag vs peak Q |
+| `@fig-domain` | [fig23_domain.png](figures/fig23_domain.png) | **Domain of applicability**: gage-distance × channel-width × elevation → clean (Puyallup) vs confounded (Nisqually) |
+| `@fig-tworeg` | [fig24_braid_two_region.png](figures/fig24_braid_two_region.png) | Two-region braid-change: compact incised Puyallup vs wide Nisqually braidplain (offline from cache) |
 | `@fig-traffic` | [figS_traffic_noise.png](figures/figS_traffic_noise.png) | Traffic-noise contamination control (supplement) |
 | `@fig-vq` | [virtual_q_animation.gif](figures/virtual_q_animation.gif) | **Embedded GIF**: space–time distributed discharge field |
 | — | [bedload_animation.gif](figures/bedload_animation.gif) | Repo-only multidisciplinary GIF (SNOTEL + gage + bedload) |
@@ -171,6 +174,43 @@ Each thread: **Claim** · **Evidence (figs)** · **Key assumptions** · **Streng
 ---
 
 ## Candidate main stories (pick one spine)
+
+::: {.callout-important}
+## ✅ SPINE LOCKED (2026-06-25) — Option B′, the geomorphic-dynamics evolution of B
+
+After the two-basin reorganization-timing result, the flood-wave lag correction, and
+the domain-of-applicability analysis (REVIEW_2026 §8–§10; tags `REORG-2BASIN-2026-06-25`,
+`FIGS-OFFLINE-2026-06-25`), the spine is **locked to the dynamics-led story**:
+
+> **"Watching a braided river rearrange itself during a flood — and where seismics can."**
+> Seismic power resolves *when* the active braid reorganizes (it **lags peak Q**, is
+> **recession-driven and stepwise**) — a timing gages and before/after satellites cannot
+> give — and the two-basin contrast **defines the method's domain** (clean at the compact,
+> co-located-gage Puyallup; confounded at the wide, far-gaged, snow-dominated Nisqually).
+
+This supersedes the earlier "Option A first" and is the **dynamics evolution of Option B**
+(rigor-led), now with a positive headline result rather than only limits. It is REVIEW_2026
+§10c **Spine 1**. The open gap is real: Gangemi et al. (2026, Tagliamento — braided) declines
+a braided source model; Ogiso (2021) saturates the *virtual-gage* concept but not the
+*dynamics*. **Journal: JGR-ES.**
+
+**Thread disposition (all 13 ship — main vs supplement):**
+- **Main spine:** T9 (braided source-model breakdown) · **reorg-timing** (NEW, `@fig-reorg`)
+  · T5 (two-regime break = the static signature) · the **two-basin domain** result
+  (`@fig-domain`, the lag + width + elevation contrast) · T4 (frequency rigor, as the
+  bounding caveat).
+- **Framing / payoff (main text, supporting):** T1 (scaling backbone) · T2 (two basins, now
+  the *domain* contrast) · T7 (virtual-Q field, the legibility device) · T8 (~36 h early
+  warning, the applied payoff) · T10 (the event container) · T13 (warm-AR rain→snow, now
+  also the supply-shutoff confound).
+- **Supplement:** T3 (time-dependent bedload, bounded) · T6 (attenuation) · T11
+  (detectability) · T12 (future high-rate).
+
+**New figures vs the old inventory:** `@fig-reorg` = fig22 (reorg timing, ×2 basins,
+lag-corrected); `@fig-domain` = fig23. fig3/fig4 are now lag-corrected for the far-gage
+Nisqually stations (slope b is lag-insensitive, Δb<0.05 — within CI — so fig2/threshold
+breaks are unchanged; only the hysteresis loop shape needed correction).
+:::
 
 **Option A — "A seismic network is a distributed gage array" (application-led).**
 Spine: T1→T2→T7→T8, with T11 as method and T4/T9 as honest caveats. Sells the virtual-discharge map + early warning as the headline capability for an ungaged hazard basin.

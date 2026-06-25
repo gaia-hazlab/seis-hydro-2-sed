@@ -64,7 +64,7 @@ from scipy.optimize import curve_fit
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from riverseis.analysis import load_timeseries  # noqa: E402
+from riverseis.analysis import estimate_pq_lag, load_timeseries  # noqa: E402
 from riverseis.figstyle import paper_style  # noqa: E402
 
 RESULTS = ROOT / "notebooks" / "data" / "results"
@@ -117,33 +117,6 @@ def _haversine_m(a: tuple[float, float], b: tuple[float, float]) -> float:
     la1, lo1, la2, lo2 = map(np.radians, (a[0], a[1], b[0], b[1]))
     h = np.sin((la2 - la1) / 2) ** 2 + np.cos(la1) * np.cos(la2) * np.sin((lo2 - lo1) / 2) ** 2
     return float(2 * R * np.arcsin(np.sqrt(h)))
-
-
-def estimate_pq_lag(lp: pd.Series, lq: pd.Series, max_h: float = 6.0,
-                    step_min: int = 5, hp: str = "36h") -> tuple[int, float]:
-    """Constant P–Q lag (minutes) by limb-timescale cross-correlation.
-
-    A high-pass (subtract a 36 h rolling mean) removes the multi-day storm trend
-    that would trend-lock a level cross-correlation, while keeping the 12–24 h
-    rising/falling limb structure whose offset IS the flood-wave travel time. Returns
-    (lag_min, r): lag is the shift applied to Q to best match P — negative when the
-    station LEADS its (downstream) gage. Search is bounded to ±max_h.
-    """
-    j = pd.concat([lp.rename("p"), lq.rename("q")], axis=1).dropna()
-    p = (j.p - j.p.rolling(hp, center=True, min_periods=12).mean()).dropna()
-    q = (j.q - j.q.rolling(hp, center=True, min_periods=12).mean()).dropna()
-    idx = p.index.intersection(q.index)
-    p, q = p[idx].values, q[idx].values
-    nmax = int(max_h * 60 / step_min)
-    best_k, best_r = 0, -9.0
-    for k in range(-nmax, nmax + 1):
-        a, c = (p[k:], q[:len(q) - k]) if k >= 0 else (p[:k], q[-k:])
-        if len(a) < 50:
-            continue
-        rr = float(np.corrcoef(a, c)[0, 1])
-        if rr > best_r:
-            best_k, best_r = k, rr
-    return best_k * step_min, best_r
 
 
 def matched_q_baseline(sid: str, cfg: dict, t0: pd.Timestamp,

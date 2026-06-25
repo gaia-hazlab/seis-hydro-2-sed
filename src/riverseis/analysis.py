@@ -140,3 +140,51 @@ def event_window(j: pd.DataFrame, days: float = 3.0) -> pd.DataFrame:
     """Slice ±`days` around the discharge peak (for per-event hysteresis)."""
     qpk = j["Q"].idxmax()
     return j.loc[qpk - pd.Timedelta(days=days): qpk + pd.Timedelta(days=days)]
+
+
+def estimate_pq_lag(lp: pd.Series, lq: pd.Series, max_h: float = 6.0,
+                    step_min: int = 5, hp: str = "36h") -> tuple[int, float]:
+    """Constant P–Q flood-wave lag (minutes) by limb-timescale cross-correlation.
+
+    A high-pass (subtract a 36 h rolling mean) removes the multi-day storm trend
+    that would trend-lock a level cross-correlation, while keeping the 12–24 h
+    rising/falling limb structure whose offset IS the flood-wave travel time. Returns
+    (lag_min, r): lag is the shift applied to Q to best match P — negative when the
+    station LEADS its (downstream) gage. Search is bounded to ±max_h. Used to align a
+    station with a gage that is not co-located (e.g. the Nisqually gage 13–21 km
+    downstream of UW.LON/GTWY); a co-located gage returns sub-resolution noise (~0).
+    """
+    j = pd.concat([lp.rename("p"), lq.rename("q")], axis=1).dropna()
+    p = (j.p - j.p.rolling(hp, center=True, min_periods=12).mean()).dropna()
+    q = (j.q - j.q.rolling(hp, center=True, min_periods=12).mean()).dropna()
+    idx = p.index.intersection(q.index)
+    p, q = p[idx].values, q[idx].values
+    nmax = int(max_h * 60 / step_min)
+    best_k, best_r = 0, -9.0
+    for k in range(-nmax, nmax + 1):
+        a, c = (p[k:], q[:len(q) - k]) if k >= 0 else (p[:k], q[-k:])
+        if len(a) < 50:
+            continue
+        rr = float(np.corrcoef(a, c)[0, 1])
+        if rr > best_r:
+            best_k, best_r = k, rr
+    return best_k * step_min, best_r
+
+
+def lag_correct(j: pd.DataFrame, min_abs_min: int = 60) -> tuple[pd.DataFrame, int]:
+    """Shift Q to the station by the estimated flood-wave lag (for far-downstream gages).
+
+    Estimates the constant P–Q lag from the frame itself and applies it only when it
+    exceeds `min_abs_min` (≥60 min ⇒ a real travel time, not the ±45 min sub-resolution
+    noise seen at co-located gages). Returns (corrected_frame, applied_lag_min); the
+    frame is unchanged and lag=0 when no correction is warranted.
+    """
+    lag, _ = estimate_pq_lag(np.log10(j["P"].clip(lower=1e-30)),
+                             np.log10(j["Q"].clip(lower=1e-6)))
+    if abs(lag) < min_abs_min:
+        return j, 0
+    qs = j["Q"].copy()
+    qs.index = qs.index + pd.Timedelta(minutes=lag)
+    out = j.copy()
+    out["Q"] = qs.reindex(j.index, method="nearest", tolerance=pd.Timedelta("10min"))
+    return out.dropna(subset=["Q"]), lag
