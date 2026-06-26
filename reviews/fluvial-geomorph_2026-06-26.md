@@ -43,8 +43,8 @@ citation and wording, not new analysis.
 
 **Tracked as GitHub issues** (label `manuscript-review`): FGR-1 → #2, FGR-2 → #3,
 FGR-3 → #4, FGR-4 → #5, FGR-5 → #6. Close each from the fixing commit
-(`... fixes #N`). Minors (FGR-6–8) and Verify items (V1–V4) are tracked in this
-report only.
+(`... fixes #N`). Minors (FGR-6–8) and Verify items (V1–V4) are bundled in #7 (a
+checklist).
 
 ### Detail
 - **FGR-1 (lead finding).** Reversible loops (|HI|≤0.06) and non-declining peak power
