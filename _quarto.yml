@@ -17,6 +17,7 @@ book:
     - part: "I · Manuscript"
       chapters:
         - paper/paper.qmd
+        - paper/supplement.qmd
     - part: "II · Reviews, critiques & development log"
       chapters:
         - paper/ROADMAP.md

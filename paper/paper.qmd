@@ -40,11 +40,19 @@ keywords: [environmental seismology, braided rivers, channel reorganization, riv
 
 # Introduction
 
-Bedload sediment transport sets the pace of channel aggradation, controls flood
-conveyance, and drives sediment hazard in glacier-fed mountain rivers, yet it
-resists direct measurement. Passive seismic monitoring of the high-frequency
-ground motion radiated by rivers offers a continuous, non-contact alternative
-[@burtin2008; @tsai2012; @gimbert2014; @cookdietze2022].
+Glacier-fed mountain rivers braid and reorganize their channels during the very
+floods that matter most for downstream hazard. As discharge rises, braided threads
+widen, switch, and avulse across the valley floor, redistributing the sediment that
+aggrades channels, undermines bridges and levees, and charges lahar-prone corridors
+[@czuba2012; @hoblitt1998]. Yet we almost never observe this reorganization *as it
+happens*: stream gages record discharge at a point, and satellites give only
+before/after snapshots through cloud, so *how and when* a braided channel rearranges
+during a flood — the event-scale dynamics — remains largely unobserved. Passive
+seismic monitoring of the high-frequency ground motion that rivers radiate offers a
+continuous, non-contact alternative [@burtin2008; @tsai2012; @gimbert2014;
+@cookdietze2022], sensitive to the near-channel processes — turbulent flow and
+sediment transport — that drive channel change, and recorded at the 10-minute cadence
+neither gages nor imagery provide for *channel position*.
 
 Two sources dominate the near-channel high-frequency wavefield, and — because we
 observe discharge $Q$, not the underlying hydraulics — we cast both as scalings in
@@ -81,6 +89,18 @@ further assumptions are implicit and revisited later: that the recorded frequenc
 band actually samples the bedload source (it is set by station Nyquist; §Methods),
 and that seismic attenuation lets a station sense the channel of interest
 (§Discussion).
+
+These scalings, and the discharge-proxying, bedload, and hysteresis results built on
+them, come almost entirely from **single-thread** channels [@burtin2008; @schmandt2017;
+@roth2016; @antoniazza2023], where a fixed line source at a known distance is a fair
+idealization. A braided glacial reach is the opposite case: the source is a
+*spatially distributed, non-stationary* set of active anabranches that migrate and
+avulse during a flood, breaking the single-channel assumption — but, we argue, also
+opening a new observable. Because the seismic source *moves with the channel*, the
+continuous record carries the timing of the reorganization itself, a quantity that
+the dense-array braided studies that exist [@burtin2011; @piantini2022] localize in
+space but do not resolve in event time, and that gages and snapshot imagery cannot
+provide at all.
 
 The December 2025 atmospheric-river floods on Mt. Rainier — near-record discharge
 on these glacial rivers — provide a natural experiment along a glacial-river
@@ -257,7 +277,6 @@ accelerometers are traffic-polluted — UW.TEHA most severely (traffic index ≈
 weekday/weekend ≈21; correlation with discharge $r\approx0$) — and are excluded
 (@fig-traffic). This restricts the usable transect to the upper broadband network.
 
-![Anthropogenic (traffic) noise screening: median 4–12 Hz power vs hour-of-week over the pre-flood week (weekends shaded). Traffic-polluted stations (red) show a strong weekday/daytime cycle; the river-dominated source stations do not.](figures/figS_traffic_noise.png){#fig-traffic width=85%}
 
 Full parameters are in `config/analysis.yaml`; the pipeline and its 2026
 corrections are documented in the [review chapter](../REVIEW_2026.md).
@@ -401,13 +420,13 @@ from AR1 to the AR2–AR3 plateau at all three stations simultaneously (@fig-bra
 shift at fixed $Q$ is the signature of the active thread **migrating toward the
 stations** over the event sequence — i.e. avulsion/lateral reworking of the
 braidplain, exactly the instability proglacial braided systems are known for
-[@coppin2022]. This is the first-order risk to the seismic virtual-discharge
+[@piantini2022]. This is the first-order risk to the seismic virtual-discharge
 rating: a calibration learned on December 2025 may not transfer to a later event if
 the channel has moved, independent of any change in the flow itself.
 
 This connects directly to the only dense-array study of a braided reach to date.
 Using 80 seismometers across a 600 m braided segment of the Séveraisse (French
-Alps), @coppin2022 located impulsive sources to *the bend apex of a single active
+Alps), @piantini2022 located impulsive sources to *the bend apex of a single active
 branch* — direct evidence that the seismic source in a braided reach lives on
 specific, migrating anabranches rather than the whole wetted area. The pioneering
 braided-river seismic study [@burtin2011, torrent de St Pierre] likewise had to
@@ -469,7 +488,6 @@ shallow braided water at 10 m leaves the inter-epoch trend noisy and the net
 permanent migration better measured by the Nov→Jan bracket above. We treat this as
 supporting, not primary, evidence.
 
-![*(Supplementary, exploratory.)* Sentinel-1 (SAR) channel-migration series through the December-2025 ARs: each off-channel station's attenuation-weighted wetted illumination relative to the on-channel anchor CC.PR03 (normalised to mid-November), a ratio that cancels per-epoch scene-count and overall-wetness biases. CC.PR01 (braidplain-central) is preferentially illuminated during the flood peak (shaded) — the geometric flow-front response — then relaxes. SAR under-detects shallow braided water at 10 m, so absolute wetted area is not used; only the between-station ratio.](figures/fig20_braid_timeseries.png){#fig-braidsat-ts width=80%}
 
 **The geometric mechanism generalizes to a second basin — and scales with the
 break.** The same satellite test, run on the Nisqually reach at UW.LON
@@ -574,11 +592,9 @@ confirms this: $b(t)$ rises above the turbulent-flow baseline during AR1–AR2 a
 relaxes afterward (@fig-bt). The per-AR averages also fall steeply downstream
 (source ≈180× → CC.TRON ≈7×), mirroring the scaling-exponent decay.
 
-![Time-resolved scaling exponent $b(t)$ for the 5–15 Hz band (24 h sliding fit), per station; the turbulence baseline is shaded and the pre-AR/AR1/AR2/AR3 windows marked. The exponent exceeds the baseline during the main pulses — bedload activation — then relaxes.](figures/fig8_b_of_time.png){#fig-bt width=92%}
 
 ![Bedload-band (5–15 Hz) power normalized to each station's pre-flood median through the event; the three AR pulses are shaded. Bedload activation tracks — but is not maximized at — the largest discharge peak.](figures/fig6_bedload_time.png){#fig-bltime width=92%}
 
-![Per-AR average bedload (×pre-flood median) by station, ordered source→downstream. AR2 dominates at every station and the signal decays strongly downstream.](figures/fig7_bedload_per_AR.png){#fig-blAR width=88%}
 
 A multidisciplinary animation that ties SNOTEL precipitation, gage discharge, and
 per-station bedload strength together (and shows the traffic-contaminated UW.TEHA
@@ -614,7 +630,6 @@ band is a coarse-transport *amplitude* proxy, not a grain-size discriminator. Th
 genuinely low-frequency coarse signatures (debris-flow/lahar boulder fronts to
 ~2 Hz; possible large-wood tremor) are a separate, underexplored target.
 
-![Lower bedload edge (30–50 Hz) from the 100-sps UW broadband stations: flood-vs-quiet spectra and 30–50 Hz vs discharge scaling. UW.LON (Nisqually) shows a tentative high-frequency transport signal.](figures/fig13_bedload_ch.png){#fig-edge width=95%}
 
 **A coarser, wood-rich source lowers the band (a grain-size– and process-conditional
 caveat).** The canonical 30–80 Hz "bedload band" is a convention built on *clean-gravel
@@ -854,14 +869,44 @@ explicit upper bound and we specify the near-channel, ≥160-sps instrumentation
 to measure it. Extending the network across the drainage would turn each capability
 into a calibrated, basin-wide one.
 
-# Data and software availability {.unnumbered}
+# Open Research {.unnumbered}
 
-Seismic data are from IRIS FDSN (networks CC, UW); discharge and stage from USGS
-NWIS; precipitation/snow from NRCS SNOTEL; flood extent from OPERA DSWx-S1. All
-analysis code, configuration, and figure-generation scripts are in the project
-repository and run inside a `pixi` environment (Quarto included). The complete
-pipeline is a numbered sequence of standalone scripts under `workflows/`, each
-writing a figure and/or a `config/*.json` it consumes downstream:
+**Data availability.** All primary data are public and were obtained from
+established archives, cited here as datasets. Seismic waveforms are from the
+Pacific Northwest Seismic Network (network UW; @data_uw_network) and the Cascades
+Volcano Observatory Cascade Chain network (network CC; @data_cc_network), accessed
+through EarthScope (formerly IRIS DMC) FDSN web services. River discharge and stage
+are from the USGS National Water Information System [@data_usgs_nwis], instantaneous
+values at the corridor gages (site numbers in @tbl-scaling / `config`). Air
+temperature and snow-water equivalent are from USDA NRCS SNOTEL stations Paradise
+and Mowich [@data_nrcs_snotel] (no DOI is minted for SNOTEL; cite by station and
+access date). Satellite optical and SAR imagery are Copernicus Sentinel-2 L2A and
+Sentinel-1 RTC [@data_copernicus_sentinel], accessed via the Microsoft Planetary
+Computer STAC API (collections `sentinel-2-l2a`, `sentinel-1-rtc`; the figures use
+ESA-attributed *modified Copernicus Sentinel data*). Flood extent is the NASA OPERA
+DSWx-S1 product [@data_opera_dswx]. The exact query parameters (networks, stations,
+channels, gage IDs, AOIs, dates) are pinned in `config/transect_puyallup.yaml` and
+`config/analysis.yaml`.
+
+**Software and derived-data availability.** All analysis code, configuration, and
+figure-generation scripts are openly available in the project repository
+(<https://github.com/gaia-hazlab/seis-hydro-2-sed>) and are archived at a versioned
+snapshot on Zenodo (DOI to be minted at acceptance:
+[10.5281/zenodo.XXXXXXX]{.mark}). The repository ships the small, version-controlled
+**derived data products** needed to rebuild every figure without re-downloading the
+raw archives — the per-station seismic band-power time series
+(`notebooks/data/results/*.csv`) and the derived Sentinel water-mask rasters used by
+the satellite figures (`notebooks/data/braid_cache/*.npz`); the raw waveform and
+imagery caches are large and are not version-controlled (they are exactly
+re-fetchable from the DOIs above). Archiving these small intermediates is a
+deliberate reproducibility choice: a one-command offline rebuild
+(`pixi run make figures-from-cache`) reproduces all figures in minutes, whereas the
+full re-derivation from raw data (`pixi run make repro`) requires network access and
+hours. The environment is pinned byte-for-byte with `pixi.lock`, and a `Dockerfile`
+provides a containerized build for full isolation
+(`docker build -t seis-hydro . && docker run --rm seis-hydro pixi run make figures-from-cache`).
+The complete pipeline is a numbered sequence of standalone scripts under
+`workflows/`, each writing a figure and/or a `config/*.json` it consumes downstream:
 
 | Step | Script | Produces |
 |---|---|---|

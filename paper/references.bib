@@ -1,33 +1,64 @@
 % Bibliography — seismic bedload transport, Mt. Rainier Dec-2025 floods.
-% DOIs marked % UNVERIFIED must be confirmed before submission (see LITERATURE.md).
+% DOIs verified June-2026 against doi.org/Crossref/provider registries.
+% Two legacy entries (ogiso2021 -> shakti2021, beason2022 -> anderson2022) had DOIs
+% that resolve to a DIFFERENT paper than the cited author — corrected to match the
+% DOI and renamed; confirm these are the intended sources (see LITERATURE.md).
 
-% --- Added from the June-2026 positioning survey (competitors to differentiate) ---
-@article{ogiso2021,
-  author = {Ogiso, M. and Uchida, T. and others},
-  title = {Estimating river discharge from seismic noise: a virtual gauge for ungauged mountainous basins},
-  journal = {Progress in Earth and Planetary Science}, year = {2021}, volume = {8}, pages = {50},
-  doi = {10.1186/s40645-021-00448-1}} % UNVERIFIED
+% ============================ DATA SOURCES (citable) ============================
+% Network/data DOIs verified June-2026. SNOTEL and Copernicus-via-PC have no DOI.
 
-@article{gangemi2026,
-  author = {Gangemi, E. and others},
-  title = {Fluvial seismology of the braided Tagliamento River from opportunistic permanent stations},
-  journal = {EGUsphere (preprint)}, year = {2026}, doi = {10.5194/egusphere-2026-1534}} % UNVERIFIED PREPRINT
+@misc{data_uw_network,
+  author    = {{University of Washington}},
+  title     = {Pacific Northwest Seismic Network (network UW)},
+  year      = {1963},
+  publisher = {International Federation of Digital Seismograph Networks},
+  doi       = {10.7914/SN/UW},
+  note      = {Waveforms accessed via EarthScope Data Services (formerly IRIS DMC), https://service.iris.edu/fdsnws/},
+  url       = {https://doi.org/10.7914/SN/UW}}
 
-@article{cook2021,
-  author = {Cook, K. L. and Rekapalli, R. and Dietze, M. and others},
-  title = {Detection and potential early warning of catastrophic flow events with regional seismic networks},
-  journal = {Science}, year = {2021}, volume = {374}, pages = {87--92},
-  doi = {10.1126/science.abj1227}} % UNVERIFIED
+@misc{data_cc_network,
+  author    = {{Cascades Volcano Observatory, U.S. Geological Survey}},
+  title     = {Cascade Chain Volcano Monitoring (network CC)},
+  year      = {2001},
+  publisher = {International Federation of Digital Seismograph Networks},
+  doi       = {10.7914/SN/CC},
+  note      = {Waveforms accessed via EarthScope Data Services (formerly IRIS DMC), https://service.iris.edu/fdsnws/},
+  url       = {https://doi.org/10.7914/SN/CC}}
 
-@article{eibl2020,
-  author = {Eibl, E. P. S. and others},
-  title = {Seismic tremor reveals subglacial flood propagation and timing in j{\"o}kulhlaups},
-  journal = {Nature Communications}, year = {2020}, volume = {11}, pages = {2504}} % UNVERIFIED
+@misc{data_usgs_nwis,
+  author    = {{U.S. Geological Survey}},
+  title     = {National Water Information System data available on the World Wide Web (USGS Water Data for the Nation)},
+  year      = {2016},
+  publisher = {U.S. Geological Survey},
+  doi       = {10.5066/F7P55KJN},
+  note      = {Instantaneous discharge/stage accessed via https://waterservices.usgs.gov/, December 2025},
+  url       = {https://doi.org/10.5066/F7P55KJN}}
 
-@article{mclaughlin2024,
-  author = {McLaughlin, M. and others},
-  title = {Bedload seismic signals in an ephemeral arroyo (Arroyo de los Pinos)},
-  journal = {Journal of Geophysical Research: Earth Surface}, year = {2024}, doi = {10.1029/2024JF008159}} % UNVERIFIED
+@misc{data_nrcs_snotel,
+  author    = {{Natural Resources Conservation Service}},
+  title     = {Snow Telemetry (SNOTEL) data, Air and Water Database (AWDB); Paradise (679) and Mowich (898) stations, Washington},
+  year      = {2026},
+  publisher = {U.S. Department of Agriculture, National Water and Climate Center},
+  note      = {No DOI assigned. Accessed December 2025 via https://wcc.nrcs.usda.gov/},
+  url       = {https://wcc.nrcs.usda.gov/}}
+
+@misc{data_copernicus_sentinel,
+  author    = {{European Space Agency}},
+  title     = {Copernicus Sentinel-2 Level-2A and Sentinel-1 Radiometrically Terrain-Corrected (RTC) data},
+  year      = {2026},
+  note      = {Contains modified Copernicus Sentinel data (2025--2026), processed by ESA; no product DOI. Accessed via the Microsoft Planetary Computer STAC API (collections sentinel-2-l2a, sentinel-1-rtc)},
+  url       = {https://planetarycomputer.microsoft.com/api/stac/v1}}
+
+@misc{data_opera_dswx,
+  author    = {{OPERA}},
+  title     = {OPERA Dynamic Surface Water Extent from Sentinel-1 (DSWx-S1) product, Version 1},
+  year      = {2024},
+  publisher = {NASA Physical Oceanography Distributed Active Archive Center (PO.DAAC)},
+  doi       = {10.5067/OPDSWS1-L3V1},
+  note      = {Accessed December 2025},
+  url       = {https://doi.org/10.5067/OPDSWS1-L3V1}}
+
+% ===================== ENVIRONMENTAL SEISMOLOGY — CORE THEORY ===================
 
 @article{burtin2008,
   author = {Burtin, A. and Bollinger, L. and Vergne, J. and Cattin, R. and N{\'a}b{\v e}lek, J. L.},
@@ -41,35 +72,17 @@
   journal = {Geophysical Research Letters}, volume = {39}, pages = {L02404}, year = {2012},
   doi = {10.1029/2011GL050255}}
 
-@article{schmandt2013,
-  author = {Schmandt, B. and Aster, R. C. and Scherler, D. and Tsai, V. C. and Karlstrom, K.},
-  title = {Multiple fluvial processes detected by riverside seismic and infrasound monitoring of a controlled flood in the Grand Canyon},
-  journal = {Geophysical Research Letters}, volume = {40}, number = {18}, pages = {4858--4863}, year = {2013},
-  doi = {10.1002/grl.50953}}
-
 @article{gimbert2014,
   author = {Gimbert, F. and Tsai, V. C. and Lamb, M. P.},
   title = {A physical model for seismic noise generation by turbulent flow in rivers},
   journal = {Journal of Geophysical Research: Earth Surface}, volume = {119}, number = {10}, pages = {2209--2238}, year = {2014},
   doi = {10.1002/2014JF003201}}
 
-@article{roth2014,
-  author = {Roth, D. L. and Finnegan, N. J. and Brodsky, E. E. and Cook, K. L. and Stark, C. P. and Wang, H. W.},
-  title = {Migration of a coarse fluvial sediment pulse detected by hysteresis in bedload-generated seismic waves},
-  journal = {Earth and Planetary Science Letters}, volume = {404}, pages = {144--153}, year = {2014},
-  doi = {10.1016/j.epsl.2014.07.019}} % UNVERIFIED
-
-@article{roth2016,
-  author = {Roth, D. L. and Brodsky, E. E. and Finnegan, N. J. and Rickenmann, D. and Turowski, J. M. and Badoux, A.},
-  title = {Bed load sediment transport inferred from seismic signals near a river},
-  journal = {Journal of Geophysical Research: Earth Surface}, volume = {121}, number = {4}, pages = {725--747}, year = {2016},
-  doi = {10.1002/2015JF003782}}
-
-@article{roth2017,
-  author = {Roth, D. L. and Finnegan, N. J. and Brodsky, E. E. and Rickenmann, D. and Turowski, J. M. and Badoux, A. and Gimbert, F.},
-  title = {Bed load transport and boundary roughness changes as competing causes of hysteresis in the relationship between river discharge and seismic amplitude},
-  journal = {Journal of Geophysical Research: Earth Surface}, volume = {122}, number = {5}, year = {2017},
-  doi = {10.1002/2016JF004062}}
+@article{schmandt2013,
+  author = {Schmandt, B. and Aster, R. C. and Scherler, D. and Tsai, V. C. and Karlstrom, K.},
+  title = {Multiple fluvial processes detected by riverside seismic and infrasound monitoring of a controlled flood in the Grand Canyon},
+  journal = {Geophysical Research Letters}, volume = {40}, number = {18}, pages = {4858--4863}, year = {2013},
+  doi = {10.1002/grl.50953}}
 
 @article{schmandt2017,
   author = {Schmandt, B. and Gaeuman, D. and Stewart, R. and Hansen, S. M. and Tsai, V. C. and Smith, J.},
@@ -77,21 +90,10 @@
   journal = {Geology}, volume = {45}, number = {4}, pages = {299--302}, year = {2017},
   doi = {10.1130/G38639.1}}
 
-@article{dietze2018,
-  author = {Dietze, M.},
-  title = {The eseis package: tools for environmental seismology},
-  journal = {Earth Surface Dynamics}, volume = {6}, pages = {669--686}, year = {2018},
-  doi = {10.5194/esurf-6-669-2018}}
-
-@article{dietze2019,
-  author = {Dietze, M. and Lagarde, S. and Halfi, E. and Laronne, J. B. and Turowski, J. M.},
-  title = {Joint sensing of bedload flux and water depth by seismic data inversion},
-  journal = {Water Resources Research}, volume = {55}, year = {2019}, doi = {10.1029/2019WR026072}}
-
 @article{bakker2020,
   author = {Bakker, M. and Gimbert, F. and Geay, T. and Misset, C. and Zanker, S. and Recking, A.},
   title = {Field application and validation of a seismic bedload transport model},
-  journal = {Journal of Geophysical Research: Earth Surface}, volume = {125}, year = {2020},
+  journal = {Journal of Geophysical Research: Earth Surface}, volume = {125}, pages = {e2019JF005416}, year = {2020},
   doi = {10.1029/2019JF005416}}
 
 @article{lagarde2021,
@@ -99,17 +101,17 @@
   title = {Grain-size distribution and propagation effects on seismic signals generated by bedload transport},
   journal = {Water Resources Research}, volume = {57}, year = {2021}, doi = {10.1029/2020WR028700}}
 
-@article{cookdietze2022,
-  author = {Cook, K. L. and Dietze, M.},
-  title = {Seismic advances in process geomorphology},
-  journal = {Annual Review of Earth and Planetary Sciences}, volume = {50}, pages = {183--204}, year = {2022},
-  doi = {10.1146/annurev-earth-032320-085133}}
+@article{dietze2018,
+  author = {Dietze, M.},
+  title = {The R package 'eseis' -- a software toolbox for environmental seismology},
+  journal = {Earth Surface Dynamics}, volume = {6}, pages = {669--686}, year = {2018},
+  doi = {10.5194/esurf-6-669-2018}}
 
-@article{antoniazza2023,
-  author = {Antoniazza, G. and Dietze, M. and Mancini, D. and Turowski, J. M. and Rickenmann, D. and Nicollier, T. and Boss, S. and Lane, S. N.},
-  title = {Anatomy of an Alpine bedload transport event: A watershed-scale seismic-network perspective},
-  journal = {Journal of Geophysical Research: Earth Surface}, volume = {128}, pages = {e2022JF007000}, year = {2023},
-  doi = {10.1029/2022JF007000}} % UNVERIFIED
+@article{dietze2019,
+  author = {Dietze, M. and Lagarde, S. and Halfi, E. and Laronne, J. B. and Turowski, J. M.},
+  title = {Joint sensing of bedload flux and water depth by seismic data inversion},
+  journal = {Water Resources Research}, volume = {55}, number = {11}, pages = {9892--9904}, year = {2019},
+  doi = {10.1029/2019WR026072}}
 
 @article{luong2024,
   author = {Luong, L. K. and others},
@@ -120,7 +122,102 @@
 @article{nativ2025,
   author = {Nativ, R. and others},
   title = {Stationary boulders increase river seismic frequency via turbulence},
-  journal = {Geophysical Research Letters}, year = {2025}, doi = {10.1029/2024GL113784}} % UNVERIFIED
+  journal = {Geophysical Research Letters}, volume = {52}, pages = {e2024GL113784}, year = {2025},
+  doi = {10.1029/2024GL113784}}
+
+@article{cookdietze2022,
+  author = {Cook, K. L. and Dietze, M.},
+  title = {Seismic advances in process geomorphology},
+  journal = {Annual Review of Earth and Planetary Sciences}, volume = {50}, pages = {183--204}, year = {2022},
+  doi = {10.1146/annurev-earth-032320-085133}}
+
+% ===================== HYSTERESIS, PULSES & ARRAY MONITORING ===================
+
+@article{roth2014,
+  author = {Roth, D. L. and Finnegan, N. J. and Brodsky, E. E. and Cook, K. L. and Stark, C. P. and Wang, H. W.},
+  title = {Migration of a coarse fluvial sediment pulse detected by hysteresis in bedload-generated seismic waves},
+  journal = {Earth and Planetary Science Letters}, volume = {404}, pages = {144--153}, year = {2014},
+  doi = {10.1016/j.epsl.2014.07.019}}
+
+@article{roth2016,
+  author = {Roth, D. L. and Brodsky, E. E. and Finnegan, N. J. and Rickenmann, D. and Turowski, J. M. and Badoux, A.},
+  title = {Bed load sediment transport inferred from seismic signals near a river},
+  journal = {Journal of Geophysical Research: Earth Surface}, volume = {121}, number = {4}, pages = {725--747}, year = {2016},
+  doi = {10.1002/2015JF003782}}
+
+@article{roth2017,
+  author = {Roth, D. L. and Finnegan, N. J. and Brodsky, E. E. and Rickenmann, D. and Turowski, J. M. and Badoux, A. and Gimbert, F.},
+  title = {Bed load transport and boundary roughness changes as competing causes of hysteresis in the relationship between river discharge and seismic amplitude recorded near a steep mountain stream},
+  journal = {Journal of Geophysical Research: Earth Surface}, volume = {122}, number = {5}, pages = {1182--1200}, year = {2017},
+  doi = {10.1002/2016JF004062}}
+
+@article{antoniazza2023,
+  author = {Antoniazza, G. and Dietze, M. and Mancini, D. and Turowski, J. M. and Rickenmann, D. and Nicollier, T. and Boss, S. and Lane, S. N.},
+  title = {Anatomy of an Alpine bedload transport event: A watershed-scale seismic-network perspective},
+  journal = {Journal of Geophysical Research: Earth Surface}, volume = {128}, pages = {e2022JF007000}, year = {2023},
+  doi = {10.1029/2022JF007000}}
+
+@article{mclaughlin2024,
+  author = {McLaughlin, M. and others},
+  title = {Seismic Monitoring of Flash Floods at the Arroyo de los Pinos: Investigation of Bedload Flux and Grain Size Distribution},
+  journal = {Journal of Geophysical Research: Earth Surface}, volume = {130}, year = {2025},
+  doi = {10.1029/2024JF008159}}
+
+% ===================== BRAIDED-RIVER SEISMOLOGY (closest prior art) =============
+
+@article{burtin2011,
+  author = {Burtin, A. and Cattin, R. and Bollinger, L. and Vergne, J. and Steer, P. and Robert, A. and Findling, N. and Tiberi, C.},
+  title = {Towards the hydrologic and bed load monitoring from high-frequency seismic noise in a braided river: The "torrent de St Pierre", French Alps},
+  journal = {Journal of Hydrology}, volume = {408}, number = {1--2}, pages = {43--53}, year = {2011},
+  doi = {10.1016/j.jhydrol.2011.07.014}}
+
+@article{piantini2022,
+  author = {Piantini, M. and Gimbert, F. and Bakker, M. and Recking, A. and Nanni, U.},
+  title = {Using a dense seismic array to study fluvial processes in a braided river reach under flood conditions},
+  journal = {LHB (La Houille Blanche)}, volume = {108}, number = {1}, year = {2022},
+  doi = {10.1080/27678490.2022.2053314},
+  note = {Severaisse, French Alps; 80-node array localizing the active braid. (Cite key was previously coppin2022.)}}
+
+% ===================== VIRTUAL DISCHARGE / FLOOD EARLY WARNING ==================
+
+@article{shakti2021,
+  author = {Shakti, P. C. and Sawazaki, K.},
+  title = {River discharge prediction for ungauged mountainous river basins during heavy rain events based on seismic noise data},
+  journal = {Progress in Earth and Planetary Science}, year = {2021}, volume = {8}, pages = {58},
+  doi = {10.1186/s40645-021-00448-1},
+  note = {Seismic-noise virtual gauge for ungauged basins; validated incl. Typhoon Hagibis 2019. (DOI previously mis-cited as Ogiso \& Uchida 2021.)}}
+
+@article{gangemi2026,
+  author = {Gangemi, M. V. and others},
+  title = {Seismic analysis of bedload discharge at Tagliamento River during flood events},
+  journal = {EGUsphere (preprint)}, year = {2026}, doi = {10.5194/egusphere-2026-1534}}
+
+@article{cook2021,
+  author = {Cook, K. L. and Rekapalli, R. and Dietze, M. and others},
+  title = {Detection and potential early warning of catastrophic flow events with regional seismic networks},
+  journal = {Science}, year = {2021}, volume = {374}, pages = {87--92},
+  doi = {10.1126/science.abj1227}}
+
+@article{eibl2020,
+  author = {Eibl, E. P. S. and others},
+  title = {Seismic ground vibrations give advanced early-warning of subglacial floods},
+  journal = {Nature Communications}, year = {2020}, volume = {11}, pages = {2504},
+  doi = {10.1038/s41467-020-15744-5}}
+
+% ===================== SEDIMENT PULSES / FLUVIAL GEOMORPHOLOGY ==================
+
+@article{lisle2001,
+  author = {Lisle, T. E. and Cui, Y. and Parker, G. and Pizzuto, J. E. and Dodd, A. M.},
+  title = {The dominance of dispersion in the evolution of bed material waves in gravel-bed rivers},
+  journal = {Earth Surface Processes and Landforms}, volume = {26}, pages = {1409--1420}, year = {2001},
+  doi = {10.1002/esp.300}}
+
+@article{cui2003,
+  author = {Cui, Y. and Parker, G. and Lisle, T. E. and Gott, J. and Hansler-Ball, M. E. and Pizzuto, J. E. and others},
+  title = {Sediment pulses in mountain rivers: 1. Experiments},
+  journal = {Water Resources Research}, volume = {39}, number = {9}, year = {2003}, doi = {10.1029/2002WR001803}}
+
+% ===================== STUDY AREA — MT. RAINIER / PUYALLUP =====================
 
 @article{czuba2011,
   author = {Czuba, J. A. and Magirl, C. S. and Czuba, C. R. and Grossman, E. E. and Curran, C. A. and Gendaszek, A. S. and Dinicola, R. S.},
@@ -130,47 +227,29 @@
 @techreport{czuba2012,
   author = {Czuba, J. A. and Magirl, C. S. and Czuba, C. R. and Curran, C. A. and Johnson, K. H. and Olsen, T. D. and Kimball, H. K. and Gish, C. C.},
   title = {Geomorphic analysis of the river response to sedimentation downstream of Mount Rainier, Washington},
-  institution = {U.S. Geological Survey}, number = {Open-File Report 2012-1242}, year = {2012}}
+  institution = {U.S. Geological Survey}, number = {Open-File Report 2012-1242}, year = {2012},
+  doi = {10.3133/ofr20121242}}
 
 @techreport{magirl2010,
-  author = {Magirl, C. S. and others},
-  title = {Channel-conveyance capacity, channel change, and sediment transport in the lower Puyallup, White, and Carbon Rivers},
-  institution = {U.S. Geological Survey}, number = {SIR 2010-5240}, year = {2010}}
+  author = {Czuba, J. A. and Czuba, C. R. and Magirl, C. S. and Voss, F. D.},
+  title = {Channel-conveyance capacity, channel change, and sediment transport in the lower Puyallup, White, and Carbon Rivers, western Washington},
+  institution = {U.S. Geological Survey}, number = {Scientific Investigations Report 2010-5240}, year = {2010},
+  doi = {10.3133/sir20105240}}
 
 @misc{anderson2025,
   author = {Anderson, S. W.},
-  title = {Channel change and sediment transport in the Puyallup River watershed through 2022},
-  howpublished = {U.S. Geological Survey (with Pierce County); data release}, year = {2025}, doi = {10.5066/P149MBYG}}
+  title = {Supporting Datasets for Analyses of Sediment Transport and Channel Change in the Puyallup River Watershed (ver. 2.0, February 2026)},
+  howpublished = {U.S. Geological Survey data release}, year = {2025}, doi = {10.5066/P149MBYG}}
 
 @article{beason2022,
-  author = {Beason, S. R. and others},
-  title = {Spatial and temporal controls on proglacial erosion rates: a comparison of four basins on Mount Rainier, 1960 to 2017},
-  journal = {Earth Surface Processes and Landforms}, year = {2022}, doi = {10.1002/esp.5274}}
+  author = {Anderson, S. W. and Shean, D.},
+  title = {Spatial and temporal controls on proglacial erosion rates: A comparison of four basins on Mount Rainier, 1960 to 2017},
+  journal = {Earth Surface Processes and Landforms}, volume = {47}, number = {2}, pages = {596--617}, year = {2022},
+  doi = {10.1002/esp.5274},
+  note = {DOI belongs to Anderson \& Shean (not Beason); confirm intended source.}}
 
 @techreport{hoblitt1998,
   author = {Hoblitt, R. P. and Walder, J. S. and Driedger, C. L. and Scott, K. M. and Pringle, P. T. and Vallance, J. W.},
-  title = {Volcano hazards from Mount Rainier, Washington (revised)},
-  institution = {U.S. Geological Survey}, number = {Open-File Report 98-428}, year = {1998}}
-
-@article{lisle2001,
-  author = {Lisle, T. E. and Cui, Y. and Parker, G. and Pizzuto, J. E. and Dodd, A. M.},
-  title = {The dominance of dispersion in the evolution of bed material waves in gravel-bed rivers},
-  journal = {Earth Surface Processes and Landforms}, volume = {26}, pages = {1409--1420}, year = {2001},
-  doi = {10.1002/esp.300}} % UNVERIFIED
-
-@article{cui2003,
-  author = {Cui, Y. and Parker, G. and Lisle, T. E. and Gott, J. and Hansler-Ball, M. E. and Pizzuto, J. E. and others},
-  title = {Sediment pulses in mountain rivers: 1. Experiments},
-  journal = {Water Resources Research}, volume = {39}, number = {9}, year = {2003}, doi = {10.1029/2002WR001803}}
-
-@article{burtin2011,
-  author = {Burtin, A. and Cattin, R. and Bollinger, L. and Vergne, J. and Steer, P. and Robert, A. and Findling, N. and Tiberi, C.},
-  title = {Towards the hydrologic and bed load monitoring from high-frequency seismic noise in a braided river: The "torrent de St Pierre", French Alps},
-  journal = {Journal of Hydrology}, volume = {408}, number = {1--2}, pages = {43--53}, year = {2011},
-  doi = {10.1016/j.jhydrol.2011.07.014}}
-
-@article{coppin2022,
-  author = {Coppin, F. and Burtin, A. and others},
-  title = {Using a dense seismic array to study fluvial processes in a braided river reach under flood conditions},
-  journal = {River Research and Applications / E3S}, year = {2022},
-  doi = {10.1080/27678490.2022.2053314}} % author list and venue UNVERIFIED — Séveraisse 80-node array
+  title = {Volcano hazards from Mount Rainier, Washington (revised 1998)},
+  institution = {U.S. Geological Survey}, number = {Open-File Report 98-428}, year = {1998},
+  doi = {10.3133/ofr98428}}

@@ -1,0 +1,63 @@
+---
+title: "Supplementary Material"
+---
+
+# Supplementary Material {.unnumbered}
+
+Supporting analyses and figures for *"Braided-channel reorganization during storms,
+resolved seismically."* The main-text cross-references (e.g. @fig-edge, @fig-traffic)
+resolve to the figures collected here. In a journal submission these would be
+renumbered S1–S5; for this rendered book they keep their stable labels.
+
+## Text S1 — Anthropogenic-noise screening {.unnumbered}
+
+Candidate lowland stations were screened for traffic/cultural contamination over a
+pre-flood week (1–7 December 2025) by the weekday/daytime-versus-night cycle of
+4–12 Hz power (`workflows/04_traffic_noise.py`). The glacial-source broadband
+stations are river-dominated (traffic index ≈ 1.3–2.6 and weak diurnal structure),
+whereas the lowland urban accelerometers carry a strong weekly cycle — UW.TEHA most
+severely (traffic index ≈ 59; weekday/weekend ≈ 21; correlation with discharge
+$r\approx0$). Contaminated stations are excluded from the transect (drawn hollow on
+@fig-map) and from all fits (@fig-traffic).
+
+## Text S2 — Flood-wave lag estimation and validation {.unnumbered}
+
+For a station whose USGS gage is not co-located, gage $Q$ lags the discharge passing
+the station by the flood-wave travel time. We estimate a constant $P$–$Q$ lag per
+station by cross-correlating the limb-timescale (36-h high-passed) components of
+$\log_{10}P$ and $\log_{10}Q$ — the high pass removes the multi-day storm trend that
+would otherwise lock the correlation onto spurious large lags — and apply it only
+where a real travel time exists (gage $\gtrsim$3 km away; a co-located gage returns
+sub-resolution noise). On the Nisqually (gage 13–21 km downstream) the implied
+celerities are ≈2 m s⁻¹, physical flood-wave speeds that validate the correction;
+the Puyallup cluster (gage 0.2–1.9 km) needs none. A *constant* lag cannot fully
+align a multi-kilometre path whose celerity varies with stage, which intrinsically
+limits matched-discharge timing at a far-gaged reach (main text §sec-domain).
+
+## Text S3 — Satellite water-threshold ensemble {.unnumbered}
+
+Turbid braided water sits near MNDWI ≈ 0, so the wetted area — and the predicted
+geometric baseline drift $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$ —
+is threshold-sensitive. We sweep the MNDWI water threshold over
+$\{-0.10,-0.05,0,+0.05,+0.10\}$ and report the median and full range per station
+(error bars on @fig-braidsat c, @fig-braidsat-nis c). The *sign and rank* of the
+inferred channel migration are robust across the ensemble; the calibrated magnitude
+is not, and awaits ≈3 m imagery (main text §sec-braided).
+
+## Supplementary Figures {.unnumbered}
+
+![Anthropogenic (traffic) noise screening: median 4–12 Hz power vs hour-of-week over the pre-flood week (weekends shaded). Traffic-polluted stations (red) show a strong weekday/daytime cycle; the river-dominated source stations do not.](figures/figS_traffic_noise.png){#fig-traffic width=85%}
+
+![Per-AR average bedload (×pre-flood median) by station, ordered source→downstream. AR2 dominates at every station and the signal decays strongly downstream. (Supports the bounded time-dependent-bedload hypothesis, main text.)](figures/fig7_bedload_per_AR.png){#fig-blAR width=88%}
+
+![Time-resolved scaling exponent $b(t)$ for the 5–15 Hz band (24 h sliding fit), per station; the turbulence baseline is shaded and the pre-AR/AR1/AR2/AR3 windows marked. The exponent exceeds the baseline during the main pulses — consistent with bedload activation — then relaxes.](figures/fig8_b_of_time.png){#fig-bt width=92%}
+
+![Lower bedload edge (30–50 Hz) from the 100-sps UW broadband stations: flood-vs-quiet spectra and 30–50 Hz vs discharge scaling. UW.LON (Nisqually) shows a tentative high-frequency transport signal; UW.RER (far from its gage) is noise.](figures/fig13_bedload_ch.png){#fig-edge width=95%}
+
+![*(Exploratory.)* Sentinel-1 (SAR) channel-migration series through the December-2025 ARs: each off-channel station's attenuation-weighted wetted illumination relative to the on-channel anchor CC.PR03 (normalised to mid-November), a ratio that cancels per-epoch scene-count and overall-wetness biases. CC.PR01 (braidplain-central) is preferentially illuminated during the flood peak (shaded) — the geometric flow-front response — then relaxes. SAR under-detects shallow braided water at 10 m, so absolute wetted area is not used; only the between-station ratio.](figures/fig20_braid_timeseries.png){#fig-braidsat-ts width=80%}
+
+::: {.content-visible when-format="html"}
+**Supplementary animations.** Two animations accompany the HTML edition: the
+space–time virtual-discharge field (@fig-vq) and a repository-only multidisciplinary
+loop (SNOTEL + gage + bedload power) at `paper/figures/bedload_animation.gif`.
+:::
