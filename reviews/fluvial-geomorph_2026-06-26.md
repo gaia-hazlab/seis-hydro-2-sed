@@ -41,6 +41,11 @@ citation and wording, not new analysis.
 | FGR-7 | Minor | Bed character / grain size of the braidplain unstated. | One sentence on bed material (poorly-sorted glacial outwash, supply-rich, debris-flow-fed). | open |
 | FGR-8 | Minor | "Stepwise = discrete avulsion" — alternatives (bar dissection, chute cutoff, single thread abandonment) not acknowledged. | Note the family of geometric events the step could represent. | open |
 
+**Tracked as GitHub issues** (label `manuscript-review`): FGR-1 → #2, FGR-2 → #3,
+FGR-3 → #4, FGR-4 → #5, FGR-5 → #6. Close each from the fixing commit
+(`... fixes #N`). Minors (FGR-6–8) and Verify items (V1–V4) are tracked in this
+report only.
+
 ### Detail
 - **FGR-1 (lead finding).** Reversible loops (|HI|≤0.06) and non-declining peak power
   rule out *supply-exhaustion* transport, but in a supply-unlimited braidplain a
