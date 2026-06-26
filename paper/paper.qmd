@@ -760,7 +760,12 @@ hazard-prone basin.
 
 Each river-proximal station can be calibrated as a rating $\log_{10}P=a+b\log_{10}Q$
 and inverted to a **seismic virtual discharge** $Q_{\text{seis}}=10^{(\log_{10}P-a)/b}$.
-At clean near-channel stations this tracks the co-located gage well (CC.PR03/PR02
+The single-station virtual-gauge concept is established — seismic-noise power has been
+inverted to discharge for ungauged mountainous basins [@shakti2021] and jointly with
+bedload flux and flow depth by waveform inversion [@dietze2019]; our contribution here
+is to operate it as a *distributed, multi-station field* and to delimit where it fails
+(braided, far-gaged reaches; @sec-domain). At clean near-channel stations this tracks
+the co-located gage well (CC.PR03/PR02
 $r=0.97/0.96$, Nash–Sutcliffe of $\log Q$ = 0.95/0.92; CC.STYX 0.75),
 while off-channel/distant stations (CC.SIFT, CC.TRON) are poor — consistent with
 the turbulence/attenuation picture. The fitted exponents cluster at $b\approx1.4$–1.8,

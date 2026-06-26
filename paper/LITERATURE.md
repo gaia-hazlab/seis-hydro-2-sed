@@ -34,7 +34,7 @@ Compiled June 2026. DOIs marked *(unverified)* must be confirmed before submissi
 
 ### Added from the June-2026 positioning survey (competitors to differentiate)
 
-- **Ogiso, Uchida & et al. (2021)**, *Prog. Earth Planet. Sci.* 8, 50, doi:10.1186/s40645-021-00448-1 — **the key prior art for our virtual-discharge framing.** Seismic noise as a *virtual gage for ungauged basins*; single-station power law $Q=A(E-E_0)^b$, validated on three floods incl. Typhoon Hagibis (Oct 2019), 1–2 Hz optimal after transient/background removal. *Our distinction: a **distributed multi-station field**, not single-station — network density is the contribution, not the P–Q concept.*
+- **Shakti P.C. & Sawazaki (2021)**, *Prog. Earth Planet. Sci.* 8, 58, doi:10.1186/s40645-021-00448-1 — **the key prior art for our virtual-discharge framing.** Seismic noise as a *virtual gage for ungauged basins*; single-station power law $Q=A(E-E_0)^b$, validated on three floods incl. Typhoon Hagibis (Oct 2019), 1–2 Hz optimal after transient/background removal. *Our distinction: a **distributed multi-station field**, not single-station — network density is the contribution, not the P–Q concept.*
 - **Gangemi et al. (2026)**, *EGUsphere* preprint egusphere-2026-1534 — **the closest competitor.** Opportunistic permanent stations on the **braided Tagliamento**; applies the single-thread Tsai/Gimbert framework *qualitatively only* (correlation/hysteresis/polarization) and explicitly states a braided source model "remains speculative and needs further investigation." *Cite to show the braided source-model gap is open; we occupy it with the satellite corroboration they lack.* (Preprint — track toward publication.)
 - **Cook et al. (2021)**, *Science* 374, 87, doi:10.1126/science.abj1227 — Chamoli: regional seismic network detected/tracked the catastrophic flow; ~min-scale downstream lead. Early-warning precedent (different mechanism: debris flow).
 - **Eibl et al. (2020)**, *Nature Comms* 11, 2504 (PMC7237689) — subglacial jökulhlaup tremor leads gage stage by **>20 h** in all four Skáftá cases. Early-warning precedent (different mechanism: outburst). *Together these cap "early warning" as a standalone novelty — deploy our ~36 h AR-flood lead as an applied payoff, not the spine.*
@@ -62,7 +62,7 @@ Compiled June 2026. DOIs marked *(unverified)* must be confirmed before submissi
 - **Czuba et al. (2012)**, USGS OFR 2012-1242 — **aggradation 1984–2009 up to 2.3 m (Puyallup), 0.6 m (Carbon); Nisqually nr National 0.13 m/yr.** Median-pulse transit times: Nisqually ~70 yr, Puyallup ~80 yr, Carbon ~300 yr, White ~60 yr. Aggradation concentrates at the confined→lowland slope break.
 - **Magirl et al. (2010)**, USGS SIR 2010-5240 — lower Puyallup/White/Carbon conveyance loss from deposition.
 - **Anderson (2025)**, USGS (Pierce Co.), data DOI 10.5066/P149MBYG — channel change & sediment transport through 2022 (lidar differencing); most recent aggradation update.
-- **Beason et al. (2022)**, *ESPL*, doi:10.1002/esp.5274 — proglacial erosion rates, four Rainier basins, 1960–2017.
+- **Anderson & Shean (2022)**, *ESPL* 47(2), doi:10.1002/esp.5274 — proglacial erosion rates, four Rainier basins, 1960–2017 (DOI belongs to Anderson & Shean; previously listed as Beason).
 - **Hoblitt et al. (1998)**, USGS OFR 98-428 — Rainier lahar hazards (Osceola, Electron mudflows down the Puyallup).
 - USGS/PNSN **debris-flow seismic detection** at Rainier (Tahoma Creek) — *detection* of mass flows, **not** continuous bedload quantification (our distinction).
 - **December 2025 AR floods (confirmed):** two back-to-back atmospheric rivers ~Dec 8–12 2025; statewide emergency (Gov. Ferguson, ~Dec 10); Carbon R. nr Fairfax highest in 19 yrs; Puyallup record flooding; Mt Rainier NP closed indefinitely (debris flows, washouts). Sources: WA Mil. Dept; WA State Standard 2025-12-10; NASA SVS #5596; NPS MORA news. *(News/agency only — no peer-reviewed post-event analysis yet.)*
@@ -120,12 +120,12 @@ source-model **breakdown in a braided glacial-outwash reach**, diagnosed by
 hysteresis reversibility + cross-flood baseline drift and corroborated by
 Sentinel-2/-1 channel-migration imagery* — a seismic+satellite joint
 channel-change diagnosis no 2023–2026 paper has published. The distributed
-virtual-gage field is the network framing device (Ogiso 2021 owns the
+virtual-gage field is the network framing device (Shakti & Sawazaki 2021 owns the
 single-station concept); the Nyquist/bedload limit is a grain-size-conditional
 bounding caveat; the ~36 h lead is the applied payoff.
 *(Superseded earlier lead: "first transect-scale bedload seismology on Cascades
 glacial rivers during a named AR flood" — still true, but transect/AR-first is
-weaker than braided-breakdown-first given Ogiso 2021 and the saturation of the
+weaker than braided-breakdown-first given Shakti & Sawazaki 2021 and the saturation of the
 virtual-gage and early-warning niches.)*
 
 **Three reviewer objections to pre-empt:**

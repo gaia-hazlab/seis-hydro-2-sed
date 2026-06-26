@@ -230,8 +230,8 @@ Does this work generate new fluvial-science knowledge? A skeptical reading
 Bottom line up front: This is a strong observational-methods contribution. As fluvial-process science, most of what it reports is the recovery of already-known fluvial behavior with a new sensor, not new knowledge about how rivers work. There is one genuinely novel caution for a subfield, one tantalizing-but-unproven candidate for new process insight, and a large untapped opportunity that, if exploited, would be the real fluvial-science contribution.
 
 What is NOT new fluvial knowledge (most of it)
-P ∝ Q^b turbulent-flow scaling — established (Gimbert 2014; Bakker 2020; Ogiso 2021). New site, not new physics.
-Virtual discharge / distributed gaging — Ogiso (2021) already did this for ungauged basins. Network density is incremental.
+P ∝ Q^b turbulent-flow scaling — established (Gimbert 2014; Bakker 2020; Shakti & Sawazaki 2021). New site, not new physics.
+Virtual discharge / distributed gaging — Shakti & Sawazaki (2021) already did this for ungauged basins. Network density is incremental.
 Rain-on-snow generated the floods (warm-AR thread) — textbook PNW hydrometeorology. The SNOTEL panel confirms; it doesn't teach a hydrologist anything new.
 ~36 h upstream-to-downstream lead — this is essentially the kinematic flood-wave travel time from Electron (RM 41) to Puyallup (RM 10), which any hydraulic-routing model gives. New sensing of a known celerity, not a new hydrological insight.
 Braided channels migrate / avulse and the active thread controls the local signal — this is the definition of a braided river. A geomorphologist already knows the source is distributed and non-stationary.
@@ -463,7 +463,7 @@ contribution. *Most defensible; least "exciting."*
 **SPINE 3 — "A seismic network as a distributed flood & sediment observatory" (application/hazard-led).**
 T1+T2+T7 virtual-Q field + T8 early warning for the lahar-prone corridor, with reorg-timing +
 braided + the domain result as the **reliability caveat**. *Most fundable; the survey flagged the
-virtual-gage concept as the most saturated (Ogiso 2021), so it must be framed as density+dynamics,
+virtual-gage concept as the most saturated (Shakti & Sawazaki 2021), so it must be framed as density+dynamics,
 not concept.*
 
 ### 10d. Execution order (next session)

@@ -191,7 +191,7 @@ the domain-of-applicability analysis (REVIEW_2026 §8–§10; tags `REORG-2BASIN
 This supersedes the earlier "Option A first" and is the **dynamics evolution of Option B**
 (rigor-led), now with a positive headline result rather than only limits. It is REVIEW_2026
 §10c **Spine 1**. The open gap is real: Gangemi et al. (2026, Tagliamento — braided) declines
-a braided source model; Ogiso (2021) saturates the *virtual-gage* concept but not the
+a braided source model; Shakti & Sawazaki (2021) saturates the *virtual-gage* concept but not the
 *dynamics*. **Journal: JGR-ES.**
 
 **Thread disposition (all 13 ship — main vs supplement):**
@@ -229,7 +229,7 @@ Spine: T10 as container, hanging T1/T3/T8 off it. A case-study narrative of a dr
 A targeted 2023–2026 literature survey (deep-research, 16 sources, 25 claims
 adversarially verified) **overturns the earlier "lead with A" recommendation.**
 The distributed virtual-gage idea (A) turns out to be the *most saturated* of the
-four: **Ogiso et al. (2021, Prog. Earth Planet. Sci.)** already established
+four: **Shakti P.C. & Sawazaki (2021, Prog. Earth Planet. Sci.)** already established
 seismic noise as a virtual gage for ungauged basins (power law $Q=A(E-E_0)^b$,
 validated on Typhoon Hagibis 2019), so our novelty there is only network *density*,
 not the concept. DAS distributed sensing is taken (Roth et al. 2025); seismic

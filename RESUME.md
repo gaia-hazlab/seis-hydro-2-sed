@@ -40,7 +40,7 @@ two-regime scaling" + fluvial mechanisms). To complete the spine reframe:
   keep bedload-sampling as the bounding caveat.
 - **Discussion:** add a synthesis paragraph that gathers PR01 (geometric),
   UW.LON/GTWY (steep Nisqually), STYX (flattening) into the network-diagnostic
-  message; cite the survey competitors (Ogiso 2021, Gangemi 2026).
+  message; cite the survey competitors (Shakti & Sawazaki 2021, Gangemi 2026).
 - **Conclusions:** lead contribution (1) becomes the break-diagnostic, not the
   virtual gage.
 
