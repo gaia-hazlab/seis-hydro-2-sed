@@ -127,7 +127,15 @@ are the robust, novel contributions.
 The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
 and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
 has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
-[@czuba2012], underscoring an active, supply-rich sediment system.
+[@czuba2012], underscoring an active, supply-rich sediment system. The channel
+**pattern** changes systematically downstream (@fig-pattern): the glacial source
+reaches are multi-thread, **braided** gravel braidplains — compact at the Puyallup PR
+cluster (active width tens of m) and far wider on the Nisqually at UW.LON (hundreds of
+m) — that give way past CC.TRON to a **single-thread, meandering** channel on the
+lowland floodplain. This braided-to-single-thread transition frames the
+source-model problem developed in §sec-braided.
+
+![Channel pattern along the flow path. (a) Corridor locator: OPERA DSWx-S1 flood water (10 Dec 2025), NHD mainstems, seismic stations (triangles) and gages (diamonds), with the three zoom reaches boxed. (b) The Puyallup source at the PR cluster — a *compact* braided channel (tens of m; cached Sentinel active-channel raster). (c) The Nisqually at UW.LON — a *wide* braided braidplain (hundreds of m). (d) The lower Puyallup past CC.TRON — a *single-thread, meandering* channel (OPERA water with the NHD centerline). Braided source reaches give way to a single-thread lowland.](figures/fig27_channel_pattern.png){#fig-pattern width=98%}
 
 We use the Cascade Volcano Observatory (network **CC**) stations across the
 **western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
