@@ -397,7 +397,12 @@ Splitting a given $Q$ into $N$ wide, shallow threads lowers per-channel depth $H
 and because turbulent power scales as $H^{7/3}$, the braided sum is *suppressed*
 relative to a confined channel and the exponent flattens. (iv) Braided threads
 **avulse and migrate** between and during floods, so the dominant source relocates —
-imposing a non-stationary distance $r$ and resetting the calibration constant.
+imposing a non-stationary distance $r$ and resetting the calibration constant. These
+are the textbook behaviors of braided gravel-bed rivers — bar growth and dissection,
+chute cutoff, thread switching, and the lowering of per-thread depth as flow partitions
+[@ashmore1991; @ashmore2013] — whose mobility the non-cohesive, sparsely vegetated
+glacial-outwash banks actively permit (vegetation and bank cohesion are what stabilize
+single-thread channels; @talpaola2007).
 
 These expectations match the data. Of the three co-located stations, the most
 braidplain-central, **CC.PR01 has the flattest exponent ($b=0.79$, below the
@@ -420,7 +425,7 @@ from AR1 to the AR2–AR3 plateau at all three stations simultaneously (@fig-bra
 shift at fixed $Q$ is the signature of the active thread **migrating toward the
 stations** over the event sequence — i.e. avulsion/lateral reworking of the
 braidplain, exactly the instability proglacial braided systems are known for
-[@piantini2022]. This is the first-order risk to the seismic virtual-discharge
+[@ashmore1991; @ashmore2013]. This is the first-order risk to the seismic virtual-discharge
 rating: a calibration learned on December 2025 may not transfer to a later event if
 the channel has moved, independent of any change in the flow itself.
 
@@ -558,10 +563,14 @@ sustained Dec-11→13 (AR3) recession is ~40% slower (−6.6 m³ s⁻¹ h⁻¹; 
 exactly where the persistent reorganization step lands. The satellite change map is
 consistent — CC.PR01's pre-flood thread is among the newly-*dry* (abandoned) pixels by
 January (@fig-braidsat b). We present this as the *parsimonious* mechanism, not a
-unique one: the stepwise seismic signature is equally compatible with a discrete thread
-abandonment, bar dissection, or chute cutoff, and rests on a single compound event;
-the slow-recession clogging hypothesis is the geomorphically motivated reading that the
-recession-rate contrast supports and that future events can test.
+unique one: the stepwise seismic signature is equally compatible with the other
+geometric routes to braid change — discrete thread abandonment, bar dissection, or
+chute cutoff [@ashmore1991] — and rests on a single compound event. Whether the
+recession-phase timing holds for the *more frequent, moderate* floods that do most of
+the cumulative geomorphic work [@wolmanmiller1960], rather than this near-record event,
+is the key generalization, to be tested out-of-sample on the March-2026 flood. The
+slow-recession clogging hypothesis is the geomorphically motivated reading that the
+recession-rate contrast supports and that those future events can test.
 
 **A source-reach hazard lead.** The same continuous record carries an early-warning
 signal: at the source cluster the 5–15 Hz transport-band power rises **~5–7 h before
