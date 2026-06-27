@@ -540,6 +540,40 @@ the dominant step ($\sim+70$ h) the "when it is mostly done."
 
 ![Event-scale timing of braided-channel reorganization at the co-located Puyallup cluster. Top: discharge with the three AR pulses shaded and the peak marked. Lower panels: the matched-discharge source baseline $c(t)$ (grey points) and a logistic step fit (blue) per station, with onset (dashed) and the fitted step midpoint (green, with bootstrap CI). The baseline is flat through the rising limb and peak and steps up on the recession — lagging peak discharge — in a stepwise transition that is persistent at CC.PR02/PR03 and reversible at CC.PR01.](figures/fig22_braided_reorg_timing.png){#fig-reorg width=98%}
 
+**A recession-deposition mechanism for the timing.** Why does the reorganization fall
+on the recession rather than the rise? A geomorphic mechanism is available and is
+*testable from the hydrograph shape*. On this supply-rich glacial-outwash braidplain —
+where coarse sediment is effectively unlimited, so a discharge-threshold "transport
+onset" is not the expected behavior — the relevant event is **deposition**, not
+entrainment: as a falling limb drops the bed shear stress below the competence for the
+coarse load, gravel drops out *in* the active thread, aggrades and superelevates it,
+and the flow eventually **avulses** to a lower, steeper path. This is the classic
+aggradation/superelevation route to avulsion [@slingerland2004; @jerolmack2007;
+@mohrig2000], here driven by recession rather than long-term aggradation. The mechanism
+predicts that reorganization should concentrate on **slow, sustained** recessions
+(long residence at moderate stage → more deposition) rather than rapid ones — and that
+is what the data show (@fig-hazard b): the Dec-9 (AR1) falling limb is fast
+(−11.4 m³ s⁻¹ h⁻¹; 323→88 m³ s⁻¹ in 20 h) and hosts no persistent step, whereas the
+sustained Dec-11→13 (AR3) recession is ~40% slower (−6.6 m³ s⁻¹ h⁻¹; 33 h) and is
+exactly where the persistent reorganization step lands. The satellite change map is
+consistent — CC.PR01's pre-flood thread is among the newly-*dry* (abandoned) pixels by
+January (@fig-braidsat b). We present this as the *parsimonious* mechanism, not a
+unique one: the stepwise seismic signature is equally compatible with a discrete thread
+abandonment, bar dissection, or chute cutoff, and rests on a single compound event;
+the slow-recession clogging hypothesis is the geomorphically motivated reading that the
+recession-rate contrast supports and that future events can test.
+
+**A source-reach hazard lead.** The same continuous record carries an early-warning
+signal: at the source cluster the 5–15 Hz transport-band power rises **~5–7 h before
+peak discharge** (and before peak stage, which here coincides with peak Q), flagging the
+ramp-up of near-channel transport on the rising limb (@fig-hazard a). This source-reach
+lead is modest on its own but compounds with the ~36 h upstream-to-downstream flood-peak
+lead (§"Local sensing and downstream early warning") — together a basis for using the
+seismic network not only to *track* the flood but to *anticipate* both the bed-mobilizing
+transport and the downstream stage in this lahar-hazard corridor.
+
+![Hazard timing and the slow-recession clogging mechanism (Puyallup cluster). **(a)** Discharge (black) and stage (blue) through the event; peak Q and stage coincide. The 5–15 Hz transport-band power onset (stars) leads the peak by ~5–7 h (shaded warning window) — transport ramps up on the rising limb. **(b)** 5–15 Hz power (per-station, ÷pre-flood median): the rapid AR1 falling limb (−11.4 m³ s⁻¹ h⁻¹, 20 h) hosts no persistent step, while the slow, sustained AR3 recession (−6.6 m³ s⁻¹ h⁻¹, 33 h) is where the braid-reorganization step lands (purple) — consistent with recession deposition clogging the active thread and forcing an avulsion.](figures/fig25_hazard_clogging.png){#fig-hazard width=98%}
+
 ### Why the timing is clean at the Puyallup and confounded at the Nisqually — a domain of applicability {#sec-domain}
 
 The same diagnostic on the Nisqually (CC.GTWY, UW.LON) does *not* return a clean
