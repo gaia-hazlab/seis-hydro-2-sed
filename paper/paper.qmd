@@ -566,11 +566,15 @@ recession-rate contrast supports and that future events can test.
 **A source-reach hazard lead.** The same continuous record carries an early-warning
 signal: at the source cluster the 5–15 Hz transport-band power rises **~5–7 h before
 peak discharge** (and before peak stage, which here coincides with peak Q), flagging the
-ramp-up of near-channel transport on the rising limb (@fig-hazard a). This source-reach
-lead is modest on its own but compounds with the ~36 h upstream-to-downstream flood-peak
-lead (§"Local sensing and downstream early warning") — together a basis for using the
-seismic network not only to *track* the flood but to *anticipate* both the bed-mobilizing
-transport and the downstream stage in this lahar-hazard corridor.
+ramp-up of near-channel transport on the rising limb (@fig-hazard a). The onset itself
+*propagates downstream* across the upper transect — from CC.SIFT (15 km from the summit,
+onset 19:45 UTC) through the Electron cluster (22–23 km, 21:05–22:00) to CC.STYX
+(27 km, 23:40), a ~4 h sweep — so upstream stations register transport initiation before
+downstream ones. This source-reach lead is modest on its own but compounds with the
+~36 h upstream-to-downstream flood-peak lead (§"Local sensing and downstream early
+warning") — together a basis for using the seismic network not only to *track* the flood
+but to *anticipate* both the bed-mobilizing transport and the downstream stage in this
+lahar-hazard corridor.
 
 ![Hazard timing and the slow-recession clogging mechanism (Puyallup cluster). **(a)** Discharge (black) and stage (blue) through the event; peak Q and stage coincide. The 5–15 Hz transport-band power onset (stars) leads the peak by ~5–7 h (shaded warning window) — transport ramps up on the rising limb. **(b)** 5–15 Hz power (per-station, ÷pre-flood median): the rapid AR1 falling limb (−11.4 m³ s⁻¹ h⁻¹, 20 h) hosts no persistent step, while the slow, sustained AR3 recession (−6.6 m³ s⁻¹ h⁻¹, 33 h) is where the braid-reorganization step lands (purple) — consistent with recession deposition clogging the active thread and forcing an avulsion.](figures/fig25_hazard_clogging.png){#fig-hazard width=98%}
 

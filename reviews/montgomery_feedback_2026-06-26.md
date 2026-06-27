@@ -44,3 +44,25 @@ supportive preliminary results below.
 
 *Analysis is reproducible from the committed gage CSV + `results/*_timeseries.csv`; a
 workflow script for M5/M7 is the natural next step.*
+
+## Built & integrated (2026-06-27)
+- **`workflows/24_hazard_timing_clogging.py` → fig25** (`@fig-hazard`), wired into the
+  offline pipeline; committed the small USGS gage CSVs (stage) for offline rebuild.
+- **§sec-reorg integration committed** (`cada2f3`): the deposition→clogging→avulsion
+  mechanism (Slingerland & Smith 2004; Jerolmack & Mohrig 2007; Mohrig 2000) + the
+  source-reach hazard lead. **Closes reviewer FGR-2 / V2 (#3).**
+
+## Confirmation analysis (2026-06-27)
+- **Satellite, PR01 (verifies the manuscript claim).** Within 300 m of CC.PR01:
+  **0 persistent, 71 newly-wet, 20 newly-dry** pixels (Nov→Jan). The near-station
+  channel relocated completely — old thread abandoned (newly-dry), new thread occupied
+  closer (newly-wet) = avulsion. ✓ (M7, #14)
+- **Spatial lead (M5, #12).** Transport-band onset **propagates downstream**: SIFT
+  (15 km) 19:45 → Electron cluster (22–23 km) 21:05–22:00 → STYX (27 km) 23:40 — a ~4 h
+  sweep (~0.8 m s⁻¹). Added to the manuscript hazard paragraph. ✓
+- **Deposition signature (inconclusive).** AR3 falling-limb $b$ steeper than rising
+  (PR02 1.18→1.58; PR03 0.69→1.36) — superficially sediment-waning on the slow
+  recession — but the avulsion *step* lies on the same falling limb and contaminates the
+  fit. Suggestive, **not demonstrated**; manuscript keeps "parsimonious, not unique."
+  *Open:* a cleaner deposition test (e.g. bed-level/DoD or grain-size evidence) for the
+  final. (M6, #13 / M7, #14)
