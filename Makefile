@@ -50,6 +50,30 @@ figures-from-cache:  ## REPRO PATH A — all offline figures from committed cach
 	$(PY) workflows/26_channel_pattern.py
 	@echo ">>> 27_width_stage (fig28; width-stage hysteresis, rising vs falling limb)"
 	$(PY) workflows/27_width_stage.py
+	@echo ">>> --- JGR-ES restructure composites (F1-F9; read the same caches) ---"
+	@echo ">>> 30_figF1_studyarea (F1; study area + channel pattern + flood driver, S2 basemap)"
+	$(PY) workflows/30_figF1_studyarea.py
+	@echo ">>> 33_figF2_backbone (F2; seismic power tracks discharge)"
+	$(PY) workflows/33_figF2_backbone.py
+	@echo ">>> 34_figF3_threshold (F3; transport-onset threshold + rating geometry)"
+	$(PY) workflows/34_figF3_threshold.py
+	@echo ">>> 35_figF4_braided (F4; braided distributed non-stationary source)"
+	$(PY) workflows/35_figF4_braided.py
+	@echo ">>> 31_figF5_satellite (F5; satellite corroboration two basins, S2 basemap)"
+	$(PY) workflows/31_figF5_satellite.py
+	@echo ">>> 32_figF6_timing (F6; event-scale timing of reorganization — spine)"
+	$(PY) workflows/32_figF6_timing.py
+	@echo ">>> 36_figF7_domain (F7; domain of applicability)"
+	$(PY) workflows/36_figF7_domain.py
+	@echo ">>> 37_figF8_virtualq (F8; virtual gage + downstream early warning)"
+	$(PY) workflows/37_figF8_virtualq.py
+	@echo ">>> 38_figF9_bedload (F9; bedload bounded hypothesis — frequency evidence)"
+	$(PY) workflows/38_figF9_bedload.py
+
+# Sentinel-2 true-color basemaps for the geospatial composites (F1, F5). NETWORK,
+# one-time; cached RGB is committed so figures-from-cache stays offline.
+basemaps:        ## fetch + cache S2 true-color basemaps (network; run once)
+	$(PY) workflows/28_fetch_basemaps.py
 
 repro:           ## REPRO PATH B — full pipeline from raw data (network; hours)
 	$(PY) workflows/00_discover_stations.py
