@@ -44,6 +44,8 @@ figures-from-cache:  ## REPRO PATH A — all offline figures from committed cach
 	$(PY) workflows/23_braid_two_region.py
 	@echo ">>> 24_hazard_timing_clogging (fig25; gage stage+Q + proxy + reorg JSON)"
 	$(PY) workflows/24_hazard_timing_clogging.py
+	@echo ">>> 25_rating_geometry (fig26; stage-discharge geometry vs seismic Qc)"
+	$(PY) workflows/25_rating_geometry.py
 
 repro:           ## REPRO PATH B — full pipeline from raw data (network; hours)
 	$(PY) workflows/00_discover_stations.py
