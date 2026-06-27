@@ -11,8 +11,8 @@ supportive preliminary results below.
 | M2 | Stage–discharge ratings → overbank / geometry change | #9 | **Now** (stage+Q at gages; fig15 base) | open |
 | M3 | Trace braid/bank boundaries; zoom WAY in on PR01 | #10 | Placeholder now (Sentinel 10 m); final needs ≈3 m | open |
 | M4 | Width–stage (dW/dH) on rising vs falling limbs | #11 | Partial (stage continuous; width coarse epochs) | **done (partial)** |
-| M5 | Bedload initiation vs peak Q vs peak stage — hazard | #12 | **Now** — see results | open (prelim) |
-| M6 | Sustained falling limb → flux (beyond threshold) | #13 | **Now** (proxy+stage on recessions) | open |
+| M5 | Bedload initiation vs peak Q vs peak stage — hazard | #12 | **Now** — see results | **done** |
+| M6 | Sustained falling limb → flux (beyond threshold) | #13 | **Now** (proxy+stage on recessions) | **done** |
 | M7 | Slow AR3 recession → deposition → braid clogging → avulsion | #14 | **Now (partial)** — see results | open (prelim) |
 
 ## Preliminary results (Puyallup / Electron gage 12092000; existing data)
