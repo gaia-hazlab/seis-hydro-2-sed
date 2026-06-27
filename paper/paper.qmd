@@ -374,9 +374,10 @@ section *suppresses* the exponent. Because the resolvable band is
 turbulence-dominated, every breakpoint is a **candidate** onset — geometric or
 bed-mechanical — separated by the satellite channel-change test, which finds the
 two satellite-tested breaks (CC.PR01 and the steep Nisqually UW.LON) to be
-substantially **geometric**, with the channel migration scaling with the break
-steepness (§sec-braided, @fig-braidsat, @fig-braidsat-nis), and to be retested
-out-of-sample on the March-2026 event.
+substantially **geometric**, with the larger channel migration falling at the
+steeper break (an ordering across the two tested reaches, not a fitted relationship;
+§sec-braided, @fig-braidsat, @fig-braidsat-nis), and to be retested out-of-sample on
+the March-2026 event.
 
 ![Transport-onset threshold: continuous broken-stick fit of $\log_{10}P$ vs $\log_{10}Q$ (5–15 Hz), with the AIC/BIC-justified breakpoint $Q_c$ (blue dashed) and the two exponents $b_{<Q_c}\!\to\!b_{>Q_c}$ in each panel title (ΔBIC on autocorrelation-corrected $n_\text{eff}$). Most stations steepen above $Q_c$; CC.STYX flattens; the clean source anchor CC.PR03 shows no significant break.](figures/fig14_threshold.png){#fig-thr width=95%}
 
@@ -408,7 +409,11 @@ decades of repeat aerial-lidar differencing (2002–2022) document persistent
 sediment accumulation and channel reorganization along the Puyallup valley reaches,
 fed by net erosion of the deglaciating headwaters [@anderson2025; @anderson2026;
 @czuba2012] — the braidplain is demonstrably mobile and aggrading on the timescale
-between events. Both the turbulent-flow model
+between events. Its bed is **poorly-sorted, coarse glacial outwash** — sand through
+boulders, delivered by debris flows and meltwater from the deglaciating headwall — so
+the reach is **supply-rich rather than supply-limited**: coarse sediment is effectively
+always available, and a discharge-threshold "transport onset" is not the expected
+control (we return to this in interpreting the breaks). Both the turbulent-flow model
 [@gimbert2014] and the impact model [@tsai2012] idealize the source as a *single
 line channel at a known, stationary distance* $r$, with power decaying as
 $\sim r^{-1}\exp(-2\pi f r / v_c Q)$. A braided reach violates this in ways that the
@@ -426,7 +431,14 @@ coalesce, and the wetted front jumps laterally — a purely **geometric** way to
 manufacture a steepening $P$–$Q$ break that mimics a transport onset. (iii)
 Splitting a given $Q$ into $N$ wide, shallow threads lowers per-channel depth $H$,
 and because turbulent power scales as $H^{7/3}$, the braided sum is *suppressed*
-relative to a confined channel and the exponent flattens. (iv) Braided threads
+relative to a confined channel and the exponent flattens. This prediction is
+*consistent with* the observed exponents: the braidplain-central CC.PR01 flattens to
+$b\approx0.79$ against $b\approx1.7$–$1.8$ at the confined near-channel stations
+(CC.PR02/PR03; @fig-scaling), the direction braided hydraulic geometry expects when
+flow partitions into wide, shallow threads [@ashmore2013]. We present it as
+*consistent*, not diagnostic, because the same off-channel station also sits farther
+from the active threads, and distance independently lowers $b$ (§"Spatial decay") —
+the two effects are not separable from $b$ alone. (iv) Braided threads
 **avulse and migrate** between and during floods, so the dominant source relocates —
 imposing a non-stationary distance $r$ and resetting the calibration constant. These
 are the textbook behaviors of braided gravel-bed rivers — bar growth and dissection,
@@ -567,14 +579,24 @@ crosses a set of reference levels and referencing each level to its first
 flat through the rising limb and peak and then **steps up on the falling limb of
 the main pulse** — onset $\sim$13–20 h *after* peak discharge — with the dominant,
 persistent shift completing on the final recession a few days later. The transition
-is **stepwise** (narrower than a day, the signature of a discrete avulsion/thread
-switch) rather than a gradual ramp, and it is **persistent** at the two near-channel
-stations (CC.PR02/PR03, $+0.2$–$0.3$ log) while CC.PR01 — the most braidplain-central
-— shows a large but *reversible* excursion, consistent with a thread that migrated
-and partly re-occupied. Reorganization here is therefore a **recession-phase
-phenomenon** (falling-stage bank collapse / thread abandonment), not a rising-limb
-or at-peak one. To our knowledge this is the first seismic resolution of the
-event-scale timing of braided-channel reorganization. The estimate carries honest
+is **stepwise** (narrower than a day) rather than a gradual ramp, and it is
+**persistent** at the two near-channel stations (CC.PR02/PR03, $+0.2$–$0.3$ log)
+while CC.PR01 — the most braidplain-central — shows a large but *reversible*
+excursion, consistent with a thread that shifted and partly re-occupied. We use two
+terms deliberately: *avulsion* for the **abrupt** (sub-daily) thread switch that the
+seismic step resolves on the event timescale, and *migration/relocation* for the
+**net** Nov→Jan displacement of the dominant thread that the satellite bracket
+measures — which may itself be a single avulsion or cumulative lateral reworking,
+a distinction the present data cannot fully settle. The step's sub-daily width is what
+identifies it as the abrupt class. Reorganization here is therefore a **recession-phase
+phenomenon**, not a rising-limb or at-peak one; its mechanism — recession deposition
+clogging the active thread and forcing the switch — is developed below, and we keep it
+separate from the *timing* result here. We are not aware of a prior seismic study that
+resolves the event-scale *timing* of braided-channel reorganization in the field —
+flume experiments image braided sediment dynamics seismically [@piantini2022] and
+field studies bracket channel change with before/after surveys, but neither resolves
+*when* within an event — though we state this as "to our knowledge," not a settled
+priority claim. The estimate carries honest
 limits: with three stations and a compound hydrograph that samples matched discharge
 densely only at the AR limbs, the inter-pulse trough, and the final recession, the
 precise mid-transition time is pulled toward the largest (final-recession)

@@ -90,3 +90,32 @@ single-event scope explicitly — geomorphologists trust authors who bound their
 - V2 — "Falling-stage bank collapse / thread abandonment" as *the* mechanism: verify against avulsion/bank-failure literature; it is one of several recession-phase events.
 - V3 — $H^{7/3}$ suppression ⇒ exponent flattening: present as a tested prediction (PR01 $b=0.79$ is consistent), citing braided hydraulic geometry.
 - V4 — Migration-vs-steepness "relationship": confirm you are not implying a fit on n=2.
+
+
+---
+
+## Minor + verify items resolved (2026-06-27, issue #7)
+- **FGR-6 (migration vs avulsion).** §sec-reorg now defines usage explicitly: *avulsion*
+  = the abrupt sub-daily switch the seismic step resolves; *migration/relocation* = the
+  net Nov→Jan thread displacement the satellite measures (one avulsion or cumulative
+  reworking — a distinction the data cannot fully settle).
+- **FGR-7 (bed character/grain size).** §sec-braided adds a sentence: poorly-sorted
+  coarse glacial outwash (sand→boulders), debris-flow/meltwater fed, supply-rich not
+  supply-limited — grounds the no-transport-threshold reading.
+- **FGR-8 (stepwise alternatives).** Already acknowledged in the recession-deposition
+  paragraph: the step is "equally compatible with discrete thread abandonment, bar
+  dissection, or chute cutoff [@ashmore1991]." Confirmed in place; no further edit.
+- **V1 (first-seismic claim).** Bounded: flume work images braided dynamics seismically
+  [@piantini2022] and field studies bracket change before/after, but neither resolves
+  *when* within an event; stated as "to our knowledge," explicitly not a priority claim.
+- **V2 (bank collapse as THE mechanism).** Removed "falling-stage bank collapse" as the
+  asserted mechanism in §sec-reorg; mechanism (recession deposition → clogging →
+  avulsion) is developed separately and framed "parsimonious, not unique."
+- **V3 (H^{7/3} suppression → flattening).** Now presented as a *tested-consistent*
+  prediction: CC.PR01 b≈0.79 vs 1.7–1.8 at the confined stations, the direction braided
+  hydraulic geometry expects [@ashmore2013] — with the honest caveat that off-channel
+  distance also lowers b, so it is consistent, not diagnostic.
+- **V4 (steepness↔migration on n=2).** §threshold wording softened from "migration
+  scaling with break steepness" to "an ordering across the two tested reaches, not a
+  fitted relationship"; §sec-braided already said "suggestive ordering, not an
+  established scaling."
