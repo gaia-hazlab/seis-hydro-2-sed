@@ -66,3 +66,16 @@ workflow script for M5/M7 is the natural next step.*
   fit. Suggestive, **not demonstrated**; manuscript keeps "parsimonious, not unique."
   *Open:* a cleaner deposition test (e.g. bed-level/DoD or grain-size evidence) for the
   final. (M6, #13 / M7, #14)
+
+## M6 — what a sustained falling limb says about flux (2026-06-27)
+Honest, modest result (text integration in §sec-reorg, no new figure):
+- A binary transport threshold is **uninformative on the recession**: the source-station
+  Qc (13-28 m3/s) is exceeded the entire multi-day fall, so it labels the whole falling
+  limb "transport-on" and carries no flux evolution.
+- The flux/reorganization information lives in the **recession SHAPE** of the seismic
+  power (rapid AR1 vs sustained AR3; fig25b) - which is what the M7 clogging mechanism
+  uses. Per-AR loops near-reversible (|HI|<=0.06) -> geometric/transport, not strong
+  supply-exhaustion hysteresis.
+- NOT supported: "sustained -> more cumulative flux" (cumulative 5-15 Hz energy is
+  dominated by AR1's larger magnitude: PR02 957 vs 660; PR03 693 vs 481). The clean
+  signal is recession-shape dependence, not integrated energy.
