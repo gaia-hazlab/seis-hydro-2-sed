@@ -626,6 +626,27 @@ confirms the aggrading, reorganizing *regime* [@anderson2026] but no airborne su
 yet brackets December 2025, so a post-event lidar acquisition over the Electron reach
 is the highest-value future constraint on this mechanism.
 
+**Width–stage hysteresis corroborates the reorganization.** An independent,
+non-seismic line of evidence — the wetted active-channel width from the SAR epoch
+series against the continuous gage stage — shows the same asymmetry as an *at-a-station*
+width–stage relation (@fig-width). On the rising limb the source braidplain widens
+steeply (the SAR width proxy at CC.PR01 grows to **2.7× its pre-flood value** as Electron
+stage climbs 5.0→7.9 ft; CC.PR02 to 1.7×). On the falling limb it does **not** retrace
+that path: at equal stage the recession width sits below the rising-limb width
+(a counter-clockwise loop), the per-foot width response is gentler on the fall than the
+rise (secant $dW/dH$ at CC.PR01 +0.65 vs +0.55 ft⁻¹; CC.PR02 +0.38 vs +0.21 ft⁻¹), and
+CC.PR01 ends the event at **0.6× its pre-flood width — narrower than before the flood**,
+whereas CC.PR02 returns to ~baseline. A reversible stage response would close the loop;
+this one does not, and the residual narrowing is concentrated at CC.PR01 — the same
+station whose pre-flood thread the change map flags as newly-dry/abandoned
+(@fig-braidsat b). The width geometry therefore points to the same conclusion as the
+seismic step and the satellite map: the active thread near CC.PR01 relocated rather than
+simply rose and fell. (Resolution caveat: five SAR epochs, an area-ratio proxy rather
+than metric width, and epoch-averaged stage; a $\ge$3 m repeat width series would sharpen
+$dW/dH$, but the rise–fall asymmetry and the PR01 net narrowing are already clear.)
+
+![At-a-station width–stage relation on the rising vs falling limb (Puyallup source, M4). **(a)** The SAR wetted active-channel width proxy (active area ÷ CC.PR03, ÷ the Nov pre-flood baseline) against epoch-mean Electron stage, traced in time (arrows): both source stations widen sharply on the rise to the AR peak, then the recession does *not* retrace the path — CC.PR01 ends *below* its pre-flood width (the abandoned thread), CC.PR02 returns to ~baseline. Whiskers span the epoch stage min–max. **(b)** Secant $dW/dH$ is steeper on the rising than the falling limb at both stations — width is shed more slowly than it was gained, leaving a reorganized channel.](figures/fig28_width_stage.png){#fig-width width=92%}
+
 **A source-reach hazard lead.** The same continuous record carries an early-warning
 signal: at the source cluster the 5–15 Hz transport-band power rises **~5–7 h before
 peak discharge** (and before peak stage, which here coincides with peak Q), flagging the

@@ -10,7 +10,7 @@ supportive preliminary results below.
 | M1 | Planform map: single-thread/meandering (past CC.TRON) vs braided (PR, UW.LON) | #8 | Medium (extend fig1; needs planform traces) | open |
 | M2 | Stage–discharge ratings → overbank / geometry change | #9 | **Now** (stage+Q at gages; fig15 base) | open |
 | M3 | Trace braid/bank boundaries; zoom WAY in on PR01 | #10 | Placeholder now (Sentinel 10 m); final needs ≈3 m | open |
-| M4 | Width–stage (dW/dH) on rising vs falling limbs | #11 | Partial (stage continuous; width coarse epochs) | open |
+| M4 | Width–stage (dW/dH) on rising vs falling limbs | #11 | Partial (stage continuous; width coarse epochs) | **done (partial)** |
 | M5 | Bedload initiation vs peak Q vs peak stage — hazard | #12 | **Now** — see results | open (prelim) |
 | M6 | Sustained falling limb → flux (beyond threshold) | #13 | **Now** (proxy+stage on recessions) | open |
 | M7 | Slow AR3 recession → deposition → braid clogging → avulsion | #14 | **Now (partial)** — see results | open (prelim) |
@@ -79,3 +79,19 @@ Honest, modest result (text integration in §sec-reorg, no new figure):
 - NOT supported: "sustained -> more cumulative flux" (cumulative 5-15 Hz energy is
   dominated by AR1's larger magnitude: PR02 957 vs 660; PR03 693 vs 481). The clean
   signal is recession-shape dependence, not integrated energy.
+
+## M4 — width–stage hysteresis, rising vs falling limb (2026-06-26)
+`workflows/27_width_stage.py` → fig28 (`@fig-width`), wired into figures-from-cache;
+text in §sec-reorg after the recession-deposition mechanism. Offline from the SAR
+December series + Electron gage stage.
+- **Rising limb widens steeply:** SAR width proxy CC.PR01 → **2.7×** pre-flood as
+  Electron stage climbs 5.0→7.9 ft; CC.PR02 → 1.7×.
+- **Falling limb does NOT retrace** (counter-clockwise loop): at equal stage, recession
+  width < rising width; secant dW/dH gentler on the fall (PR01 +0.65 rise vs +0.55 fall
+  ft⁻¹; PR02 +0.38 vs +0.21).
+- **PR01 ends at 0.6× pre-flood width — narrower than before the flood**; PR02 returns
+  to ~baseline. Residual narrowing concentrated at PR01 = the same station the change
+  map flags newly-dry/abandoned (fig22b) → independent geometric corroboration of the
+  avulsion. Directly answers DM's "dW/dH on rising vs falling limbs."
+- *Caveat (in caption):* 5 SAR epochs, area-ratio proxy (not metric width),
+  epoch-averaged stage; ≥3 m repeat width series would sharpen dW/dH.

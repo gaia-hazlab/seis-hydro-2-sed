@@ -48,6 +48,8 @@ figures-from-cache:  ## REPRO PATH A — all offline figures from committed cach
 	$(PY) workflows/25_rating_geometry.py
 	@echo ">>> 26_channel_pattern (fig27; braided-vs-single-thread pattern map)"
 	$(PY) workflows/26_channel_pattern.py
+	@echo ">>> 27_width_stage (fig28; width-stage hysteresis, rising vs falling limb)"
+	$(PY) workflows/27_width_stage.py
 
 repro:           ## REPRO PATH B — full pipeline from raw data (network; hours)
 	$(PY) workflows/00_discover_stations.py
