@@ -32,10 +32,12 @@ abstract: |
   km downstream (a flood-wave lag we correct, implied celerity ≈2 m s⁻¹) on a far
   wider, higher braidplain where the post-flood **rain→snow supply shutoff** masks
   the geometric signal — together defining the **domain** in which source-resolved
-  river seismology is clean (a compact channel with a co-located gage). Upstream
-  seismic power also leads the downstream flood-peak stage by ~36 h, a seismic
-  early-warning capability for this lahar-hazard corridor.
-keywords: [environmental seismology, braided rivers, channel reorganization, river discharge, flood early warning, Mt. Rainier, atmospheric river]
+  river seismology is clean (a compact channel with a co-located gage). Finally, a
+  deterministic routing of the upstream discharge through the downstream rating
+  reproduces the observed downstream stage for this event — a proof-of-concept for a
+  seismic-fed flood nowcast in this gage-sparse lahar corridor, not yet a
+  skill-validated forecast.
+keywords: [environmental seismology, braided rivers, channel reorganization, river discharge, flood nowcasting, Mt. Rainier, atmospheric river]
 ---
 
 # Introduction
@@ -235,21 +237,38 @@ Lawler index $HI$ (split the series at peak $Q$ and interpolate the rising- and
 falling-limb power at $q_\text{norm}=0.5$; positive = clockwise). Implemented in
 `src/riverseis/analysis.py` (`fit_scaling`, `lawler_hysteresis_index`).
 
-**Matched-discharge baseline and the event-scale timing of channel reorganization
-(spine).** On the braided source reaches the source position is non-stationary, so we
-separate channel geometry from flow as the residual of the rating,
-$r(t)=\log_{10}P(t)-(a+b\log_{10}Q)$. Because $r(t)$ still mixes geometry with
-within-event hysteresis and rating curvature (a function of $Q$ alone), we track it at
-**matched discharge**: for a set of reference discharges that the compound hydrograph
-crosses repeatedly during the event (its inter-pulse troughs and limbs), we sample $r$
-at each crossing and reference every level to its first (rising-limb) crossing, so the
-resulting baseline $c(t)$ is a sequence of same-stage "snapshots" whose changes are
-source geometry, not discharge. We detect the onset of reorganization as the first
-sustained $2\sigma$ departure of $c(t)$ from the rising-limb band; fit the dominant
-step with a logistic $c_0+\Delta/(1+e^{-(t-t_{50})/\tau})$ — midpoint $t_{50}$ giving
-the lead/lag relative to peak $Q$, width $4\tau$ distinguishing a stepwise from a
-gradual transition, magnitude $\Delta$ its size — and bound $t_{50},\tau,\Delta$ with a
-moving bootstrap; an end-state offset that returns to zero flags a *reversible*
+**Matched-discharge baseline $c(t)$ and the event-scale timing of channel
+reorganization (spine).** On the braided source reaches the source position is
+non-stationary, so we separate channel geometry from flow as the residual of the
+rating, $r(t)=\log_{10}P(t)-(a+b\log_{10}Q)$. This residual is continuous, but it
+still mixes the geometry signal we want with within-event hysteresis and rating
+curvature — both functions of $Q$ alone — so reading timing off $r(t)$ directly would
+confound geometry with flow. We remove the flow dependence by comparing power **only at
+equal discharge**. Define a ladder of reference discharges $\{Q_k\}$ (here
+$60,70,\dots,160$ m³ s⁻¹, the band the compound hydrograph re-crosses repeatedly), and
+let $t_{k,j}$ be the $j$-th time the hydrograph crosses level $Q_k$. The
+matched-discharge baseline is the residual at those crossings, each level referenced to
+its **first (rising-limb)** crossing:
+
+$$
+c\!\left(t_{k,j}\right) \;=\; r\!\left(t_{k,j}\right) \;-\; r\!\left(t_{k,1}\right),
+\qquad Q\!\left(t_{k,j}\right)=Q_k .
+$$ {#eq-ct}
+
+By construction $c$ is therefore **not a continuous time series**: it is defined only
+at the discrete instants the hydrograph passes through a reference level, where a true
+same-stage comparison exists; between crossings the discharge differs and no
+matched-discharge value is defined. Each $c$ value is a same-stage "snapshot" whose
+change from the rising-limb reference is *source geometry, not discharge*. The sampling
+density in time is set by how often and how long the hydrograph dwells in the reference
+band, so a fast pulse yields few snapshots and a slow, sustained recession yields many
+(this is why the slow recession, where reorganization occurs, is also the best-sampled
+limb; @fig-reorg a). We detect the onset of reorganization as the first sustained
+$2\sigma$ departure of $c$ from the rising-limb band; fit the dominant step with a
+logistic $c_0+\Delta/(1+e^{-(t-t_{50})/\tau})$ — midpoint $t_{50}$ giving the lead/lag
+relative to peak $Q$, width $4\tau$ distinguishing a stepwise from a gradual
+transition, magnitude $\Delta$ its size — and bound $t_{50},\tau,\Delta$ with a moving
+bootstrap; an end-state offset that returns to zero flags a *reversible*
 (non-persistent) excursion rather than an irreversible reorganization.
 
 **Flood-wave-lag correction for far-downstream gages.** Where a station's gage is not
@@ -713,7 +732,7 @@ simply rose and fell. (Resolution caveat: five SAR epochs, an area-ratio proxy r
 than metric width, and epoch-averaged stage; a $\ge$3 m repeat width series would sharpen
 $dW/dH$, but the rise–fall asymmetry and the PR01 net narrowing are already clear.)
 
-![Event-scale timing of braided-channel reorganization (full page; co-located Puyallup cluster). **(a)** The matched-discharge source baseline $c(t)$ (grey points) and a logistic step fit (blue) per station — onset $+13$–$20$ h after peak $Q$, dominant step $t_{50}\approx+70$ h (CC.PR02 $\Delta+0.29$, $R^2$ 0.66) / $+74$ h (CC.PR03 $\Delta+0.50$, $R^2$ 0.72), CC.PR01 reversible — over the discharge with the three AR pulses shaded. **(b)** At-a-station width–stage hysteresis: CC.PR01 width peaks at 2.7× then ends 0.6× pre-flood (abandoned thread), CC.PR02 1.7×→~baseline; the falling limb does not retrace the rise. **(c)** Recession-rate clogging: the fast AR1 fall (−11.4 m³ s⁻¹ h⁻¹, 20 h) hosts no step, while the slow AR3 fall (−6.6 m³ s⁻¹ h⁻¹, 33 h) is where the reorganization step lands (CC.PR02 12-12 01:31, CC.PR03 12-12 05:06) — recession deposition clogging the active thread and forcing an avulsion.](figures/figF6_timing.png){#fig-reorg width=100%}
+![Event-scale timing of braided-channel reorganization (full page; co-located Puyallup cluster). **(a)** The matched-discharge source baseline $c(t)$ (grey points; @eq-ct) and a logistic step fit (blue) per station — onset $+13$–$20$ h after peak $Q$, dominant step $t_{50}\approx+70$ h (CC.PR02 $\Delta+0.29$, $R^2$ 0.66) / $+74$ h (CC.PR03 $\Delta+0.50$, $R^2$ 0.72), CC.PR01 reversible — over the discharge with the three AR pulses shaded. $c(t)$ is defined only at reference-discharge crossings, so the snapshots are sparse on the fast AR2 pulse (which transits the reference band quickly) and dense on the slow AR3 recession — the limb where reorganization occurs and is therefore best sampled, not a gap in coverage. **(b)** At-a-station width–stage hysteresis: CC.PR01 width peaks at 2.7× then ends 0.6× pre-flood (abandoned thread), CC.PR02 1.7×→~baseline; the falling limb does not retrace the rise. **(c)** Recession-rate clogging: the fast AR1 fall (−11.4 m³ s⁻¹ h⁻¹, 20 h) hosts no step, while the slow AR3 fall (−6.6 m³ s⁻¹ h⁻¹, 33 h) is where the reorganization step lands (CC.PR02 12-12 01:31, CC.PR03 12-12 05:06) — recession deposition clogging the active thread and forcing an avulsion.](figures/figF6_timing.png){#fig-reorg width=100%}
 
 ## Domain of applicability {#sec-domain}
 
@@ -787,37 +806,50 @@ process-conditional caveat); we keep this bounded, not isolated, in Text S6.
 
 ![Bedload as a bounded hypothesis (frequency evidence). **(a)** Median ground-velocity PSD, flood (10 Dec) vs quiet (03 Dec): the 50-sps source station (CC.PR03; Nyquist 25 Hz) lifts broadband to the Nyquist while the canonical 30–80 Hz bedload band is *unsampled*, and the 200-sps lowland station shows no flood signal at the bedload band. **(b)** 5–15 Hz bedload proxy across the ARs (×pre-flood median): AR2 is the maximum at every station, decaying downstream to CC.TRON ≈7×. The per-AR and time-resolved details are in @fig-blAR and @fig-bt.](figures/figF9_bedload.png){#fig-spec width=98%}
 
-## Distributed sensing and downstream early warning {#sec-ew}
+## Distributed sensing and a path to downstream nowcasting {#sec-ew}
 
-**A source-reach hazard lead.** The continuous record carries an early-warning
-signal: at the source cluster the 5–15 Hz transport-band power rises **~5–7 h before
-peak discharge** (CC.PR01 +6.6, CC.PR02 +5.0, CC.PR03 +6.1 h; and before peak stage, which here coincides with peak Q), flagging the
-ramp-up of near-channel transport on the rising limb (@fig-vq b). The onset itself
-*propagates downstream* across the upper transect — from CC.SIFT (15 km from the summit,
-onset 19:45 UTC) through the Electron cluster (22–23 km, 21:05–22:00) to CC.STYX
-(27 km, 23:40), a ~4 h sweep — so upstream stations register transport initiation before
-downstream ones. This source-reach lead is modest on its own but compounds with the
-~36 h upstream-to-downstream flood-peak lead below.
+**A source-reach transport *diagnostic*, not a forecast.** The continuous record flags
+when the bed begins to move: at the source cluster the 5–15 Hz transport-band power
+rises **~5–7 h before peak discharge** (CC.PR01 +6.6, CC.PR02 +5.0, CC.PR03 +6.1 h;
+and before peak stage, which here coincides with peak $Q$), and the onset *propagates
+downstream* across the upper transect — CC.SIFT (15 km, 19:45 UTC) → Electron cluster
+(22–23 km, 21:05–22:00) → CC.STYX (27 km, 23:40), a ~4 h sweep (@fig-vq b). We are
+careful about what this is: a lead of the *transport* onset over the *local* peak $Q$
+is a **diagnostic that the bed is mobilizing on the rising limb** — information a gage
+cannot provide, because a stage record alone does not say whether the bed is in motion
+— rather than a forecast of a downstream quantity. At the same station the rising limb
+of $Q$ is already visible, so the operational content of this lead is "transport is now
+active here," not "the flood will be larger there."
 
-**Local sensing and downstream early warning.** The seismic signal senses *local*
-hydraulics, which explains an otherwise puzzling contrast across the compound event:
-the **upstream gage and seismic stay flat** across successive ARs (Electron
-323→309→317 m³/s; CC.PR03 power peaking in AR2), while the **basin-integrating
-downstream gage rises monotonically** (Puyallup 1017→1158→1257 m³/s). The small,
-steep glacial headwater received similar forcing each pulse, and the near-channel
-station only senses its own ~km reach; the downstream peak instead grows through
-cumulative basin-scale processes — soil saturation, a rising freezing level feeding
-the large White River sub-basin, and superposition of lagged tributary waves. The
-upstream seismic thus follows local, not integrated, discharge — independent support
-for the turbulent-flow interpretation.
+**Local sensing explains a flat-upstream / rising-downstream contrast.** The seismic
+signal senses *local* hydraulics, which explains an otherwise puzzling feature of the
+compound event: the **upstream gage and seismic stay flat** across successive ARs
+(Electron 323→309→317 m³/s; CC.PR03 power peaking in AR2), while the
+**basin-integrating downstream gage rises monotonically** (Puyallup 1017→1158→1257
+m³/s). The small, steep glacial headwater received similar forcing each pulse and the
+near-channel station only senses its own ~km reach; the downstream peak instead grows
+through cumulative basin-scale processes — soil saturation, a rising freezing level
+feeding the large White River sub-basin, and superposition of lagged tributary waves.
+The upstream seismic thus follows local, not integrated, discharge — independent
+support for the turbulent-flow interpretation, and a caution that an upstream
+*amplitude* does not translate into a downstream amplitude without a basin model.
 
-Because the upstream signal precedes the downstream peak, it carries early-warning
-value: the upstream seismic power leads the downstream (Puyallup) stage peak by
-~36 h, and the flood peak propagates Electron→Puyallup over ~70 h (@fig-vq c). For an
-undammed, gage-sparse, lahar-hazard corridor (Orting, Puyallup), a continuous
-upstream seismic proxy could extend warning lead time; predicting the downstream peak
-*amplitude* (here 4× the headwater) would require a trained, multi-event model
-(see §Limitations and the development log).
+**Does any of this amount to forecast skill? A routing proof-of-concept.** A bare
+timing lead is *not* forecast skill — a gage at the same upstream point would provide
+the identical lead, and more directly; the seismic's distinct value is that it covers
+*ungauged* reaches and senses *bed transport* a stage record cannot. Genuine skill
+means predicting the downstream **stage or discharge magnitude**, validated
+out-of-sample against a baseline — which requires an upstream→downstream transfer
+(flood routing with celerity, attenuation, and lateral inflow) that we cannot *train*
+or *validate* from a single event. What we *can* show is that the physical ingredients
+are in place: a deterministic routing of the upstream Electron discharge — a constant
+flood-wave lag plus gain, passed through the downstream stage–discharge rating —
+reproduces the observed downstream (Puyallup) stage for this event (@fig-vq c). We
+present this as a **proof of concept, not demonstrated skill**: it is one event, with
+no learning, no uncertainty quantification, and no out-of-sample test. It establishes
+the path — a continuous, distributed upstream observable feeding a routed stage nowcast
+for the undammed, gage-sparse, lahar-hazard corridor (Orting, Puyallup) — and the
+first out-of-sample test is the March-2026 flood (§Limitations; development log).
 
 **Seismic virtual discharge.** Each river-proximal station can be calibrated as a
 rating $\log_{10}P=a+b\log_{10}Q$ and inverted to a **seismic virtual discharge**
@@ -829,7 +861,7 @@ virtual gages yields a **space–time discharge field** across the western Raini
 drainages (animation, HTML edition; @fig-vq-anim), i.e. a distributed streamflow
 nowcast from a seismic network.
 
-![Distributed sensing and downstream early warning. **(a)** Seismic virtual discharge vs the co-located gage at each river-proximal station (CC.PR03 NSE 0.95, CC.PR02 0.92, CC.STYX 0.75); near-channel source stations reproduce the hydrograph. **(b)** Transport-onset warning window: the 5–15 Hz onset leads peak $Q$ by ~5–7 h (CC.PR01 +6.6, CC.PR02 +5.0, CC.PR03 +6.1 h). **(c)** Downstream early warning: upstream seismic power leads the downstream flood-peak stage by ~36 h, and the flood peak propagates Electron→Puyallup over ~70 h.](figures/figF8_virtualq.png){#fig-vq width=98%}
+![Distributed sensing, virtual gage, and a routing proof-of-concept. **(a)** Seismic virtual discharge vs the co-located gage, all three river-proximal stations on one axis (capped 1–500 m³/s; CC.PR03 NSE 0.95, CC.PR02 0.92, CC.STYX 0.75) — near-channel source stations reproduce the hydrograph. **(b)** Bed-transport *diagnostic*: the 5–15 Hz transport-band onset leads peak $Q$ by ~5–7 h (CC.PR01 +6.6, CC.PR02 +5.0, CC.PR03 +6.1 h), flagging that the bed is mobilizing on the rising limb — not a downstream forecast. **(c)** Routing proof-of-concept: the upstream Electron discharge, routed by a constant flood-wave lag (≈8 h, implied celerity ≈1.7 m s⁻¹) and gain and passed through the downstream stage–discharge rating, reproduces the observed Puyallup stage ($r\approx0.89$) for this event. It is a *concept, not validated skill* — one event, no learning, no out-of-sample test (the constant gain over-predicts the second peak; NSE 0.48); the first out-of-sample test is the March-2026 flood.](figures/figF8_virtualq.png){#fig-vq width=98%}
 
 ::: {.content-visible when-format="html"}
 ![Space–time virtual-discharge animation (the single embedded animation): USGS gages (diamonds) and seismic virtual gages (filled triangles, $Q$ inverted from $P\propto Q^{b}$; hollow = no usable signal), colored on one discharge scale, through the Dec-2025 ARs. Rivers swell with discharge; the panel below shows gage hydrographs with a time cursor.](figures/virtual_q_animation.gif){#fig-vq-anim width=70%}
@@ -935,10 +967,11 @@ direct measurements. Fitting the December-2025 stage and discharge at the corrid
 gages (@fig-ratingSI) gives $\beta\approx1.6$ near the mouth (Puyallup at Puyallup),
 $\beta\approx2$ on the Nisqually, and a much steeper $\beta\approx5$ in the
 confined upper Puyallup (Electron) — coarser, narrower channels are more stage-sensitive.
-The practical consequence is that a **seismic virtual discharge can be mapped to a
-stage nowcast** through the local rating ($h = h_0 + (Q_{\text{seis}}/C)^{1/\beta}$),
-turning the upstream early-warning lead (≈36 h) into a forecast of the
-flood-relevant variable downstream — without a co-located stage sensor.
+The practical consequence is that a **seismic virtual discharge can be mapped to
+stage** through the local rating ($h = h_0 + (Q_{\text{seis}}/C)^{1/\beta}$) — the
+basis of the routing proof-of-concept in §"Distributed sensing" (@fig-vq c), and a
+concrete path toward a downstream stage nowcast that does not need a co-located stage
+sensor, once skill is established out-of-sample.
 
 ## New capabilities and a 2026 "what-if"
 
@@ -948,11 +981,12 @@ with the 500-sps CH channels live at the near-channel source stations (CC.PR03,
 SIFT, STYX, CARB), we could (i) compute the **30–80 Hz bedload band directly** and
 test for a *measured* (not merely bounded) bedload signal at the glacial source;
 (ii) run the **virtual-discharge field in real time** as a distributed nowcast that
-fills the long ungaged reaches between USGS gages; and (iii) operate the
-**~36 h upstream-to-downstream lead** as an early-warning product for the
-Orting–Puyallup lahar corridor, fused with SNOTEL precipitation and OPERA SAR
-flood maps. The same compound event would thus move from a turbulence-and-discharge
-study to an integrated, multi-sensor flood-and-sediment observation — the central
+fills the long ungaged reaches between USGS gages; and (iii) develop the routed
+upstream→downstream stage nowcast (§"Distributed sensing"; @fig-vq c) toward a
+validated early-warning product for the Orting–Puyallup lahar corridor — fused with
+SNOTEL precipitation and OPERA SAR flood maps, and tested out-of-sample on repeat
+events. The same compound event would thus move from a turbulence-and-discharge study
+to an integrated, multi-sensor flood-and-sediment observation — the central
 forward-looking capability this work demonstrates and recommends.
 
 ## Limitations
