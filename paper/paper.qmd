@@ -372,6 +372,24 @@ out-of-sample on the March-2026 event.
 
 ![Transport-onset threshold: continuous broken-stick fit of $\log_{10}P$ vs $\log_{10}Q$ (5–15 Hz), with the AIC/BIC-justified breakpoint $Q_c$ (blue dashed) and the two exponents $b_{<Q_c}\!\to\!b_{>Q_c}$ in each panel title (ΔBIC on autocorrelation-corrected $n_\text{eff}$). Most stations steepen above $Q_c$; CC.STYX flattens; the clean source anchor CC.PR03 shows no significant break.](figures/fig14_threshold.png){#fig-thr width=95%}
 
+**Independent evidence from the gage ratings.** The USGS stage–discharge ratings
+record the same geometry change *hydraulically*, independent of the seismic data. The
+local rating exponent $\beta(Q)=\mathrm{d}\log Q/\mathrm{d}\log(h-h_0)$ (from
+$Q=C(h-h_0)^{\beta}$) reads whether the conveying section is confining and deepening
+($\beta$ rising) or spreading overbank ($\beta$ flat). At the confined source gages
+$\beta$ climbs steeply with discharge — from $\sim$0.1 at low flow to $\sim$2.0
+(Puyallup nr Electron) and $\sim$1.7 (Nisqually nr National) — and **the seismic
+$P$–$Q$ break $Q_c$ falls within the rating-steepening band at each** (Electron
+$Q_c\approx28$ m³ s⁻¹, on the $\beta\!:\!0.4\!\to\!1.7$ ramp; @fig-ratinggeom). That an
+independent hydraulic-geometry transition occurs near the seismic break — at a gage
+*co-located* with the source cluster — is direct support for reading the break as
+geometric rather than bed-mechanical. The lowland Puyallup-at-Puyallup gage instead
+keeps $\beta\lesssim1.4$ even at $10^3$ m³ s⁻¹, the flat signature of **overbank**
+spreading onto the floodplain — the overbank end-member named among the candidate
+mechanisms above.
+
+![Stage–discharge geometry at four corridor gages. **(a)** The ratings (stage above zero-flow vs discharge). **(b)** The local rating exponent $\beta(Q)$: at the confined source gages (Puyallup nr Electron, Nisqually nr National) $\beta$ rises steeply with discharge (channel confining/deepening) and the seismic break $Q_c$ (dotted) falls within the steepening band — independent hydraulic evidence of a geometry transition near the break; the lowland Puyallup-at-Puyallup gage keeps $\beta$ low (overbank spreading).](figures/fig26_rating_geometry.png){#fig-ratinggeom width=98%}
+
 ## The braided-reach problem: a distributed, non-stationary source {#sec-braided}
 
 The single most consequential geomorphic caveat to everything above is hiding in
