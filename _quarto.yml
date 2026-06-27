@@ -29,7 +29,10 @@ book:
         - paper/references.qmd
 
 bibliography: paper/references.bib
-csl: https://www.zotero.org/styles/american-geophysical-union
+# Vendored locally (was https://www.zotero.org/styles/american-geophysical-union):
+# the remote URL was fetched on every render and failed CI on a zotero.org timeout.
+# Refresh from https://github.com/citation-style-language/styles if AGU updates it.
+csl: paper/american-geophysical-union.csl
 
 format:
   html:
