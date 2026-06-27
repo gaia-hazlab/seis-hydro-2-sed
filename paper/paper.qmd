@@ -377,7 +377,12 @@ out-of-sample on the March-2026 event.
 The single most consequential geomorphic caveat to everything above is hiding in
 plain sight: the Puyallup source cluster (CC.PR01/PR02/PR03, within $\sim$1.5 km of
 one another) sits on an **aggrading glacial-outwash braidplain**, not the single,
-fixed channel that the governing models assume. Both the turbulent-flow model
+fixed channel that the governing models assume. This is not an assumption: two
+decades of repeat aerial-lidar differencing (2002–2022) document persistent
+sediment accumulation and channel reorganization along the Puyallup valley reaches,
+fed by net erosion of the deglaciating headwaters [@anderson2025; @anderson2026;
+@czuba2012] — the braidplain is demonstrably mobile and aggrading on the timescale
+between events. Both the turbulent-flow model
 [@gimbert2014] and the impact model [@tsai2012] idealize the source as a *single
 line channel at a known, stationary distance* $r$, with power decaying as
 $\sim r^{-1}\exp(-2\pi f r / v_c Q)$. A braided reach violates this in ways that the
@@ -570,7 +575,12 @@ recession-phase timing holds for the *more frequent, moderate* floods that do mo
 the cumulative geomorphic work [@wolmanmiller1960], rather than this near-record event,
 is the key generalization, to be tested out-of-sample on the March-2026 flood. The
 slow-recession clogging hypothesis is the geomorphically motivated reading that the
-recession-rate contrast supports and that those future events can test.
+recession-rate contrast supports and that those future events can test. The decisive
+*independent* test would be a topographic difference (DEM-of-Difference) spanning the
+flood, imaging the deposition directly: the existing 2002–2022 repeat-lidar record
+confirms the aggrading, reorganizing *regime* [@anderson2026] but no airborne survey
+yet brackets December 2025, so a post-event lidar acquisition over the Electron reach
+is the highest-value future constraint on this mechanism.
 
 **A source-reach hazard lead.** The same continuous record carries an early-warning
 signal: at the source cluster the 5–15 Hz transport-band power rises **~5–7 h before
