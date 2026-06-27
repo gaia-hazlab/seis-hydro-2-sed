@@ -415,14 +415,19 @@ turbulence baseline), the lowest correlation ($r=0.69$ vs 0.96–0.98), and one
 of the sharpest broken-stick breaks in the network** ($b:-0.12\!\to\!1.59$ at
 $Q_c\approx28$ m³/s, $\Delta\mathrm{BIC}\approx154$; @fig-thr).
 Read naively, that break is the cleanest "bedload onset" we have. But a
-rising-vs-falling-limb diagnostic (@fig-braid) overturns that reading: the per-AR
+rising-vs-falling-limb diagnostic (@fig-braid) complicates that reading: the per-AR
 $P$–$Q$ loops are **reversible (Lawler hysteresis index $|HI|\le0.06$, no clockwise
-sense)** and the in-window **peak power does not decline across successive ARs** —
-neither the loop direction nor the supply-exhaustion signature expected for
-genuine bedload onset [cf. the clockwise sediment hysteresis of @burtin2008;
-@roth2016] is present. The break is therefore most consistent with a **geometric
-wetted-front onset**: at $Q_c$ a broad, close, active flow front switches on, not
-the bed.
+sense)** and the in-window **peak power does not decline across successive ARs**.
+Reversibility and the absence of decline rule out a **supply-exhaustion**
+(supply-*limited*) transport onset [cf. the clockwise sediment hysteresis of
+@burtin2008; @roth2016] — but not transport as such: this glacial-outwash braidplain
+is sediment-*rich* (the deglaciating headwaters oversupply it; @anderson2026), and a
+supply-unlimited bedload onset would likewise be reversible and non-declining, so
+hysteresis alone cannot exclude it. The positive case for a **geometric wetted-front
+onset** — at $Q_c$ a broad, close, active flow front switches on, not the bed —
+rests instead on the independent satellite channel-change (below) and on the
+$H^{7/3}$ flow-partitioning argument above; and in a supply-rich basin a discrete
+bed-mechanical *threshold* is the less expected behavior to begin with.
 
 What *is* present is a coherent **baseline drift across the AR sequence**:
 at matched discharge the 5–15 Hz power rises by $\sim$0.2–0.3 log units ($\approx$2×)
@@ -507,11 +512,13 @@ migrated **$\approx$240 m toward the station** between November and January
 the station footprint by January), versus $\approx$50 m at the Puyallup CC.PR01.
 This matters because UW.LON has the **steepest $P$–$Q$ break in the network**
 ($b\!:\!1.1\!\to\!5.0$, §threshold) — far steeper than CC.PR01's
-($-0.12\!\to\!1.59$). Across the two satellite-tested reaches, then, the *amount of
-channel migration tracks the steepness of the break* (CC.PR01: $\Delta r\approx-50$
-m, $\Delta b\approx+1.7$; UW.LON: $\Delta r\approx-240$ m, $\Delta b\approx+4.0$) —
-the relationship expected if these breaks are **geometric channel-reorganization
-signatures rather than bed-mechanical transport onsets**. The Nisqually's large
+($-0.12\!\to\!1.59$). The two satellite-tested reaches are, then, *consistent* with
+larger channel migration at the steeper break (CC.PR01: $\Delta r\approx-50$ m,
+$\Delta b\approx+1.7$; UW.LON: $\Delta r\approx-240$ m, $\Delta b\approx+4.0$) — the
+direction expected if these breaks are **geometric channel-reorganization signatures
+rather than bed-mechanical transport onsets**. With only two reaches this is a
+suggestive ordering, not an established scaling; testing it requires more
+satellite-instrumented braided breaks. The Nisqually's large
 migration partly reflects post-flood (early-January) seasonal wetting and the
 magnitude is threshold-sensitive, as on the Puyallup; but the *inward sense* and
 its order across basins are robust, and they extend the braided-source
