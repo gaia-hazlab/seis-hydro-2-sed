@@ -94,7 +94,8 @@ notebooks/data_march/
 # re-pulling slow seismic data or the flaky Planetary Computer API.
 #   notebooks/data/results/      seismic band-power timeseries (CSV)
 #   notebooks/data/braid_cache/  derived Sentinel mndwi/channel rasters (npz) +
-#                                station pixels (json) + December series (csv)
+#                                station pixels (json) + December series (csv);
+#                                opera_corridor.npz (cached OPERA flood-water raster)
 #   notebooks/data/usgs_iv_*.csv USGS-NWIS discharge+STAGE per gage (small; stage is
 #                                not in results/, so needed offline for fig15/fig25)
 # To (re)track after adding a new file: git add -f notebooks/data/braid_cache/

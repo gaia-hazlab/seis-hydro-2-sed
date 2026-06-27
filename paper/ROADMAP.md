@@ -72,6 +72,7 @@ provisional and will move as the three open dependencies resolve.
 | `@fig-tworeg` | [fig24_braid_two_region.png](figures/fig24_braid_two_region.png) | Two-region braid-change: compact incised Puyallup vs wide Nisqually braidplain (offline from cache) |
 | `@fig-hazard` | [fig25_hazard_clogging.png](figures/fig25_hazard_clogging.png) | **Hazard timing (M5)** — 5–15 Hz transport-band onset leads peak Q by ~6 h — and the **slow AR3-recession braid clogging (M7)** that hosts the avulsion (Montgomery feedback) |
 | `@fig-ratinggeom` | [fig26_rating_geometry.png](figures/fig26_rating_geometry.png) | **Stage–discharge geometry (M2)**: rating exponent β(Q) — source-reach confinement (β→2, seismic Qc in the steepening band) vs lowland overbank (β flat) |
+| `@fig-pattern` | [fig27_channel_pattern.png](figures/fig27_channel_pattern.png) | **Channel-pattern map (M1)**: braided source (PR compact, UW.LON wide) → single-thread meandering lower Puyallup past TRON (OPERA water + Sentinel + NHD) |
 | `@fig-traffic` | [figS_traffic_noise.png](figures/figS_traffic_noise.png) | Traffic-noise contamination control (supplement) |
 | `@fig-vq` | [virtual_q_animation.gif](figures/virtual_q_animation.gif) | **Embedded GIF**: space–time distributed discharge field |
 | — | [bedload_animation.gif](figures/bedload_animation.gif) | Repo-only multidisciplinary GIF (SNOTEL + gage + bedload) |
