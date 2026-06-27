@@ -1,0 +1,134 @@
+---
+title: "Supplementary Material"
+---
+
+# Supplementary Material {.unnumbered}
+
+Supporting analyses and figures for *"Braided-channel reorganization during storms,
+resolved seismically."* The main-text cross-references (e.g. @fig-edge, @fig-traffic)
+resolve to the figures collected here, presented in chronological (workflow 02→23)
+order. In a journal submission these would be renumbered S1–S11; for this rendered
+book they keep their stable labels.
+
+## Text S1 — Anthropogenic-noise screening {.unnumbered}
+
+Candidate lowland stations were screened for traffic/cultural contamination over a
+pre-flood week (1–7 December 2025) by the weekday/daytime-versus-night cycle of
+4–12 Hz power (`workflows/04_traffic_noise.py`). The glacial-source broadband
+stations are river-dominated (traffic index ≈ 1.3–2.6 and weak diurnal structure),
+whereas the lowland urban accelerometers carry a strong weekly cycle — UW.TEHA most
+severely (traffic index ≈ 59; weekday/weekend ≈ 21; correlation with discharge
+$r\approx0$). Contaminated stations are excluded from the transect (drawn hollow on
+@fig-map) and from all fits (@fig-traffic).
+
+## Text S2 — Flood-wave lag estimation and validation {.unnumbered}
+
+For a station whose USGS gage is not co-located, gage $Q$ lags the discharge passing
+the station by the flood-wave travel time. We estimate a constant $P$–$Q$ lag per
+station by cross-correlating the limb-timescale (36-h high-passed) components of
+$\log_{10}P$ and $\log_{10}Q$ — the high pass removes the multi-day storm trend that
+would otherwise lock the correlation onto spurious large lags — and apply it only
+where a real travel time exists (gage $\gtrsim$3 km away; a co-located gage returns
+sub-resolution noise). On the Nisqually (gage 13–21 km downstream) the implied
+celerities are ≈2 m s⁻¹, physical flood-wave speeds that validate the correction;
+the Puyallup cluster (gage 0.2–1.9 km) needs none. A *constant* lag cannot fully
+align a multi-kilometre path whose celerity varies with stage, which intrinsically
+limits matched-discharge timing at a far-gaged reach (main text §sec-domain).
+Implemented in `src/riverseis/analysis.py` (`estimate_pq_lag`, `lag_correct`).
+
+## Text S3 — Satellite water-threshold ensemble {.unnumbered}
+
+Turbid braided water sits near MNDWI ≈ 0, so the wetted area — and the predicted
+geometric baseline drift $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$ —
+is threshold-sensitive. We sweep the MNDWI water threshold over
+$\{-0.10,-0.05,0,+0.05,+0.10\}$ and report the median and full range per station
+(whiskers on @fig-braidsat). The *sign and rank* of the inferred channel migration
+are robust across the ensemble; the calibrated magnitude is not, and awaits ≈3 m
+imagery (main text §sec-braided).
+
+## Text S4 — Virtual-discharge inversion and Nash–Sutcliffe skill {.unnumbered}
+
+Each river-proximal station is calibrated as a rating $\log_{10}P=a+b\log_{10}Q$ and
+inverted to a **seismic virtual discharge**
+$Q_{\text{seis}}=10^{(\log_{10}P-a)/b}$. We score the inversion against the
+co-located USGS gage by the Nash–Sutcliffe efficiency (NSE) of $\log Q$. At clean
+near-channel source stations the virtual discharge reproduces the hydrograph
+(CC.PR03 $r=0.97$, NSE 0.95; CC.PR02 $r=0.96$, NSE 0.92; CC.STYX 0.75), while
+off-channel/distant stations (CC.SIFT, CC.TRON) are poor — consistent with the
+turbulence/attenuation picture. The fitted exponents cluster at $b\approx1.4$–1.8,
+near the @gimbert2014 turbulent-flow prediction, and are roughly steady in time, so
+the rating is stable rather than carrying additional time-varying information. The
+braidplain station CC.PR01 is the weakest of the source cluster ($r=0.69$, NSE
+$\approx0$) and shows the cross-event baseline drift documented in main text
+§sec-braided — a caution that virtual-discharge ratings on braided reaches may need
+re-calibration after channel-reworking events rather than transferring unchanged.
+Combining the gages with these virtual gages yields a space–time discharge field
+(animation, HTML edition; @fig-vq-anim in the main text), i.e. a distributed
+streamflow nowcast from a seismic network (`workflows/12_virtual_q.py`).
+
+## Text S5 — The 30–50 Hz lower bedload edge and Hertzian contact frequency {.unnumbered}
+
+The best available probe of the bedload edge for the December-2025 event is the
+100-sps UW broadband stations (Nyquist 50 Hz): at UW.LON (Nisqually, 0.21 km) the
+30–50 Hz power scales with discharge ($b\approx1.4$), a tentative high-frequency
+transport signal, whereas UW.RER (far from its gage) is noise (@fig-edge). A clean
+30–80 Hz test awaits the 2026 high-rate (CH) archive. Grain size, moreover, is
+encoded in *amplitude* ($\propto D^3$), not in the band: even a 2 m boulder's
+Hertzian contact corner is ~140 Hz, so within ≤50 Hz boulders and cobbles share a
+flat spectral shape — a low band is a coarse-transport *amplitude* proxy, not a
+grain-size discriminator. The genuinely low-frequency coarse signatures
+(debris-flow/lahar boulder fronts to ~2 Hz; possible large-wood tremor) are a
+separate, underexplored target (`workflows/14_bedload_ch.py`).
+
+## Text S6 — Coarse, wood-rich source lowers the band (a grain-size– and process-conditional caveat) {.unnumbered}
+
+The canonical 30–80 Hz "bedload band" is a convention built on *clean-gravel
+saltation* — where discrete Hertzian grain impacts radiate — and, as above, even metre
+boulders keep that impact corner above ~140 Hz, so individual-grain impacts cannot by
+themselves explain the 5–15 Hz steepening. But glacier-fed Cascade outwash rivers are
+not clean-saltation systems. Their coarse-transport regime is dominated by (i) boulders
+moving by **rolling and sliding** and grain–grain collision rather than ballistic
+saltation, (ii) abundant **large wood** — logs and log jams delivered by the forested
+catchment — and (iii) frequent **hyperconcentrated and debris-flow surges** (Tahoma,
+Kautz, Nisqually, and the upper Puyallup are among Mount Rainier's most debris-flow-prone
+valleys; USGS). All three radiate *lower* frequencies than gravel saltation: debris-flow
+and lahar boulder fronts generate energy down to ~2 Hz, and large, low-stiffness wood is
+an intrinsically long-contact, low-frequency impactor. The coarse-transport seismic band
+in such systems therefore extends **downward**, into the few-Hz–to–tens-of-Hz range that
+overlaps our resolvable 1–15 Hz window — so the 50-sps stations may in fact carry genuine
+coarse-clast and large-wood signatures, not turbulence alone. This is double-edged: the
+same band is spectrally degenerate with turbulence (and with the immobile-boulder
+turbulence of @nativ2025), so the coarse-transport contribution remains *bounded*, not
+isolated. The lesson is that the detectability cutoff is **grain-size– and
+process-conditional**: in coarse, wood-rich proglacial reaches like the braided Puyallup
+source, part of the coarse-transport signal lives *below* 25 Hz and is, in principle,
+sampled — one more reason this reach is a distinct interpretive regime rather than a clean
+line-channel bedload source (main text §sec-braided).
+
+## Supplementary Figures {.unnumbered}
+
+![Anthropogenic (traffic) noise screening: median 4–12 Hz power vs hour-of-week over the pre-flood week (weekends shaded). Traffic-polluted stations (red) show a strong weekday/daytime cycle; the river-dominated source stations do not. (Text S1; `workflows/04_traffic_noise.py`.)](figures/figS_traffic_noise.png){#fig-traffic width=85%}
+
+![Full $P$–$Q$ scatter grid: band power versus discharge with robust log–log fits and bootstrap confidence intervals, for all analyzed stations (the representative subset is in main-text @fig-scaling). (`workflows/02_make_figures.py`.)](figures/fig3_pq_scatter.png){#fig-pqgrid width=95%}
+
+![Full event hysteresis loops (December 2025 flood) for all stations, colored by time into the event. Clockwise loops indicate supply exhaustion or proximal sources on the rising limb; counter-clockwise indicates delayed or distal sediment delivery. (`workflows/02_make_figures.py`.)](figures/fig4_hysteresis.png){#fig-hystall width=95%}
+
+![Per-AR average bedload (×pre-flood median) by station, ordered source→downstream. AR2 dominates at every station and the signal decays strongly downstream. (Supports the bounded time-dependent-bedload hypothesis, main text §sec-bedload; `workflows/05_bedload_time.py`.)](figures/fig7_bedload_per_AR.png){#fig-blAR width=88%}
+
+![Time-resolved scaling exponent $b(t)$ for the 5–15 Hz band (24 h sliding fit), per station; the turbulence baseline is shaded and the pre-AR/AR1/AR2/AR3 windows marked. The exponent exceeds the baseline during the main pulses — consistent with bedload activation — then relaxes. (`workflows/08_b_of_time.py`.)](figures/fig8_b_of_time.png){#fig-bt width=92%}
+
+![Lower bedload edge (30–50 Hz) from the 100-sps UW broadband stations: flood-vs-quiet spectra and 30–50 Hz vs discharge scaling. UW.LON (Nisqually) shows a tentative high-frequency transport signal; UW.RER (far from its gage) is noise. (Text S5; `workflows/14_bedload_ch.py`.)](figures/fig13_bedload_ch.png){#fig-edge width=95%}
+
+![Stage–discharge rating $Q=C(h-h_0)^\beta$ at four corridor gages (Dec 2025 instantaneous stage vs discharge, with power-law fits). The rating converts between the seismic-estimated discharge and the flood-hazard stage, and underpins the rating-geometry $\beta(Q)$ in main-text @fig-thr. (`workflows/17_rating.py`.)](figures/fig15_rating.png){#fig-ratingSI width=70%}
+
+![*(Exploratory.)* Sentinel-1 (SAR) channel-migration series through the December-2025 ARs: each off-channel station's attenuation-weighted wetted illumination relative to the on-channel anchor CC.PR03 (normalised to mid-November), a ratio that cancels per-epoch scene-count and overall-wetness biases. CC.PR01 (braidplain-central) is preferentially illuminated during the flood peak (shaded) — the geometric flow-front response — then relaxes. SAR under-detects shallow braided water at 10 m, so absolute wetted area is not used; only the between-station ratio. (`workflows/19_braid_optical_change.py`, `23_braid_two_region.py`.)](figures/fig20_braid_timeseries.png){#fig-braidsat-ts width=80%}
+
+![*(Confounded.)* Nisqually reorganization-timing diagnostic (CC.GTWY, UW.LON): the matched-discharge source baseline and logistic-step attempt, with the flood-wave-lag correction applied. This diagnostic does **not** return a clean geometric step: the gage sits 13–21 km downstream (a constant lag cannot fully align a 20-km, stage-varying celerity), the braidplain is far wider, and the post-flood rain→snow supply shutoff masks the geometric drift. The "Nisqually confounded" verdict is carried by the domain figure, main-text @fig-domain. (`workflows/21_braided_reorg_timing.py --basin nisqually`.)](figures/fig22_braided_reorg_timing_nisqually.png){#fig-reorgnis width=98%}
+
+::: {.content-visible when-format="html"}
+**Supplementary animations.** Two animations accompany the HTML edition: the
+space–time virtual-discharge field (main-text @fig-vq-anim) and a repository-only
+multidisciplinary loop (SNOTEL + gage + bedload power) at
+`paper/figures/bedload_animation.gif` (`workflows/06_bedload_gif.py`,
+`13_virtual_q_gif.py`).
+:::
