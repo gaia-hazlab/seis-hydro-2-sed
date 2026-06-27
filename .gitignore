@@ -95,7 +95,10 @@ notebooks/data_march/
 #   notebooks/data/results/      seismic band-power timeseries (CSV)
 #   notebooks/data/braid_cache/  derived Sentinel mndwi/channel rasters (npz) +
 #                                station pixels (json) + December series (csv);
-#                                opera_corridor.npz (cached OPERA flood-water raster)
+#                                opera_corridor.npz (cached OPERA flood-water raster);
+#                                {puyallup,nisqually,corridor}_basemap.npz (cached
+#                                Sentinel-2 true-color RGB for the geospatial figures;
+#                                built once by workflows/28_fetch_basemaps.py)
 #   notebooks/data/usgs_iv_*.csv USGS-NWIS discharge+STAGE per gage (small; stage is
 #                                not in results/, so needed offline for fig15/fig25)
 # To (re)track after adding a new file: git add -f notebooks/data/braid_cache/
