@@ -240,13 +240,26 @@ def _halo():
 
 
 def _optimize(gif: Path) -> None:
+    """Re-encode with ONE global palette so the discharge colorscale (colorbar +
+    markers) is identical in every frame — a per-frame adaptive palette makes the
+    same value flicker between slightly different RGB. We derive the shared palette
+    from a tall montage of sampled frames so it spans the basemap *and* the full
+    range of marker colours across the event, then map every frame to it without
+    dither (dither would re-introduce frame-to-frame noise)."""
     try:
         from PIL import Image, ImageSequence
         im = Image.open(gif)
-        fr = [f.copy().convert("P", palette=Image.ADAPTIVE, colors=80)
-              for f in ImageSequence.Iterator(im)]
-        fr[0].save(gif, save_all=True, append_images=fr[1:], loop=0,
-                   duration=im.info.get("duration", 170), optimize=True)
+        dur = im.info.get("duration", 170)
+        frames = [f.convert("RGB") for f in ImageSequence.Iterator(im)]
+        w, h = frames[0].size
+        sample = frames[::max(1, len(frames) // 8)]          # spread across the event
+        montage = Image.new("RGB", (w, h * len(sample)))
+        for k, f in enumerate(sample):
+            montage.paste(f, (0, k * h))
+        master = montage.convert("P", palette=Image.ADAPTIVE, colors=128)
+        q = [f.quantize(palette=master, dither=Image.Dither.NONE) for f in frames]
+        q[0].save(gif, save_all=True, append_images=q[1:], loop=0,
+                  duration=dur, optimize=True)
     except Exception as e:                       # noqa: BLE001
         print("optimize skipped:", e)
 
