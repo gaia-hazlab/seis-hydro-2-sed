@@ -126,44 +126,7 @@ a bounded hypothesis — while the **event-scale timing of channel reorganizatio
 the **reach geometry that bounds when it is measurable**, and the early-warning lead
 are the robust, novel contributions.
 
-# Data and study area
 
-The western flanks of Mt Rainier have recently received attention from the hazard community 
-for its recognized threat for massive debris flows and volcanic related lahars (REF). 
-Two seismig monitoring network operates and monitor the volcano-tectonic activities at Mt Rainer: 
-the Cascade Volcano Observatory (network code **CC**) and the Pacific Northwest Seismic
-Network (network code **UW**) stations that are laid out across the
-**western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
-and upper White. We complement this geophysical monitoring with USGS discharge gages and NRCS SNOTEL/precipitation
-stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
-network, not a single transect.
-
-The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
-and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
-has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
-[@czuba2012], underscoring an active, supply-rich sediment system. The channel
-**pattern** changes systematically downstream (@fig-map): the glacial source
-reaches are multi-thread, **braided** gravel braidplains — compact at the Puyallup PR
-cluster (active width tens of m) and far wider on the Nisqually at UW.LON (hundreds of
-m) — that give way past CC.TRON to a **single-thread, meandering** channel on the
-lowland floodplain. This braided-to-single-thread transition frames the
-source-model problem developed in §sec-braided.
-
-
-The CC stations are being upgraded from 50 sps to
-**500 sps** high-rate (CH) channels: 19 of 31 stations in the study area now list
-CH channels (Nyquist 250 Hz) in their metadata (@fig-map, marker color). However,
-these high-rate channels came online in **2026**: for the December 2025 event only
-the legacy **50-sps (BH)** waveforms are archived and retrievable (CH returns no
-data through FDSN at any 2025 date), capping the resolvable band at the **25 Hz
-Nyquist** — below the canonical 30–80 Hz bedload band. The highest-rate
-near-channel data that *do* exist for the event are the **100-sps (HH)** PNSN/UW
-broadband stations (UW.RER 0.44 km, UW.LON 0.21 km), which reach a 30–50 Hz lower
-bedload edge. The 500-sps upgrade is thus a *2026 capability*: the same event today
-would be recorded into the full bedload band — the basis for the "what-if 2026"
-scenario (§Discussion) — and it also flags that **instrument upgrades must be
-matched by high-rate data archival** to realize bedload monitoring. The event
-peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
 
 ## Flood driver: the December 2025 atmospheric-river floods
 
@@ -207,6 +170,50 @@ testing seismic flood and sediment monitoring, and is the motivation for the
 network analysis that follows.
 
 ![Study area, channel pattern, and flood driver. **(a)** Corridor locator on a Sentinel-2 true-color basemap: OPERA DSWx-S1 flood water (10 Dec 2025), NHD mainstems, the CC/UW seismic stations (triangles, colored by sample rate — the network is upgrading 50→500 sps), USGS discharge gages and NRCS SNOTEL/met stations, with the three zoom reaches boxed. **(b)** The Puyallup source at the PR cluster — a *compact* braided channel (tens of m; S2 basemap with the active-channel mask). **(c)** The Nisqually at UW.LON — a *wide* braided braidplain (hundreds of m). **(d)** The lower Puyallup past CC.TRON — a *single-thread, meandering* channel. **(e)** The warm-AR flood driver from high-elevation SNOTEL: Paradise (1563 m) and Mowich air temperature vs the 0 °C freezing line (rain-on-snow during the shaded AR pulses) with snow-water-equivalent (held down through the warm ARs, then accumulating ≈8→26 cm). Basemaps are illustrative; the channel masks and flood water are quantitative.](figures/figF1_studyarea.png){#fig-map width=98%}
+
+
+# Data
+
+The western flanks of Mt Rainier have recently received attention from the hazard community 
+for its recognized threat for massive debris flows and volcanic related lahars (REF). 
+Two seismig monitoring network operates and monitor the volcano-tectonic activities at Mt Rainer: 
+the Cascade Volcano Observatory (network code **CC**) and the Pacific Northwest Seismic
+Network (network code **UW**) stations that are laid out across the
+**western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
+and upper White. We complement this geophysical monitoring with USGS discharge gages and NRCS SNOTEL/precipitation
+stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
+network, not a single transect.
+
+The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
+and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
+has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
+[@czuba2012], underscoring an active, supply-rich sediment system. The channel
+**pattern** changes systematically downstream (@fig-map): the glacial source
+reaches are multi-thread, **braided** gravel braidplains — compact at the Puyallup PR
+cluster (active width tens of m) and far wider on the Nisqually at UW.LON (hundreds of
+m) — that give way past CC.TRON to a **single-thread, meandering** channel on the
+lowland floodplain. This braided-to-single-thread transition frames the
+source-model problem developed in §sec-braided.
+
+
+The CC stations are being upgraded from 50 sps to
+**500 sps** high-rate (CH) channels: 19 of 31 stations in the study area now list
+CH channels (Nyquist 250 Hz) in their metadata (@fig-map, marker color). However,
+these high-rate channels came online in **2026**: for the December 2025 event only
+the legacy **50-sps (BH)** waveforms are archived and retrievable (CH returns no
+data through FDSN at any 2025 date), capping the resolvable band at the **25 Hz
+Nyquist** — below the canonical 30–80 Hz bedload band. The highest-rate
+near-channel data that *do* exist for the event are the **100-sps (HH)** PNSN/UW
+broadband stations (UW.RER 0.44 km, UW.LON 0.21 km), which reach a 30–50 Hz lower
+bedload edge. The 500-sps upgrade is thus a *2026 capability*: the same event today
+would be recorded into the full bedload band — the basis for the "what-if 2026"
+scenario (§Discussion) — and it also flags that **instrument upgrades must be
+matched by high-rate data archival** to realize bedload monitoring. The event
+peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
+
+The satellite images ...
+
+The snotel and gage stations.
 
 # Methods
 
@@ -871,7 +878,7 @@ nowcast from a seismic network.
 ![Distributed sensing, virtual gage, and a routing proof-of-concept. **(a)** Seismic virtual discharge vs the co-located gage, all three river-proximal stations on one axis (capped 1–500 m³/s; CC.PR03 NSE 0.95, CC.PR02 0.92, CC.STYX 0.75) — near-channel source stations reproduce the hydrograph. **(b)** Bed-transport *diagnostic*: the 5–15 Hz transport-band onset leads peak $Q$ by ~5–7 h (CC.PR01 +6.6, CC.PR02 +5.0, CC.PR03 +6.1 h), flagging that the bed is mobilizing on the rising limb — not a downstream forecast. **(c)** Routing proof-of-concept: the upstream Electron discharge, routed by a constant flood-wave lag (≈8 h, implied celerity ≈1.7 m s⁻¹) and gain and passed through the downstream stage–discharge rating, reproduces the observed Puyallup stage ($r\approx0.89$) for this event. It is a *concept, not validated skill* — one event, no learning, no out-of-sample test (the constant gain over-predicts the second peak; NSE 0.48); the first out-of-sample test is the March-2026 flood.](figures/figF8_virtualq.png){#fig-vq width=98%}
 
 ::: {.content-visible when-format="html"}
-![Space–time virtual-discharge animation (the single embedded animation): USGS gages (diamonds) and seismic virtual gages (filled triangles, $Q$ inverted from $P\propto Q^{b}$; hollow = no usable signal), colored on one discharge scale, through the Dec-2025 ARs. Rivers swell with discharge; the panel below shows gage hydrographs with a time cursor.](figures/virtual_q_animation.gif){#fig-vq-anim width=70%}
+![Space–time discharge field across the western Mt. Rainier drainages through the December-2025 atmospheric rivers (HTML edition; a public-facing rendering over a Sentinel-2 true-color basemap). USGS river gauges (diamonds, measured) and seismic *virtual* gauges (triangles, $Q$ inverted from the calibrated $P\propto Q^{b}$ rating; hollow = sensor present but no usable signal) are colored on one discharge scale and grow/brighten as discharge rises; the rivers swell with flow, the downstream at-risk communities (Orting, Sumner, Puyallup) are marked, and a live clock and atmospheric-river chip track the event over the gauge-hydrograph ticker below. The seismic gauges fill the long ungauged reaches between USGS stations — the distributed observable underlying the routing nowcast of @fig-vq c.](figures/virtual_q_animation.gif){#fig-vq-anim width=78%}
 :::
 
 # Discussion
@@ -979,22 +986,6 @@ stage** through the local rating ($h = h_0 + (Q_{\text{seis}}/C)^{1/\beta}$) —
 basis of the routing proof-of-concept in §"Distributed sensing" (@fig-vq c), and a
 concrete path toward a downstream stage nowcast that does not need a co-located stage
 sensor, once skill is established out-of-sample.
-
-## New capabilities and a 2026 "what-if"
-
-The network that recorded this event is mid-upgrade from 50 to 500 sps (@fig-map),
-which reframes what is observable. **Had the identical AR sequence struck in 2026**,
-with the 500-sps CH channels live at the near-channel source stations (CC.PR03,
-SIFT, STYX, CARB), we could (i) compute the **30–80 Hz bedload band directly** and
-test for a *measured* (not merely bounded) bedload signal at the glacial source;
-(ii) run the **virtual-discharge field in real time** as a distributed nowcast that
-fills the long ungaged reaches between USGS gages; and (iii) develop the routed
-upstream→downstream stage nowcast (§"Distributed sensing"; @fig-vq c) toward a
-validated early-warning product for the Orting–Puyallup lahar corridor — fused with
-SNOTEL precipitation and OPERA SAR flood maps, and tested out-of-sample on repeat
-events. The same compound event would thus move from a turbulence-and-discharge study
-to an integrated, multi-sensor flood-and-sediment observation — the central
-forward-looking capability this work demonstrates and recommends.
 
 ## Limitations
 

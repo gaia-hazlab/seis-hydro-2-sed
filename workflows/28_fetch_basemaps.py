@@ -54,6 +54,10 @@ REGIONS = {
     # wide study-area locator (matches fig27 VIEW); lon/lat, coarse for size
     "corridor":  dict(aoi=(-122.36, 46.73, -121.78, 47.24), crs="EPSG:4326",
                       res=0.0006),
+    # widest extent for the public flood-monitoring animation: includes the
+    # glaciated summit (east) and the downstream at-risk towns (north-west)
+    "anim":      dict(aoi=(-122.55, 46.70, -121.55, 47.34), crs="EPSG:4326",
+                      res=0.0006),
 }
 DEFAULT_WINDOW = "2025-06-01/2025-09-30"   # clear-sky PNW summer
 MAX_CLOUD = 25
