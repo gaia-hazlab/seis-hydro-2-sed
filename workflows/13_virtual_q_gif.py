@@ -226,8 +226,21 @@ def main() -> int:
         chip.get_bbox_patch().set_facecolor(AR_CHIP.get(lab, "#5b6675"))
         return sc_g, sc_v, g_glow, v_glow, river_lc, glow, cur, clock, chip
 
-    FuncAnimation(fig, update, frames=len(frames), interval=180, blit=False).save(
-        GIF, writer=PillowWriter(fps=6), dpi=72)
+    anim = FuncAnimation(fig, update, frames=len(frames), interval=180, blit=False)
+    # MP4 (H.264) — small, crisp, loops cleanly; the web-friendly export. yuv420p +
+    # faststart for browser/QuickTime compatibility; even pixel dims at dpi=100.
+    mp4 = GIF.with_suffix(".mp4")
+    try:
+        from matplotlib.animation import FFMpegWriter
+        anim.save(mp4, writer=FFMpegWriter(
+            fps=12, codec="h264",
+            extra_args=["-pix_fmt", "yuv420p", "-crf", "20", "-movflags", "+faststart"]),
+            dpi=100, savefig_kwargs={"facecolor": BG})
+        print(f"wrote {mp4}")
+    except Exception as e:                       # noqa: BLE001
+        print("mp4 skipped:", e)
+    # GIF (one global palette so the discharge colourscale is fixed across frames)
+    anim.save(GIF, writer=PillowWriter(fps=6), dpi=72, savefig_kwargs={"facecolor": BG})
     _optimize(GIF)
     plt.close(fig)
     print(f"wrote {GIF} ({len(frames)} frames; {len(gages)} gauges + {len(vg)} seismic gauges)")
