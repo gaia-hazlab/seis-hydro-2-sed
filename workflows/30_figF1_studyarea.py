@@ -190,7 +190,7 @@ def panel_a(ax, op, rivers, cc, uw, gages, snotel):
     ax.set_aspect(1.0 / np.cos(np.radians(47.0)))
     ax.set_xlabel("longitude"); ax.set_ylabel("latitude")
     ax.tick_params(axis="both", labelsize=12)
-    ax.set_title("(a) Study corridor — channel pattern along the flow",
+    ax.set_title("(a) Study corridor",
                  fontsize=14, loc="left")
 
     handles = [
@@ -276,7 +276,7 @@ def panel_down(ax, rivers, col):
     ax.set_xticks([]); ax.set_yticks([])
     for sp in ax.spines.values():
         sp.set_edgecolor("#006d2c"); sp.set_linewidth(2.4)
-    ax.set_title("(d) lower Puyallup\n    single-thread", fontsize=14,
+    ax.set_title("(d) Lower Puyallup", fontsize=14,
                  color="#006d2c", loc="left", pad=4)
 
 
@@ -312,7 +312,7 @@ def panel_snotel(ax, war, ar):
         lab.set_rotation(35); lab.set_ha("right")
     ax.tick_params(axis="y", labelsize=12)
     ax.margins(x=0.02)
-    ax.set_title("(e) Warm-AR flood driver (SNOTEL)", fontsize=14, loc="left", pad=4)
+    ax.set_title("(e) Flood driver (SNOTEL)", fontsize=14, loc="left", pad=4)
 
     # SWE on a twin axis (dashed)
     ax2 = ax.twinx()
@@ -370,10 +370,10 @@ def main() -> int:
     axe = fig.add_subplot(gd[0, 1])
 
     panel_a(axa, op, rivers, cc, uw, layers["gages"], layers["snotel"])
-    panel_braid(axb, "puyallup", PR, "(b) Puyallup source — braided, compact",
+    panel_braid(axb, "puyallup", PR, "(b) Puyallup — braided",
                 "#e31a1c")
     panel_braid(axc, "nisqually", {"LON": LON},
-                "(c) Nisqually at UW.LON — braided, wide", "#1f78b4")
+                "(c) Nisqually — braided", "#1f78b4")
     panel_down(axd, rivers, "#006d2c")
     panel_snotel(axe, war, ar)
 

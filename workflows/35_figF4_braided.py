@@ -160,7 +160,7 @@ def panel_hysteresis(ax, hyst):
     ax.set_xlim(lq_lo - 0.12, lq_hi + 0.30)
     ax.set_xlabel(r"$\log_{10} Q$  (m$^3$ s$^{-1}$)")
     ax.set_ylabel(r"$\log_{10} P$  (5–15 Hz, stacked per station)")
-    ax.set_title("(a) Braided P–Q hysteresis", loc="left", fontsize=14)
+    ax.set_title("(a) Per-AR P–Q loops", loc="left", fontsize=14)
 
 
 def panel_reach(ax, att):
@@ -225,7 +225,7 @@ def panel_reach(ax, att):
     ax.set_xlim(1, 100); ax.set_ylim(0.01, 30)
     ax.set_xlabel("frequency (Hz)")
     ax.set_ylabel(r"e-folding distance $r_e$  (km)")
-    ax.set_title(r"(b) Seismic reach  $r_e = v_c\,Q(f)\,/\,(2\pi f)$",
+    ax.set_title(r"(b) Seismic reach $r_e(f)$",
                  loc="left", fontsize=14)
     ax.legend(fontsize=12, loc="upper right", framealpha=0.92,
               borderpad=0.5, labelspacing=0.35)

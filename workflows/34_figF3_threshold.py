@@ -122,7 +122,7 @@ def panel_a(ax, thr):
 
     ax.set_xlabel(r"$\log_{10} Q$  (m$^3$ s$^{-1}$)")
     ax.set_ylabel(r"$\log_{10} P$ (5–15 Hz), intercept-removed + offset")
-    ax.set_title("(a) Two-regime transport-onset fits  $P\\propto Q^{\\,b}$", fontsize=14)
+    ax.set_title("(a) Two-regime P–Q fits", fontsize=14)
     ax.legend(fontsize=12, loc="upper left", handlelength=1.6, labelspacing=0.4,
               framealpha=0.93, borderpad=0.5)
     ax.margins(x=0.02)
@@ -169,7 +169,7 @@ def panel_b(ax, rg, thr):
             fontsize=12, color="0.4", va="center")
     ax.set_xlabel(r"discharge $Q$  (m$^3$ s$^{-1}$)")
     ax.set_ylabel(r"local rating exponent $\beta=\mathrm{d}\log Q/\mathrm{d}\log(h-h_0)$")
-    ax.set_title("(b) Rating geometry: confinement ($\\beta\\!\\uparrow$) vs overbank",
+    ax.set_title("(b) Rating geometry $\\beta(Q)$",
                  fontsize=14)
     ax.legend(fontsize=12, loc="upper left", handlelength=1.4, framealpha=0.92)
 
@@ -194,7 +194,7 @@ def panel_c(ax, status):
     ax.set_yticklabels(labels, fontsize=12)
     ax.set_xlabel(r"P–Q correlation  $r$")
     ax.set_xlim(-0.5, 1.05)
-    ax.set_title("(c) Station skill (source→downstream)", fontsize=14)
+    ax.set_title("(c) Station skill", fontsize=14)
 
     # usability legend
     seen, handles = [], []

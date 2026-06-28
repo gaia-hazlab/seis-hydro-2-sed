@@ -57,6 +57,7 @@ def day_psd(net, sta, day, inv):
 
 def main() -> int:
     cl = Client("IRIS", timeout=60)
+    psd_cache: dict[str, np.ndarray] = {}      # f/p arrays -> committed for offline F9 panel (a)
     fig, ax = plt.subplots(figsize=(8.2, 5.0))
     ax.axvspan(1, 20, color="#0072B2", alpha=0.08, zorder=0)
     ax.axvspan(30, 80, color="#E69F00", alpha=0.12, zorder=0)
@@ -73,6 +74,9 @@ def main() -> int:
             if r is None:
                 print(f"  no PSD for {net}.{sta} {day}"); continue
             f, p = r
+            key = f"{net}.{sta}_{day}"
+            psd_cache[f"{key}_f"] = f.astype("float32")
+            psd_cache[f"{key}_p"] = p.astype("float32")
             ax.semilogx(f, p, ls, color=c, lw=1.6 if ls == "-" else 1.1,
                         alpha=0.95 if ls == "-" else 0.7,
                         label=f"{net}.{sta} ({int(2*f[-1])} sps) — {lab}")
@@ -88,6 +92,11 @@ def main() -> int:
     fig.savefig(FIGDIR / "fig11_spectra.png")
     plt.close(fig)
     print(f"wrote {FIGDIR}/fig11_spectra.png")
+    # cache the PSD curves so the F9 composite can re-plot panel (a) OFFLINE
+    if psd_cache:
+        out = ROOT / "notebooks" / "data" / "results" / "spectra_psd.npz"
+        np.savez_compressed(out, **psd_cache)
+        print(f"cached PSD curves -> {out} ({len(psd_cache)//2} series)")
     return 0
 
 

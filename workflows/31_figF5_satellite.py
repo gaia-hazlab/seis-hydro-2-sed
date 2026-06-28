@@ -105,7 +105,7 @@ def main() -> int:
                    origin="upper", colors="#ff2d2d", linewidths=1.1, zorder=4)
         _stations(ax, spx)
         ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
-        ax.set_title(f"({next(panel)}) {basin} — S2 true-color + post channel",
+        ax.set_title(f"({next(panel)}) {basin}",
                      fontsize=13.5)
         ax.ticklabel_format(style="plain", useOffset=False)
         ax.tick_params(labelsize=11)
@@ -122,7 +122,7 @@ def main() -> int:
         ax.imshow(rgba, extent=ext, origin="upper", zorder=3, interpolation="nearest")
         _stations(ax, spx)
         ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
-        ax.set_title(f"({next(panel)}) Active-channel change (S2$\\cup$S1)",
+        ax.set_title(f"({next(panel)}) Active-channel change",
                      fontsize=13.5)
         # colour key as a compact in-panel legend (was an over-long title)
         from matplotlib.patches import Patch as _Patch
@@ -161,7 +161,7 @@ def main() -> int:
     axd.tick_params(labelsize=12)
     axd.set_ylabel(r"predicted $\Delta\log_{10}P=\log_{10}(W_{post}/W_{pre})$",
                    fontsize=13)
-    axd.set_title("(c/f) Predicted geometric drift $\\Delta\\log P$", fontsize=13.5)
+    axd.set_title("(c/f) Predicted drift $\\Delta\\log P$", fontsize=13.5)
     axd.text(0.5, -0.13, r"$W=\sum A\,r^{-1}e^{-r/r_e}$, "
              + f"$r_e$={r_e:.0f} m; whiskers = MNDWI-threshold ensemble (min, max)",
              transform=axd.transAxes, ha="center", fontsize=11, color="0.3")

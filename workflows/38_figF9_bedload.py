@@ -87,15 +87,45 @@ def load_ar_windows() -> list[tuple]:
     return out
 
 
+SPEC = RESULTS / "spectra_psd.npz"
+# (station id, colour, sample rate) for the two contrasting stations
+SPEC_STA = [("CC.PR03", "#0072B2", 50), ("UW.UPS", "#D55E00", 200)]
+
+
 def panel_a(ax) -> None:
-    """Flood-vs-quiet PSD. No cached spectra arrays exist offline, so we imshow
-    the committed fig11_spectra.png. (If cached spectra were ever added, this is
-    where they'd be re-plotted instead.)"""
-    img = FIGDIR / "fig11_spectra.png"
-    ax.imshow(plt.imread(str(img)))
-    ax.axis("off")
-    ax.set_title("(a) Flood vs quiet ground-velocity spectra",
-                 loc="left", fontsize=14)
+    """Flood-vs-quiet ground-velocity PSD, re-plotted from the cached spectra
+    (notebooks/data/results/spectra_psd.npz, written by workflows/11_spectra.py).
+    Falls back to the committed fig11_spectra.png if the cache is absent."""
+    if not SPEC.exists():
+        ax.imshow(plt.imread(str(FIGDIR / "fig11_spectra.png")))
+        ax.axis("off")
+        ax.set_title("(a) Flood vs quiet spectra", loc="left", fontsize=14)
+        return
+    z = np.load(SPEC)
+    ax.axvspan(1, 20, color="#0072B2", alpha=0.08, zorder=0)
+    ax.axvspan(30, 80, color="#E69F00", alpha=0.14, zorder=0)
+    for sid, c, sps in SPEC_STA:
+        for day, ls, lab, al, lw in [("20251203", ":", "quiet", 0.75, 1.4),
+                                     ("20251210", "-", "flood", 0.95, 2.0)]:
+            fk, pk = f"{sid}_{day}_f", f"{sid}_{day}_p"
+            if fk not in z.files:
+                continue
+            ax.semilogx(z[fk], z[pk], ls, color=c, lw=lw, alpha=al,
+                        label=f"{sid} ({sps} sps) — {lab}")
+        ax.axvline(sps / 2, color=c, ls="--", lw=0.9, alpha=0.55)   # Nyquist
+    ax.set_xlim(0.5, 100)
+    ax.set_ylim(-175, -100)                          # focus on the signal band
+    ax.set_xlabel("frequency (Hz)", fontsize=13)
+    ax.set_ylabel("velocity PSD (dB re m² s⁻² Hz⁻¹)", fontsize=13)
+    ax.tick_params(labelsize=12)
+    ax.text(6, -102, "turbulence\n1–20 Hz", ha="center", va="top",
+            fontsize=11.5, color="#0072B2")
+    ax.text(49, -102, "bedload\n30–80 Hz", ha="center", va="top",
+            fontsize=11.5, color="#a8780a")
+    ax.set_title("(a) Flood vs quiet spectra", loc="left", fontsize=14)
+    ax.legend(fontsize=10, loc="lower left", framealpha=0.92,
+              borderpad=0.4, labelspacing=0.3)
+    ax.grid(alpha=0.25, which="both")
 
 
 def panel_b(ax_d, ax_b) -> dict:
@@ -124,8 +154,7 @@ def panel_b(ax_d, ax_b) -> dict:
     ax_d.plot(q.index, q.values, color="k", lw=1.4)
     ax_d.set_ylabel("discharge\n(m³ s⁻¹)", fontsize=13)
     ax_d.tick_params(labelsize=12)
-    ax_d.set_title("(b) 5–15 Hz bedload proxy across the December-2025 atmospheric rivers",
-                   loc="left", fontsize=14)
+    ax_d.set_title("(b) 5–15 Hz bedload proxy", loc="left", fontsize=14)
     # Give the AR labels a dedicated band of headroom ABOVE all discharge data so
     # they never sit on the peaks; stagger two heights so adjacent labels (which
     # can be close in time) never touch each other.
@@ -145,15 +174,11 @@ def panel_b(ax_d, ax_b) -> dict:
                       label=f"{s} ({data[s]['dist']:.0f} km)")
     ax_b.axhline(1.0, color="0.5", ls=":", lw=1)
     ymax = max(np.nanmax(data[s]["nrm"].values) for s in stations)
-    # extra top headroom so the legend (top-centre) clears the tallest traces
-    ax_b.set_ylim(0.5, ymax * 2.6)
+    ax_b.set_ylim(0.5, ymax * 1.5)            # legend now lives below panel (a)
     ax_b.set_ylabel("5–15 Hz power /\npre-flood median", fontsize=13)
     ax_b.set_xlabel("December 2025 (UTC)", fontsize=13)
     ax_b.tick_params(labelsize=12)
-    # park the 6-station legend in the reserved top band, spread across 3 columns
-    # so it sits clear of the spiky traces below
-    ax_b.legend(fontsize=12, ncol=3, loc="upper center", framealpha=0.92,
-                borderpad=0.5, columnspacing=1.2, handlelength=1.6)
+    handles, labels = ax_b.get_legend_handles_labels()   # drawn below panel (a) in main()
 
     # per-AR means for reporting
     per_ar = {}
@@ -163,21 +188,27 @@ def panel_b(ax_d, ax_b) -> dict:
             seg = data[s]["nrm"][(data[s]["nrm"].index >= s0) & (data[s]["nrm"].index < s1)]
             rec[lab] = round(float(seg.mean()), 2) if len(seg) else None
         per_ar[s] = (data[s]["dist"], rec)
-    return per_ar
+    return per_ar, handles, labels
 
 
 def main() -> int:
-    fig = plt.figure(figsize=(13, 6))
-    # (a) spans full height on the left; (b) is a stacked discharge+proxy pair on the right
-    gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.05], height_ratios=[1, 2.1],
-                          hspace=0.08, wspace=0.14)
-    ax_a = fig.add_subplot(gs[:, 0])
+    fig = plt.figure(figsize=(13, 6.2))
+    # right column = (b) discharge strip + proxy; left column = (a) spectra on top
+    # with panel (b)'s station legend parked in a strip BELOW it (declutters (b)).
+    gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.08], height_ratios=[1, 2.1],
+                          hspace=0.08, wspace=0.16)
+    left = gs[:, 0].subgridspec(6, 1, hspace=0.0)
+    ax_a = fig.add_subplot(left[0:5, 0])
+    ax_leg = fig.add_subplot(left[5, 0]); ax_leg.axis("off")
     ax_d = fig.add_subplot(gs[0, 1])
     ax_b = fig.add_subplot(gs[1, 1], sharex=ax_d)
     plt.setp(ax_d.get_xticklabels(), visible=False)
 
     panel_a(ax_a)
-    per_ar = panel_b(ax_d, ax_b)
+    per_ar, handles, labels = panel_b(ax_d, ax_b)
+    ax_leg.legend(handles, labels, ncol=2, loc="center", fontsize=11,
+                  framealpha=0, columnspacing=1.3, handlelength=1.7, borderpad=0.2,
+                  title="5–15 Hz proxy — station (km from summit)", title_fontsize=11)
 
     for lab in ax_b.get_xticklabels():
         lab.set_rotation(25); lab.set_ha("right")

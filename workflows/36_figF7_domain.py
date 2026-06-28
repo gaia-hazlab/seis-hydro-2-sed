@@ -127,7 +127,7 @@ def main() -> int:
     axA.set_xlabel("station -> gage distance (km)")
     axA.set_ylabel("active-channel width (m, optical)")
     axA.set_xlim(0.15, 35); axA.set_ylim(10, 800)
-    axA.set_title("(a) two dominant controls -- only the lower-left is readable",
+    axA.set_title("(a) Domain of applicability",
                   fontsize=14)
     handles = [plt.Line2D([], [], marker="o", ls="", mfc=c, mec="k", label=v)
                for v, c in VCOLOR.items() if v != "persistent (other)"]
@@ -184,7 +184,7 @@ def main() -> int:
     axB.set_yticklabels([s.split(".")[1] for s in order], fontsize=12.5)
     axB.set_xlim(-0.5, len(factors) + 0.7)
     axB.set_ylim(len(order) - 0.5, -0.5)
-    axB.set_title("(b) confounding factors (darker = worse) -> verdict",
+    axB.set_title("(b) Confounding factors → verdict",
                   fontsize=14)
     for sp in axB.spines.values():
         sp.set_visible(False)

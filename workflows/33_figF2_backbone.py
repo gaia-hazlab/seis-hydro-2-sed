@@ -128,7 +128,7 @@ def panel_a(ax):
     axp.set_ylabel("seismic power / median  (5–15 Hz)", fontsize=14, labelpad=8)
     axp.yaxis.set_label_position("right")
     ax.set_xlabel("December 2025 (UTC)", fontsize=14)
-    ax.set_title("(a)  Power tracks the flood wave", loc="left", fontsize=14)
+    ax.set_title("(a) Power vs discharge", loc="left", fontsize=14)
     ax.tick_params(labelsize=12)
     axp.tick_params(labelsize=12)
     for lab in ax.get_xticklabels():
@@ -160,7 +160,7 @@ def panel_b(ax):
                           f"[{fit.b_lo:.2f}, {fit.b_hi:.2f}]")
     ax.set_xlabel(r"$\log_{10}\,Q$  (m$^3$ s$^{-1}$)", fontsize=14)
     ax.set_ylabel(r"$\log_{10}\,P$  (seismic band power)", fontsize=14)
-    ax.set_title("(b)  P $\\propto$ Q$^{\\,b}$  (5–15 Hz subset)", loc="left",
+    ax.set_title("(b) P $\\propto$ Q$^{\\,b}$", loc="left",
                  fontsize=14)
     ax.tick_params(labelsize=12)
     # add headroom above the data (data unchanged) so the upper-left legend
@@ -214,7 +214,7 @@ def panel_c(ax):
     ax.set_xscale("log")
     ax.set_xlabel("band center frequency (Hz)", fontsize=14)
     ax.set_ylabel(r"scaling exponent $b$   ($P \propto Q^{\,b}$)", fontsize=14)
-    ax.set_title("(c)  Near-source bands rise above turbulence", loc="left",
+    ax.set_title("(c) Exponent vs frequency", loc="left",
                  fontsize=14)
     ax.tick_params(labelsize=12)
 

@@ -130,7 +130,7 @@ def panel_a(ax, virt: dict, fit: dict) -> dict:
     # traces leave clear space; single column keeps it narrow and off the data.
     ax.legend(fontsize=12, loc="lower left", ncol=2, framealpha=0.92,
               borderaxespad=0.4, handlelength=1.6, columnspacing=1.1)
-    ax.set_title("(a) Seismic virtual discharge tracks the gage",
+    ax.set_title("(a) Virtual discharge vs gage",
                  fontsize=14, loc="left")
     return out
 
@@ -202,7 +202,7 @@ def panel_b(ax) -> dict:
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
     ax.tick_params(axis="x", labelsize=12)
     ax.set_xlabel("December 2025 (UTC)")
-    ax.set_title("(b) Bed-transport onset leads peak Q (diagnostic)",
+    ax.set_title("(b) Transport onset (diagnostic)",
                  fontsize=14, loc="left")
     return dict(leads=leads, q_peak_utc=str(q_peak_t))
 
@@ -299,7 +299,7 @@ def panel_c(ax) -> dict:
                 fontsize=11, color="#555")
     ax.legend(loc="upper right", fontsize=12, framealpha=0.92,
               borderaxespad=0.4, handlelength=1.6)
-    ax.set_title("(c) Routing concept: upstream Q → downstream stage",
+    ax.set_title("(c) Routing concept",
                  fontsize=14, loc="left")
     return dict(tau_h=tau_h, celerity_ms=celerity_ms, gain=g,
                 r_stage=r_stage, nse_stage=nse_stage, cc_max=float(np.nanmax(cc)))

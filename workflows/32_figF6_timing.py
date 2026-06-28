@@ -198,7 +198,7 @@ def main() -> int:
                       ha="center", va="top", fontsize=12, color=AR_COLORS[w["label"]],
                       fontweight="semibold")
     ax_q.text(q_peak, q0.max() * 0.42, " peak Q", color="#D55E00", fontsize=12, va="center")
-    ax_q.set_title("(a)  Matched-discharge reorganization timing — Puyallup PR cluster",
+    ax_q.set_title("(a) Matched-discharge timing",
                    fontsize=14, loc="left", fontweight="semibold")
     ax_q.tick_params(labelbottom=False)
     ax_q.margins(x=0.005)
@@ -310,7 +310,7 @@ def main() -> int:
                      ha=ha, textcoords="offset points", fontsize=12, color="0.3")
     axB.set_xlabel("gage stage at Electron (ft; epoch mean, whiskers = min–max)", fontsize=12)
     axB.set_ylabel("wetted active-channel width proxy\n(SAR area ÷PR03 ÷Nov baseline)", fontsize=12)
-    axB.set_title("(b)  Width–stage hysteresis: rise widens, fall does not recover",
+    axB.set_title("(b) Width–stage hysteresis",
                   fontsize=14, loc="left", fontweight="semibold")
     axB.legend(loc="upper left", fontsize=12, framealpha=0.92, edgecolor="0.8")
 
@@ -359,7 +359,7 @@ def main() -> int:
              axC.get_ylim()[0] * 1.5,
              "braid reorganization\n(avulsion step)", color="#6a3d9a",
              fontsize=12, va="bottom", ha="left", fontweight="semibold")
-    axC.set_title("(c)  Slow AR3 recession hosts the reorganization (clogging)",
+    axC.set_title("(c) Recession clogging",
                   fontsize=14, loc="left", fontweight="semibold")
     axC.legend(loc="upper right", fontsize=12, ncol=3, framealpha=0.92,
                edgecolor="0.8", columnspacing=1.0, handlelength=1.4)

@@ -6,6 +6,8 @@ author:
     email: mdenolle@uw.edu
   - name: Bradley P. Lipovsky
     affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
+  - name: David Montgomery
+    affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
 date: last-modified
 abstract: |
   Glacier-fed mountain rivers carry the floods and sediment that drive downstream
@@ -37,7 +39,7 @@ abstract: |
   reproduces the observed downstream stage for this event — a proof-of-concept for a
   seismic-fed flood nowcast in this gage-sparse lahar corridor, not yet a
   skill-validated forecast.
-keywords: [environmental seismology, braided rivers, channel reorganization, river discharge, flood nowcasting, Mt. Rainier, atmospheric river]
+keywords: [braided rivers, channel reorganization, river discharge, Mt. Rainier, atmospheric river, environmental seismology]
 ---
 
 # Introduction
@@ -126,6 +128,16 @@ are the robust, novel contributions.
 
 # Data and study area
 
+The western flanks of Mt Rainier have recently received attention from the hazard community 
+for its recognized threat for massive debris flows and volcanic related lahars (REF). 
+Two seismig monitoring network operates and monitor the volcano-tectonic activities at Mt Rainer: 
+the Cascade Volcano Observatory (network code **CC**) and the Pacific Northwest Seismic
+Network (network code **UW**) stations that are laid out across the
+**western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
+and upper White. We complement this geophysical monitoring with USGS discharge gages and NRCS SNOTEL/precipitation
+stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
+network, not a single transect.
+
 The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
 and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
 has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
@@ -137,13 +149,8 @@ m) — that give way past CC.TRON to a **single-thread, meandering** channel on 
 lowland floodplain. This braided-to-single-thread transition frames the
 source-model problem developed in §sec-braided.
 
-We use the Cascade Volcano Observatory (network **CC**) stations across the
-**western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
-and upper White — paired with USGS discharge gages and NRCS SNOTEL/precipitation
-stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
-network, not a single transect.
 
-**An upgrading network.** The CC stations are being upgraded from 50 sps to
+The CC stations are being upgraded from 50 sps to
 **500 sps** high-rate (CH) channels: 19 of 31 stations in the study area now list
 CH channels (Nyquist 250 Hz) in their metadata (@fig-map, marker color). However,
 these high-rate channels came online in **2026**: for the December 2025 event only
@@ -389,7 +396,7 @@ attempted and did not work* — itself a useful deployment guide. Notably, the
 steepest scaling is on the Nisqually (UW.LON $b\approx1.98$), exceeding the Puyallup
 source ($b\approx1.71$).
 
-![Seismic power tracks discharge (backbone). **(a)** Event timeseries: discharge with the 5–15 Hz power at the source stations through the December 2025 flood. **(b)** $P$–$Q$ log–log scatter for a representative subset with robust fits (CC.PR03 $b\approx1.71$, CC.SIFT 0.77, CC.TRON 0.56, UW.LON 1.98). **(c)** Scaling exponent $b$ versus band-center frequency: near-source stations rise above the turbulence baseline (shaded, $b\approx0.9$–$1.4$; @gimbert2014) while the exponent falls with distance downstream and off-channel. The full station grid is in @fig-pqgrid.](figures/figF2_backbone.png){#fig-scaling width=98%}
+![Seismic power tracks discharge (backbone). **(a)** Event timeseries: discharge with the 5–15 Hz power at the source stations through the December 2025 flood — the band power tracks the flood wave pulse-for-pulse, the basis of the discharge proxy. **(b)** $P$–$Q$ log–log scatter for a representative subset with robust fits (CC.PR03 $b\approx1.71$, CC.SIFT 0.77, CC.TRON 0.56, UW.LON 1.98). **(c)** Scaling exponent $b$ versus band-center frequency: near-source stations rise above the turbulence baseline (shaded, $b\approx0.9$–$1.4$; @gimbert2014) while the exponent falls with distance downstream and off-channel. The full station grid is in @fig-pqgrid.](figures/figF2_backbone.png){#fig-scaling width=98%}
 
 ## Transport-onset threshold and rating geometry {#sec-threshold}
 
@@ -804,7 +811,7 @@ mirroring the scaling-exponent decay. A coarser, wood-rich source can lower the
 coarse-transport band into the resolvable window (a grain-size– and
 process-conditional caveat); we keep this bounded, not isolated, in Text S6.
 
-![Bedload as a bounded hypothesis (frequency evidence). **(a)** Median ground-velocity PSD, flood (10 Dec) vs quiet (03 Dec): the 50-sps source station (CC.PR03; Nyquist 25 Hz) lifts broadband to the Nyquist while the canonical 30–80 Hz bedload band is *unsampled*, and the 200-sps lowland station shows no flood signal at the bedload band. **(b)** 5–15 Hz bedload proxy across the ARs (×pre-flood median): AR2 is the maximum at every station, decaying downstream to CC.TRON ≈7×. The per-AR and time-resolved details are in @fig-blAR and @fig-bt.](figures/figF9_bedload.png){#fig-spec width=98%}
+![Bedload as a bounded hypothesis: the frequency evidence. **(a)** Median ground-velocity power spectral density on a flood day (10 Dec, solid) versus a quiet pre-flood day (03 Dec, dotted), for a 50-sps glacial-source station (CC.PR03, blue) and a 200-sps lowland station (UW.UPS, orange); dashed vertical lines mark each station's Nyquist frequency and the shaded bands are the turbulence (1–20 Hz) and canonical bedload (30–80 Hz) windows (PSD axis clipped to −175 to −100 dB to focus on the signal). The flood lifts power broadly across the turbulence band, but where the river is actually sensed — the 50-sps source station, Nyquist 25 Hz — the canonical 30–80 Hz bedload band is *physically unsampled*; the 200-sps lowland station reaches the bedload band but is downstream of the glacial source and carries no flood excess there. This is why our 5–15 Hz "bedload" proxy is a *transition-band* indicator, not a measurement of canonical bedload. **(b)** The 5–15 Hz proxy through the event (÷ each station's pre-flood median), with discharge on top and the four AR windows shaded; the per-station key is below panel (a). The proxy peaks on **AR2** at every station and decays strongly downstream (source ≈180× → CC.TRON ≈7×, ~35 km), mirroring the scaling-exponent decay. Per-AR means and the time-resolved exponent are in @fig-blAR and @fig-bt; the 30–50 Hz lower-edge analysis from the 100-sps stations is in Text S5.](figures/figF9_bedload.png){#fig-spec width=98%}
 
 ## Distributed sensing and a path to downstream nowcasting {#sec-ew}
 
