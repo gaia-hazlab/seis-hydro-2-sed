@@ -122,11 +122,15 @@ def panel_a(ax, thr):
 
     ax.set_xlabel(r"$\log_{10} Q$  (m$^3$ s$^{-1}$)")
     ax.set_ylabel(r"$\log_{10} P$ (5–15 Hz), intercept-removed + offset")
-    ax.set_title("(a) Two-regime transport-onset fits  $P\\propto Q^{\\,b}$", fontsize=11)
-    ax.legend(fontsize=7.4, loc="lower right", handlelength=1.6, labelspacing=0.35,
-              framealpha=0.92)
+    ax.set_title("(a) Two-regime transport-onset fits  $P\\propto Q^{\\,b}$", fontsize=14)
+    ax.legend(fontsize=12, loc="upper left", handlelength=1.6, labelspacing=0.4,
+              framealpha=0.93, borderpad=0.5)
     ax.margins(x=0.02)
-    ax.margins(y=0.08)
+    # extra headroom on top so the upper-left legend clears the highest-offset
+    # scatter cloud instead of sitting on it
+    ax.margins(y=0.10)
+    y0, y1 = ax.get_ylim()
+    ax.set_ylim(y0, y1 + 0.30 * (y1 - y0))
 
 
 def panel_b(ax, rg, thr):
@@ -150,20 +154,24 @@ def panel_b(ax, rg, thr):
         if "seismic_Qc_cms" in d:
             qcv = d["seismic_Qc_cms"]
             ax.axvline(qcv, color=col, ls=":", lw=1.5)
-            # stagger the two source labels so they don't collide
-            ytxt = 0.78 if site == "12092000" else 1.95
-            ax.text(qcv * 0.92, ytxt, f"seismic $Q_c$\n{d.get('seismic_break','')}",
-                    color=col, fontsize=7.2, va="top", ha="right")
+            # stagger the two source labels so they don't collide with each
+            # other, the fit lines, or the upper-left legend
+            ytxt = 0.72 if site == "12092000" else 1.62
+            ax.annotate(f"seismic $Q_c$\n{d.get('seismic_break','')}",
+                        xy=(qcv, ytxt), xytext=(qcv * 0.80, ytxt),
+                        color=col, fontsize=12, va="top", ha="right",
+                        bbox=dict(boxstyle="round,pad=0.18", fc="white",
+                                  ec=col, alpha=0.85, lw=0.7))
 
     ax.set_xscale("log")
     ax.set_ylim(0, 2.3)
     ax.text(ax.get_xlim()[0] * 1.15, 0.25, "overbank / flat section",
-            fontsize=7.5, color="0.4", va="center")
+            fontsize=12, color="0.4", va="center")
     ax.set_xlabel(r"discharge $Q$  (m$^3$ s$^{-1}$)")
     ax.set_ylabel(r"local rating exponent $\beta=\mathrm{d}\log Q/\mathrm{d}\log(h-h_0)$")
     ax.set_title("(b) Rating geometry: confinement ($\\beta\\!\\uparrow$) vs overbank",
-                 fontsize=11)
-    ax.legend(fontsize=7.2, loc="upper left", handlelength=1.4)
+                 fontsize=14)
+    ax.legend(fontsize=12, loc="upper left", handlelength=1.4, framealpha=0.92)
 
 
 def panel_c(ax, status):
@@ -183,10 +191,10 @@ def panel_c(ax, status):
     ax.barh(y, rvals, color=cols, edgecolor="0.3", lw=0.4, height=0.7)
     ax.axvline(0, color="0.4", lw=0.8)
     ax.set_yticks(y)
-    ax.set_yticklabels(labels, fontsize=8)
+    ax.set_yticklabels(labels, fontsize=12)
     ax.set_xlabel(r"P–Q correlation  $r$")
     ax.set_xlim(-0.5, 1.05)
-    ax.set_title("(c) Station skill (source→downstream)", fontsize=11)
+    ax.set_title("(c) Station skill (source→downstream)", fontsize=14)
 
     # usability legend
     seen, handles = [], []
@@ -195,7 +203,8 @@ def panel_c(ax, status):
         if any(r["status"] == st for r in rows) and lab not in seen:
             handles.append(plt.Rectangle((0, 0), 1, 1, color=c))
             seen.append(lab)
-    ax.legend(handles, seen, fontsize=7.5, loc="lower right", title=None)
+    ax.legend(handles, seen, fontsize=12, loc="lower right", title=None,
+              framealpha=0.92)
 
 
 def main() -> int:

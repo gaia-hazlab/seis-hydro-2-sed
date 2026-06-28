@@ -127,9 +127,28 @@ def panel_a(ax, op, rivers, cc, uw, gages, snotel):
                 mfc="#b30000" if hi else "#fdae61", mec="k",
                 mew=1.1 if hi else 0.7, zorder=6)
         if sta in LABEL:
-            ax.annotate(sta, (lon, lat), color="k", fontsize=8, fontweight="bold",
-                        xytext=(4, 4), textcoords="offset points", zorder=7,
-                        path_effects=None)
+            # per-station label offset to avoid colliding with the zoom boxes,
+            # river lines, and neighbouring station labels
+            dx, dy, ha = 6, 5, "left"
+            if sta == "PR01":
+                dx, dy, ha = 8, -4, "left"
+            elif sta == "PR02":
+                dx, dy, ha = -9, 9, "right"
+            elif sta == "PR03":
+                dx, dy, ha = 8, -12, "left"
+            elif sta == "TRON":
+                dx, dy, ha = 8, 6, "left"
+            elif sta == "STYX":
+                dx, dy, ha = -8, 6, "right"
+            elif sta == "SIFT":
+                dx, dy, ha = 8, -3, "left"
+            elif sta == "LON":
+                dx, dy, ha = 8, 4, "left"
+            ax.annotate(sta, (lon, lat), color="k", fontsize=12, fontweight="semibold",
+                        ha=ha, va="center", xytext=(dx, dy),
+                        textcoords="offset points", zorder=7,
+                        bbox=dict(boxstyle="round,pad=0.12", fc="white",
+                                  ec="none", alpha=0.72))
 
     # USGS gages (diamonds) + SNOTEL (squares)
     for g in gages:
@@ -142,36 +161,37 @@ def panel_a(ax, op, rivers, cc, uw, gages, snotel):
                           (BOX_DOWN, "#00e5ff", "(d)")]:
         ax.add_patch(Rectangle((box[0], box[2]), box[1] - box[0], box[3] - box[2],
                                fill=False, ec=col, lw=2.0, zorder=8))
-        ax.text(box[1], box[3], lab, color=col, fontsize=10, fontweight="bold",
+        ax.text(box[1], box[3], lab, color=col, fontsize=13, fontweight="semibold",
                 ha="left", va="bottom", zorder=9,
-                bbox=dict(boxstyle="round,pad=0.1", fc="0.15", ec="none", alpha=0.6))
+                bbox=dict(boxstyle="round,pad=0.15", fc="0.15", ec="none", alpha=0.7))
 
     # reach annotations
     ax.annotate("braided source\n(Puyallup, PR cluster)", (-122.05, 46.915),
-                xytext=(-122.345, 46.965), fontsize=9, fontweight="bold",
-                color="#a50026", zorder=9,
-                bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.7),
-                arrowprops=dict(arrowstyle="->", color="#a50026", lw=1.3))
+                xytext=(-122.350, 46.960), fontsize=12, fontweight="semibold",
+                color="#a50026", zorder=9, va="center",
+                bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.78),
+                arrowprops=dict(arrowstyle="->", color="#a50026", lw=1.4))
     ax.annotate("braided\n(Nisqually, UW.LON)", (-121.81, 46.751),
-                xytext=(-122.02, 46.74), fontsize=9, fontweight="bold",
-                color="#08519c", zorder=9,
-                bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.7),
-                arrowprops=dict(arrowstyle="->", color="#08519c", lw=1.3))
+                xytext=(-122.07, 46.738), fontsize=12, fontweight="semibold",
+                color="#08519c", zorder=9, va="center",
+                bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.78),
+                arrowprops=dict(arrowstyle="->", color="#08519c", lw=1.4))
     ax.annotate("single-thread,\nmeandering (past TRON)", (-122.205, 47.045),
-                xytext=(-122.355, 47.14), fontsize=9, fontweight="bold",
-                color="#006d2c", zorder=9,
-                bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.7),
-                arrowprops=dict(arrowstyle="->", color="#006d2c", lw=1.3))
+                xytext=(-122.355, 47.155), fontsize=12, fontweight="semibold",
+                color="#006d2c", zorder=9, va="center",
+                bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.78),
+                arrowprops=dict(arrowstyle="->", color="#006d2c", lw=1.4))
 
     # Mt. Rainier toward the SE corner (summit is just off-extent)
-    ax.annotate("Mt. Rainier ▲", (-121.795, 46.847), fontsize=9.5,
-                fontweight="bold", color="0.1", ha="right", va="center", zorder=9,
-                bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.7))
+    ax.annotate("Mt. Rainier ▲", (-121.795, 46.847), fontsize=12,
+                fontweight="semibold", color="0.1", ha="right", va="center", zorder=9,
+                bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.78))
 
     ax.set_aspect(1.0 / np.cos(np.radians(47.0)))
     ax.set_xlabel("longitude"); ax.set_ylabel("latitude")
+    ax.tick_params(axis="both", labelsize=12)
     ax.set_title("(a) Study corridor — channel pattern along the flow",
-                 fontsize=11, loc="left")
+                 fontsize=14, loc="left")
 
     handles = [
         Line2D([], [], ls="none", marker="^", ms=10, mfc="#b30000", mec="k",
@@ -186,7 +206,8 @@ def panel_a(ax, op, rivers, cc, uw, gages, snotel):
                label="flood water (OPERA, 10 Dec 2025)"),
         Line2D([], [], color="#08519c", lw=1.4, label="NHD river"),
     ]
-    ax.legend(handles=handles, loc="upper right", fontsize=8, framealpha=0.92)
+    ax.legend(handles=handles, loc="upper right", fontsize=12, framealpha=1.0,
+              borderpad=0.5, labelspacing=0.4, handletextpad=0.5).set_zorder(20)
 
 
 def panel_braid(ax, region, ststns, title, col):
@@ -209,16 +230,16 @@ def panel_braid(ax, region, ststns, title, col):
 
     for sta, (lon, lat) in ststns.items():
         x, y = to_utm(lon, lat)
-        ax.plot(x, y, "^", ms=11, mfc="yellow", mec="k", mew=1.3, zorder=5)
-        ax.annotate(sta, (x, y), color="k", fontsize=8, fontweight="bold",
-                    xytext=(6, 4), textcoords="offset points", zorder=6,
-                    bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.7))
+        ax.plot(x, y, "^", ms=12, mfc="yellow", mec="k", mew=1.3, zorder=5)
+        ax.annotate(sta, (x, y), color="k", fontsize=12, fontweight="semibold",
+                    xytext=(8, 5), textcoords="offset points", zorder=6,
+                    bbox=dict(boxstyle="round,pad=0.16", fc="white", ec="none", alpha=0.8))
 
     ax.set_aspect("equal")          # UTM metres -> braids keep true planform
     ax.set_xticks([]); ax.set_yticks([])
     for sp in ax.spines.values():
         sp.set_edgecolor(col); sp.set_linewidth(2.4)
-    ax.set_title(title, fontsize=9.5, color=col, loc="left", pad=3)
+    ax.set_title(title, fontsize=14, color=col, loc="left", pad=4)
 
 
 def panel_down(ax, rivers, col):
@@ -245,17 +266,18 @@ def panel_down(ax, rivers, col):
     # mark TRON if it falls in the crop
     tron = (-122.1753, 46.9977)
     if lon0 <= tron[0] <= lon1 and lat0 <= tron[1] <= lat1:
-        ax.plot(*tron, "^", ms=11, mfc="#b30000", mec="k", mew=1.2, zorder=5)
-        ax.annotate("TRON", tron, color="k", fontsize=8, fontweight="bold",
-                    xytext=(6, 4), textcoords="offset points", zorder=6,
-                    bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.7))
+        ax.plot(*tron, "^", ms=12, mfc="#b30000", mec="k", mew=1.2, zorder=5)
+        ax.annotate("TRON", tron, color="k", fontsize=12, fontweight="semibold",
+                    ha="right", va="bottom", xytext=(-8, 5),
+                    textcoords="offset points", zorder=6,
+                    bbox=dict(boxstyle="round,pad=0.16", fc="white", ec="none", alpha=0.8))
 
     ax.set_aspect(1.0 / np.cos(np.radians(47.0)))
     ax.set_xticks([]); ax.set_yticks([])
     for sp in ax.spines.values():
         sp.set_edgecolor("#006d2c"); sp.set_linewidth(2.4)
-    ax.set_title("(d) lower Puyallup\n    single-thread", fontsize=9.0,
-                 color="#006d2c", loc="left", pad=3)
+    ax.set_title("(d) lower Puyallup\n    single-thread", fontsize=14,
+                 color="#006d2c", loc="left", pad=4)
 
 
 def panel_snotel(ax, war, ar):
@@ -274,17 +296,23 @@ def panel_snotel(ax, war, ar):
 
     # 0 C freezing line (warm AR = above => rain-on-snow)
     ax.axhline(0.0, color="0.35", lw=1.3, ls="--", zorder=2)
-    ax.text(0.012, 0.0, " 0 °C (rain/snow)", transform=ax.get_yaxis_transform(),
-            color="0.35", fontsize=8, va="bottom", ha="left")
 
     for name, rec in war.items():
         t, v = series(rec, "tempC")
         ax.plot(t, v, lw=1.5, color=colors.get(name),
                 label=f"{name} T ({rec['elev_m']} m)", zorder=4)
-    ax.set_ylabel("air temp (°C)")
-    ax.tick_params(axis="x", labelsize=8, rotation=25)
-    ax.tick_params(axis="y", labelsize=9)
-    ax.set_title("(e) Warm-AR flood driver (SNOTEL)", fontsize=9.5, loc="left", pad=3)
+    ax.set_ylabel("air temp (°C)", fontsize=13)
+
+    # date ticks: weekly, formatted compactly, gently rotated so they don't crowd
+    import matplotlib.dates as mdates
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=mdates.MO))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+    ax.tick_params(axis="x", labelsize=12)
+    for lab in ax.get_xticklabels():
+        lab.set_rotation(35); lab.set_ha("right")
+    ax.tick_params(axis="y", labelsize=12)
+    ax.margins(x=0.02)
+    ax.set_title("(e) Warm-AR flood driver (SNOTEL)", fontsize=14, loc="left", pad=4)
 
     # SWE on a twin axis (dashed)
     ax2 = ax.twinx()
@@ -293,14 +321,27 @@ def panel_snotel(ax, war, ar):
             t, v = series(rec, "swe_cm")
             ax2.plot(t, v, lw=1.4, ls=":", color=colors.get(name), alpha=0.85,
                      label=f"{name} SWE", zorder=3)
-    ax2.set_ylabel("SWE (cm)", fontsize=9)
-    ax2.tick_params(axis="y", labelsize=8)
+    ax2.set_ylabel("SWE (cm)", fontsize=13)
+    ax2.tick_params(axis="y", labelsize=12)
+
+    # generous headroom above the temperature traces so the 2-row legend sits
+    # fully clear of the data peaks (the warm-AR spikes are tall)
+    ylo, yhi = ax.get_ylim()
+    ax.set_ylim(ylo, yhi + 0.72 * (yhi - ylo))
+    # keep the SWE twin axis in step so its dotted traces also clear the legend
+    s2lo, s2hi = ax2.get_ylim()
+    ax2.set_ylim(s2lo, s2hi + 0.72 * (s2hi - s2lo))
+    # 0 C label in the clear lower-left, away from the warm AR traces
+    ax.text(0.015, 0.0, "0 °C (rain/snow)", transform=ax.get_yaxis_transform(),
+            color="0.25", fontsize=12, va="bottom", ha="left", zorder=5,
+            bbox=dict(boxstyle="round,pad=0.18", fc="white", ec="none", alpha=0.85))
 
     h1, l1 = ax.get_legend_handles_labels()
     h2, l2 = ax2.get_legend_handles_labels()
-    ax.legend(h1 + h2, l1 + l2, loc="lower center", fontsize=6.6, ncol=2,
-              framealpha=0.92, handlelength=1.4, columnspacing=1.0,
-              borderpad=0.3)
+    leg = ax.legend(h1 + h2, l1 + l2, loc="upper left", fontsize=12, ncol=2,
+                    framealpha=0.96, handlelength=1.5, columnspacing=1.0,
+                    labelspacing=0.35, borderpad=0.4, borderaxespad=0.3)
+    leg.set_zorder(20)
 
 
 def main() -> int:

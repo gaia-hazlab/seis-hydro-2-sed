@@ -121,15 +121,25 @@ def panel_a(ax):
         (hp,) = axp.plot(j.index, pn, color=color(sta), lw=1.0, alpha=0.85)
         handles.append(hp)
         labels.append(f"{sta}  (5–15 Hz)")
-    ax.set_ylabel(r"discharge $Q$  (m$^3$ s$^{-1}$)")
+    ax.set_ylabel(r"discharge $Q$  (m$^3$ s$^{-1}$)", fontsize=14)
     axp.set_yscale("log")
-    axp.set_ylabel("seismic power / median  (5–15 Hz)")
-    ax.set_xlabel("December 2025 (UTC)")
-    ax.set_title("(a)  Power tracks the flood wave", loc="left", fontweight="bold")
+    # keep the twin-axis title off the panel title: label sits on the outward
+    # (right) side and the title is left-aligned, so they never collide.
+    axp.set_ylabel("seismic power / median  (5–15 Hz)", fontsize=14, labelpad=8)
+    axp.yaxis.set_label_position("right")
+    ax.set_xlabel("December 2025 (UTC)", fontsize=14)
+    ax.set_title("(a)  Power tracks the flood wave", loc="left", fontsize=14)
+    ax.tick_params(labelsize=12)
+    axp.tick_params(labelsize=12)
     for lab in ax.get_xticklabels():
         lab.set_rotation(25)
         lab.set_ha("right")
-    ax.legend(handles, labels, loc="upper right", frameon=True, fontsize=9)
+    # late-Dec: the discharge tail (black) sits low and the normalized power
+    # traces sit high, leaving a clear mid-height band on the right. Anchor the
+    # legend there (just right of centre, vertically mid-panel).
+    ax.legend(handles, labels, loc="center", bbox_to_anchor=(0.80, 0.52),
+              frameon=True, fontsize=12, framealpha=0.92,
+              handletextpad=0.4, handlelength=1.8, labelspacing=0.35)
 
 
 def panel_b(ax):
@@ -148,18 +158,22 @@ def panel_b(ax):
             ax.plot(xs, fit.intercept + fit.b_ols * xs, color=c, lw=2.2, zorder=5,
                     label=f"{sta} ({role})  b={fit.b_ols:.2f} "
                           f"[{fit.b_lo:.2f}, {fit.b_hi:.2f}]")
-    ax.set_xlabel(r"$\log_{10}\,Q$  (m$^3$ s$^{-1}$)")
-    ax.set_ylabel(r"$\log_{10}\,P$  (seismic band power)")
+    ax.set_xlabel(r"$\log_{10}\,Q$  (m$^3$ s$^{-1}$)", fontsize=14)
+    ax.set_ylabel(r"$\log_{10}\,P$  (seismic band power)", fontsize=14)
     ax.set_title("(b)  P $\\propto$ Q$^{\\,b}$  (5–15 Hz subset)", loc="left",
-                 fontweight="bold")
-    ax.legend(loc="lower right", frameon=True, fontsize=8.5)
+                 fontsize=14)
+    ax.tick_params(labelsize=12)
+    # add headroom above the data (data unchanged) so the upper-left legend
+    # sits clear of the high CC.PR03 point cloud rather than on top of it.
+    y0, y1 = ax.get_ylim()
+    ax.set_ylim(y0, y1 + 0.32 * (y1 - y0))
+    ax.legend(loc="upper left", frameon=True, fontsize=12, framealpha=0.92,
+              borderaxespad=0.6, handlelength=1.6, labelspacing=0.4)
 
 
 def panel_c(ax):
     """Scaling exponent b vs band-center frequency, per station, baseline shaded."""
-    ax.axhspan(*WATER_BASELINE, color="0.6", alpha=0.18, zorder=0,
-               label=f"turbulence baseline b≈{WATER_BASELINE[0]}–{WATER_BASELINE[1]}\n"
-                     f"(Gimbert et al. 2014)")
+    ax.axhspan(*WATER_BASELINE, color="0.6", alpha=0.18, zorder=0)
     ax.axhline(1.0, color="0.5", ls=":", lw=1, zorder=0)
 
     markers = ["o", "s", "^", "D", "v", "P", "X", "h", "<", ">", "*", "p"]
@@ -198,11 +212,25 @@ def panel_c(ax):
                     markeredgecolor=color(sta) if is_sub else "0.55",
                     label=sta if is_sub else None, zorder=4 if is_sub else 2)
     ax.set_xscale("log")
-    ax.set_xlabel("band center frequency (Hz)")
-    ax.set_ylabel(r"scaling exponent $b$   ($P \propto Q^{\,b}$)")
+    ax.set_xlabel("band center frequency (Hz)", fontsize=14)
+    ax.set_ylabel(r"scaling exponent $b$   ($P \propto Q^{\,b}$)", fontsize=14)
     ax.set_title("(c)  Near-source bands rise above turbulence", loc="left",
-                 fontweight="bold")
-    ax.legend(loc="upper left", frameon=True, fontsize=8.5)
+                 fontsize=14)
+    ax.tick_params(labelsize=12)
+
+    # label the shaded turbulence baseline in-place (no legend entry, so the
+    # station legend stays uncluttered) at the left edge inside the band.
+    xlo = ax.get_xlim()[0]
+    ax.text(xlo * 1.04, np.mean(WATER_BASELINE),
+            f"turbulence baseline  b≈{WATER_BASELINE[0]}–{WATER_BASELINE[1]}\n"
+            f"(Gimbert et al. 2014)",
+            fontsize=11.5, va="center", ha="left", color="0.30",
+            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7",
+                      alpha=0.85))
+    # near-source stations sit HIGH (b>1.4); context stations sit LOW. The
+    # lower-right corner is the empty region for the station legend.
+    ax.legend(loc="lower right", frameon=True, fontsize=12, framealpha=0.92,
+              borderaxespad=0.6, ncol=2, columnspacing=1.0, handletextpad=0.4)
     return reps
 
 

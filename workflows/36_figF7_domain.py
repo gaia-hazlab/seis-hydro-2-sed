@@ -93,7 +93,7 @@ def main() -> int:
     axA.axvline(CLEAN_MAX_KM, color="#1a701a", lw=1.0, ls=":", zorder=1)
     axA.axhline(CLEAN_MAX_W, color="#1a701a", lw=1.0, ls=":", zorder=1)
     axA.text(0.16, 6.2, f"readable domain\n(gage < {CLEAN_MAX_KM:.0f} km +\nwidth < {CLEAN_MAX_W:.0f} m)",
-             fontsize=9, color="#1a701a", va="bottom")
+             fontsize=12, color="#1a701a", va="bottom")
 
     for st in stations:
         if st["width"] is None:
@@ -102,23 +102,24 @@ def main() -> int:
                     c=VCOLOR[st["verdict"]], edgecolor="k", lw=0.8, zorder=5)
         axA.annotate(f"{st['sid'].split('.')[1]}\nb={st['b']}",
                      (st["km"], st["width"]), textcoords="offset points",
-                     xytext=(8, -4), fontsize=9)
+                     xytext=(9, 2), fontsize=12)
     # GTWY: width not optically measured -> show as a distance marker w/ up-arrow
     g = next(s for s in stations if s["sid"] == "CC.GTWY")
     axA.annotate("GTWY\n(width n/a)", (g["km"], 150), textcoords="offset points",
-                 xytext=(6, 0), fontsize=9, color="#d62728")
+                 xytext=(-10, 0), ha="right", va="center",
+                 fontsize=12, color="#d62728")
     axA.scatter(g["km"], 150, marker="^", s=70, facecolor="none",
                 edgecolor="#d62728", lw=1.4, zorder=5)
     axA.annotate("", xy=(g["km"], 230), xytext=(g["km"], 150),
                  arrowprops=dict(arrowstyle="->", color="#d62728", lw=1.2))
 
     # ---- explicit basin verdict callouts (so the SI fig is not needed) --------
-    axA.text(0.55, 200, "PUYALLUP cluster\nCLEAN / usable",
-             fontsize=10, fontweight="bold", color="#1a701a", ha="center",
+    axA.text(0.5, 320, "PUYALLUP cluster\nCLEAN / usable",
+             fontsize=13, color="#1a701a", ha="center",
              va="center", bbox=dict(boxstyle="round,pad=0.3", fc="#eaf6ea",
                                     ec="#2ca02c", lw=1.3))
-    axA.text(7.5, 30, "NISQUALLY reaches CONFOUNDED\ngage 13-21 km downstream\n+ rain->snow supply shutoff\n+ flood-wave lag",
-             fontsize=9, fontweight="bold", color="#9c1414", ha="center",
+    axA.text(5.5, 70, "NISQUALLY reaches CONFOUNDED\ngage 13-21 km downstream\n+ rain->snow supply shutoff\n+ flood-wave lag",
+             fontsize=12, color="#9c1414", ha="center",
              va="center", bbox=dict(boxstyle="round,pad=0.3", fc="#fbeaea",
                                     ec="#d62728", lw=1.3))
 
@@ -127,11 +128,12 @@ def main() -> int:
     axA.set_ylabel("active-channel width (m, optical)")
     axA.set_xlim(0.15, 35); axA.set_ylim(10, 800)
     axA.set_title("(a) two dominant controls -- only the lower-left is readable",
-                  fontsize=11)
+                  fontsize=14)
     handles = [plt.Line2D([], [], marker="o", ls="", mfc=c, mec="k", label=v)
                for v, c in VCOLOR.items() if v != "persistent (other)"]
-    axA.legend(handles=handles, fontsize=8.5, loc="lower right",
-               title="reorg-timing verdict")
+    leg = axA.legend(handles=handles, fontsize=12, loc="lower right",
+                     title="reorg-timing verdict")
+    leg.get_title().set_fontsize(12)
 
     # ---- Panel B: normalised confounding-factor heat-strip --------------------
     order = ["CC.PR03", "CC.PR02", "CC.PR01", "CC.GTWY", "UW.LON"]
@@ -156,32 +158,34 @@ def main() -> int:
             if np.isnan(M[i, j]):
                 axB.add_patch(Rectangle((j - 0.5, i - 0.5), 1, 1, hatch="////",
                                         fill=False, edgecolor="0.5", lw=0))
-                axB.text(j, i, "n/a", ha="center", va="center", fontsize=8,
+                axB.text(j, i, "n/a", ha="center", va="center", fontsize=12,
                          color="0.4")
         v = rows[s]["verdict"]
         mark = "OK" if v == "clean geometric step" else "X"
         axB.text(len(factors) - 0.5 + 0.85, i, mark, ha="center", va="center",
-                 fontsize=13, fontweight="bold", color=VCOLOR[v])
+                 fontsize=15, fontweight="bold", color=VCOLOR[v])
 
-    # basin bracket: which rows are clean vs confounded
-    axB.text(-1.65, 1.0, "PUYALLUP\n(clean)", rotation=90, ha="center",
-             va="center", fontsize=9.5, fontweight="bold", color="#1a701a")
-    axB.text(-1.65, 3.5, "NISQUALLY\n(confounded)", rotation=90, ha="center",
-             va="center", fontsize=9.5, fontweight="bold", color="#9c1414")
-    axB.add_patch(FancyBboxPatch((-0.5, -0.5), len(factors), 3,
+    # basin bracket: which rows are clean vs confounded (small gap so the green
+    # and red brackets never touch at the PR01 / GTWY boundary)
+    axB.text(-1.7, 1.0, "PUYALLUP\n(clean)", rotation=90, ha="center",
+             va="center", fontsize=12.5, color="#1a701a")
+    axB.text(-1.7, 3.5, "NISQUALLY\n(confounded)", rotation=90, ha="center",
+             va="center", fontsize=12.5, color="#9c1414")
+    axB.add_patch(FancyBboxPatch((-0.5, -0.5), len(factors), 2.94,
                                  boxstyle="round,pad=0.02", fill=False,
                                  ec="#2ca02c", lw=1.6, zorder=6, clip_on=False))
-    axB.add_patch(FancyBboxPatch((-0.5, 2.5), len(factors), 2,
+    axB.add_patch(FancyBboxPatch((-0.5, 2.56), len(factors), 1.94,
                                  boxstyle="round,pad=0.02", fill=False,
                                  ec="#d62728", lw=1.6, zorder=6, clip_on=False))
 
-    axB.set_xticks(range(len(factors))); axB.set_xticklabels(factors, fontsize=9.5)
+    axB.set_xticks(range(len(factors)))
+    axB.set_xticklabels(factors, fontsize=12)
     axB.set_yticks(range(len(order)))
-    axB.set_yticklabels([s.split(".")[1] for s in order], fontsize=10)
+    axB.set_yticklabels([s.split(".")[1] for s in order], fontsize=12.5)
     axB.set_xlim(-0.5, len(factors) + 0.7)
     axB.set_ylim(len(order) - 0.5, -0.5)
     axB.set_title("(b) confounding factors (darker = worse) -> verdict",
-                  fontsize=11)
+                  fontsize=14)
     for sp in axB.spines.values():
         sp.set_visible(False)
     axB.tick_params(length=0)

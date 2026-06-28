@@ -125,10 +125,13 @@ def panel_a(ax, virt: dict, fit: dict) -> dict:
     ax.set_ylabel("discharge  (m³/s)")
     ax.set_xlabel("December 2025 (UTC)")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
-    ax.tick_params(axis="x", labelsize=10)
-    ax.legend(fontsize=8.5, loc="lower center", ncol=2, framealpha=0.9)
+    ax.tick_params(axis="x", labelsize=12)
+    # legend pinned to the low-discharge band (bottom-left) where the month-long
+    # traces leave clear space; single column keeps it narrow and off the data.
+    ax.legend(fontsize=12, loc="lower left", ncol=2, framealpha=0.92,
+              borderaxespad=0.4, handlelength=1.6, columnspacing=1.1)
     ax.set_title("(a) Seismic virtual discharge tracks the gage",
-                 fontsize=12, loc="left")
+                 fontsize=14, loc="left")
     return out
 
 
@@ -159,13 +162,22 @@ def panel_b(ax) -> dict:
              label="stage", zorder=2)
     axS.set_ylabel("stage  (m)", color="#2c7fb8")
     axS.yaxis.set_label_position("right")
-    axS.tick_params(axis="y", labelcolor="#2c7fb8", labelright=True)
+    axS.tick_params(axis="y", labelcolor="#2c7fb8", labelright=True, labelsize=12)
+    # headroom on the stage axis so its dashed peaks sit below the top band that
+    # holds the annotation box + legend
+    s_lo, s_hi = float(np.nanmin(he.values)), float(np.nanmax(he.values))
+    axS.set_ylim(s_lo - 0.04 * (s_hi - s_lo), s_hi + 0.55 * (s_hi - s_lo))
 
     # the single clearly-shaded LEAD WINDOW (onset -> peak)
     ax.axvspan(onset_first, q_peak_t, color="#fdae61", alpha=0.32, zorder=1)
     ax.axvline(q_peak_t, color="#D55E00", lw=1.5, zorder=4)
-    ax.text(q_peak_t, qe.max() * 0.99, " peak Q & stage", color="#D55E00",
-            fontsize=9, va="top", fontweight="medium")
+    # extra headroom above the Q peak so the top band is clear for annotations
+    ax.set_ylim(top=qe.max() * 1.62)
+    # "peak Q & stage" set vertically along the peak line, in the clear shaded
+    # rising-limb strip, so it never sits on the Q / stage curves
+    ax.text(q_peak_t, qe.max() * 0.62, "peak Q & stage ", color="#D55E00",
+            fontsize=12, va="center", ha="right", rotation=90,
+            fontweight="medium", zorder=5)
 
     # bed-transport onset stars
     for s, t in onsets.items():
@@ -173,17 +185,25 @@ def panel_b(ax) -> dict:
         ax.plot(t, yv, "*", ms=15, mfc=ST_COLORS[s], mec="k", mew=0.6, zorder=6,
                 label=f"{s} onset")
     lead_lo, lead_hi = min(leads.values()), max(leads.values())
-    ax.annotate("5–15 Hz bed-transport onset leads peak Q by\n"
-                f"~{lead_lo:.0f}–{lead_hi:.0f} h — the bed mobilizes on the rising limb",
-                xy=(onset_first, qe.loc[:q_peak_t].max() * 0.35),
-                xytext=(pd.Timestamp("2025-12-08T01:30:00+00:00"), qe.max() * 0.70),
-                fontsize=9, arrowprops=dict(arrowstyle="->", color="#b35900"))
-    ax.legend(loc="upper right", fontsize=8.5, ncol=2, framealpha=0.9)
+    # annotation parked in the clear top-left band (above the data); narrow,
+    # 4 short lines; arrow drops to the onset star so it never crosses the curves
+    ax.annotate("5–15 Hz bed-transport\n"
+                f"onset leads peak Q\nby ~{lead_lo:.0f}–{lead_hi:.0f} h — the bed\n"
+                "mobilizes on the rising limb",
+                xy=(onset_first, qe.loc[:q_peak_t].max() * 0.30),
+                xytext=(0.035, 0.965), textcoords="axes fraction",
+                fontsize=12, va="top", ha="left",
+                bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7", alpha=0.92),
+                arrowprops=dict(arrowstyle="->", color="#b35900"))
+    # legend top-right, compact, kept clear of the left-side annotation box
+    ax.legend(loc="upper right", fontsize=12, ncol=1, framealpha=0.92,
+              borderaxespad=0.5, handlelength=1.3, labelspacing=0.3,
+              handletextpad=0.5)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
-    ax.tick_params(axis="x", labelsize=9)
+    ax.tick_params(axis="x", labelsize=12)
     ax.set_xlabel("December 2025 (UTC)")
     ax.set_title("(b) Bed-transport onset leads peak Q (diagnostic)",
-                 fontsize=12, loc="left")
+                 fontsize=14, loc="left")
     return dict(leads=leads, q_peak_utc=str(q_peak_t))
 
 
@@ -257,22 +277,30 @@ def panel_c(ax) -> dict:
     ax.set_ylabel("downstream stage  (m)")
     ax.set_xlim(w0, w1)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
-    ax.tick_params(axis="x", labelsize=9)
+    ax.tick_params(axis="x", labelsize=12)
     ax.set_xlabel("December 2025 (UTC)")
 
-    # forecast horizon = tau, annotated
-    ax.text(0.025, 0.96,
+    # headroom at the top for the legend; headroom at the bottom for the two
+    # text boxes, so neither sits on the observed/predicted stage curves.
+    ymin = float(np.nanmin([np.nanmin(hd.values), np.nanmin(h_pred.values)]))
+    ymax = float(np.nanmax([np.nanmax(hd.values), np.nanmax(h_pred.values)]))
+    span = ymax - ymin
+    ax.set_ylim(ymin - 0.42 * span, ymax + 0.18 * span)
+
+    # forecast horizon = tau, annotated (parked in clear space, lower-left)
+    ax.text(0.025, 0.20,
             f"forecast horizon = {tau_h:.1f} h  (celerity ≈ {celerity_ms:.1f} m/s)\n"
             f"gain g = {g:.2f}   stage r = {r_stage:.2f}   NSE = {nse_stage:.2f}",
-            transform=ax.transAxes, va="top", ha="left", fontsize=8.5,
-            bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="0.6", alpha=0.9))
+            transform=ax.transAxes, va="bottom", ha="left", fontsize=12,
+            bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="0.6", alpha=0.92))
     ax.annotate("deterministic routing (constant lag + gain + rating); single event —\n"
                 "a concept, NOT validated forecast skill (out-of-sample test = March-2026)",
                 xy=(0.025, 0.025), xycoords="axes fraction", va="bottom", ha="left",
-                fontsize=8, color="#555")
-    ax.legend(loc="upper right", fontsize=8.5, framealpha=0.9)
+                fontsize=11, color="#555")
+    ax.legend(loc="upper right", fontsize=12, framealpha=0.92,
+              borderaxespad=0.4, handlelength=1.6)
     ax.set_title("(c) Routing concept: upstream Q → downstream stage",
-                 fontsize=12, loc="left")
+                 fontsize=14, loc="left")
     return dict(tau_h=tau_h, celerity_ms=celerity_ms, gain=g,
                 r_stage=r_stage, nse_stage=nse_stage, cc_max=float(np.nanmax(cc)))
 
@@ -284,8 +312,10 @@ def main() -> int:
     fit = json.loads((CONFIG / "virtual_q_fit.json").read_text())
 
     fig = plt.figure(figsize=(13, 8.5))
+    # generous wspace so panel (b)'s right twin-axis "stage (m)" label and
+    # panel (c)'s left "downstream stage (m)" label do not collide.
     gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.0],
-                          hspace=0.34, wspace=0.30)
+                          hspace=0.38, wspace=0.42)
     ax_a = fig.add_subplot(gs[0, :])
     ax_b = fig.add_subplot(gs[1, 0])
     ax_c = fig.add_subplot(gs[1, 1])

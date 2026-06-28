@@ -175,31 +175,31 @@ def main() -> int:
     # ----- layout: full page, 2 conceptual rows ------------------------------
     # Top "row" = panel (a) split into a discharge strip + 3 station baseline rows.
     # Bottom row = (b) width-stage loop | (c) recession clogging.
-    fig = plt.figure(figsize=(13, 9))
+    fig = plt.figure(figsize=(13.5, 10.2))
     gs = fig.add_gridspec(
-        2, 2, height_ratios=[1.32, 1.0], hspace=0.30, wspace=0.22,
-        left=0.07, right=0.965, top=0.965, bottom=0.075)
+        2, 2, height_ratios=[1.42, 1.0], hspace=0.32, wspace=0.24,
+        left=0.075, right=0.965, top=0.97, bottom=0.075)
 
     # (a) nested gridspec: strip + 3 stations
-    gsa = gs[0, :].subgridspec(4, 1, height_ratios=[0.9, 1, 1, 1], hspace=0.0)
+    gsa = gs[0, :].subgridspec(4, 1, height_ratios=[0.85, 1, 1, 1], hspace=0.0)
     ax_q = fig.add_subplot(gsa[0])
     ax_st = [fig.add_subplot(gsa[i + 1], sharex=ax_q) for i in range(3)]
 
     # ---------------- (a) discharge strip ----------------
     _, q0 = matched_q_baseline(STATIONS[0])
     ax_q.plot(q0.index, q0.values, color="#222", lw=1.5)
-    ax_q.set_ylabel("Q\n(m³ s⁻¹)", fontsize=10)
+    ax_q.set_ylabel("Q\n(m³ s⁻¹)", fontsize=12)
     ax_q.axvline(q_peak, color="#D55E00", lw=1.4, zorder=5)
     for w in ars:
         if w["label"] in AR_COLORS:
             ax_q.axvspan(pd.Timestamp(w["start"]), pd.Timestamp(w["end"]),
                          color=AR_COLORS[w["label"]], alpha=0.13, zorder=0)
-            ax_q.text(pd.Timestamp(w["peak"]), q0.max() * 0.98, w["label"],
-                      ha="center", va="top", fontsize=9, color=AR_COLORS[w["label"]],
-                      fontweight="bold")
-    ax_q.text(q_peak, q0.max() * 0.40, " peak Q", color="#D55E00", fontsize=8.5, va="center")
+            ax_q.text(pd.Timestamp(w["peak"]), q0.max() * 0.96, w["label"],
+                      ha="center", va="top", fontsize=12, color=AR_COLORS[w["label"]],
+                      fontweight="semibold")
+    ax_q.text(q_peak, q0.max() * 0.42, " peak Q", color="#D55E00", fontsize=12, va="center")
     ax_q.set_title("(a)  Matched-discharge reorganization timing — Puyallup PR cluster",
-                   fontsize=12, loc="left", fontweight="bold")
+                   fontsize=14, loc="left", fontweight="semibold")
     ax_q.tick_params(labelbottom=False)
     ax_q.margins(x=0.005)
 
@@ -220,9 +220,9 @@ def main() -> int:
                 ax.axvspan(pd.Timestamp(w["start"]), pd.Timestamp(w["end"]),
                            color=AR_COLORS[w["label"]], alpha=0.06, zorder=0)
         ax.axvline(q_peak, color="#D55E00", lw=1.0, alpha=0.7)
-        ax.scatter(df.t, y, s=12, c="#9a9a9a", alpha=0.6, zorder=2,
+        ax.scatter(df.t, y, s=14, c="#9a9a9a", alpha=0.6, zorder=2,
                    label="matched-Q snapshots")
-        ax.plot(df.t.values[order], yhat[order], color=ST_COLORS[sid], lw=2.2,
+        ax.plot(df.t.values[order], yhat[order], color=ST_COLORS[sid], lw=2.4,
                 zorder=3, label="logistic step fit")
 
         onset = d.get("onset_utc")
@@ -238,33 +238,39 @@ def main() -> int:
                 hi = q_peak + pd.Timedelta(hours=ci[1])
                 ax.axvspan(lo, hi, color="#009E73", alpha=0.18, zorder=1)
             lag = d["step_t50_lag_vs_Qpeak_h"]
-            head = (f"{sid}: persistent step  t50 {t50:%m-%d %H:%M}Z "
-                    f"(+{lag:.0f} h vs peak)  Δ={d['magnitude_log10']:+.2f} log₁₀  R²={d['r2']:.2f}")
+            head = (f"{sid}  persistent step:  t50 {t50:%m-%d %H:%M}Z "
+                    f"(+{lag:.0f} h)   Δ={d['magnitude_log10']:+.2f} log₁₀   R²={d['r2']:.2f}")
         else:
-            head = (f"{sid}: reversible / transient — returns to baseline "
+            head = (f"{sid}  reversible / transient — returns to baseline "
                     f"(end-state {d['persistent_offset_log10']:+.2f} log₁₀)")
-        ax.text(0.012, 0.90, head, transform=ax.transAxes, fontsize=9.0,
-                va="top", ha="left", fontweight="bold",
-                bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.75))
-        ax.set_ylabel("c = Δlog₁₀P", fontsize=9.5)
-        ax.set_ylim(min(-0.55, y.min() - 0.08), max(0.85, y.max() + 0.08))
+        # header sits in a reserved band at the top of the row, clear of the data
+        ax.text(0.010, 0.965, head, transform=ax.transAxes, fontsize=12.5,
+                va="top", ha="left", fontweight="semibold", color=ST_COLORS[sid],
+                bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="0.8", lw=0.6,
+                          alpha=0.92), zorder=6)
+        ax.set_ylabel("c = Δlog₁₀P", fontsize=12)
+        # extra top headroom so the header band never touches the c(t) points/curve
+        ax.set_ylim(min(-0.55, y.min() - 0.08), max(0.85, y.max() + 0.08) + 0.30)
         ax.margins(x=0.005)
         if sid != STATIONS[-1]:
             ax.tick_params(labelbottom=False)
 
-    # legend + onset key on the first station panel only
+    # shared key for panel (a): one horizontal row centered above the strip,
+    # well clear of every c(t) point and step-fit curve.
     handles = [
-        plt.Line2D([], [], marker="o", ls="", mfc="#9a9a9a", mec="none", ms=6,
+        plt.Line2D([], [], marker="o", ls="", mfc="#9a9a9a", mec="none", ms=7,
                    label="matched-Q snapshots"),
-        plt.Line2D([], [], color="#444", lw=2.2, label="logistic step fit"),
+        plt.Line2D([], [], color="#444", lw=2.4, label="logistic step fit"),
         plt.Line2D([], [], color="#CC79A7", lw=1.2, ls="--", label="onset"),
         plt.Line2D([], [], color="#009E73", lw=1.8, label="step t50 (±95% CI)"),
         plt.Line2D([], [], color="#D55E00", lw=1.0, label="peak Q"),
     ]
-    ax_st[0].legend(handles=handles, loc="lower right", fontsize=7.8, ncol=3,
-                    framealpha=0.92, columnspacing=1.0, handlelength=1.4)
+    ax_st[0].legend(handles=handles, loc="upper right",
+                    bbox_to_anchor=(0.998, 0.86), fontsize=12, ncol=2,
+                    framealpha=0.95, edgecolor="0.8", columnspacing=1.4,
+                    handlelength=1.6, handletextpad=0.5)
     ax_st[-1].xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
-    ax_st[-1].set_xlabel("December 2025 (UTC)", fontsize=10)
+    ax_st[-1].set_xlabel("December 2025 (UTC)", fontsize=12)
 
     # ---------------- (b) width-stage hysteresis ----------------
     axB = fig.add_subplot(gs[1, 0])
@@ -287,21 +293,26 @@ def main() -> int:
         axB.plot(H[0], W[0], "o", mfc="white", mec=c, mew=1.6, ms=8, zorder=4)
         axB.plot(H[1:], W[1:], "o", color=c, ms=7, zorder=4, label=lab)
     axB.axhline(1.0, color="0.6", ls=":", lw=1)
-    axB.annotate("pre-flood width (Nov, ref)", (H.min(), 1.0), xytext=(2, 4),
-                 textcoords="offset points", fontsize=8, color="0.4")
+    axB.annotate("pre-flood width (Nov, ref)", (10, 1.0), xytext=(-2, 5),
+                 ha="right", textcoords="offset points", fontsize=12, color="0.45")
+    # epoch labels: explicit per-epoch placement into clear regions, no collisions
     Wp = np.array([series.loc[e, "PR01_rel_to_PR03"] for e in ORDER])
+    LABEL_OFFS = {                  # (dx, dy) in points, and ha
+        "Nov 16–30":          (-9, 11, "right"),
+        "Dec 1–8":            (16, 13, "left"),
+        "Dec 9–12 (AR peak)": (-10, 7, "right"),
+        "Dec 13–20":          (12, -13, "left"),
+        "Dec 21–31":          (10, -11, "left"),
+    }
     for e, x, y in zip(ORDER, H, Wp):
-        dx, dy = (6, 2)
-        if e == "Dec 9–12 (AR peak)":
-            dx, dy = (-8, -12)
+        dx, dy, ha = LABEL_OFFS[e]
         axB.annotate(e.replace(" (AR peak)", " (peak)"), (x, y), xytext=(dx, dy),
-                     ha="right" if dx < 0 else "left", textcoords="offset points",
-                     fontsize=7.5, color="0.3")
-    axB.set_xlabel("gage stage at Electron (ft; epoch mean, whiskers = min–max)", fontsize=10)
-    axB.set_ylabel("wetted active-channel width proxy\n(SAR area ÷PR03 ÷Nov baseline)", fontsize=10)
+                     ha=ha, textcoords="offset points", fontsize=12, color="0.3")
+    axB.set_xlabel("gage stage at Electron (ft; epoch mean, whiskers = min–max)", fontsize=12)
+    axB.set_ylabel("wetted active-channel width proxy\n(SAR area ÷PR03 ÷Nov baseline)", fontsize=12)
     axB.set_title("(b)  Width–stage hysteresis: rise widens, fall does not recover",
-                  fontsize=11.5, loc="left", fontweight="bold")
-    axB.legend(loc="upper left", fontsize=9, framealpha=0.9)
+                  fontsize=14, loc="left", fontweight="semibold")
+    axB.legend(loc="upper left", fontsize=12, framealpha=0.92, edgecolor="0.8")
 
     # ---------------- (c) recession-rate clogging ----------------
     axC = fig.add_subplot(gs[1, 1])
@@ -315,28 +326,43 @@ def main() -> int:
         pre = j["P"][(j.index >= pd.Timestamp(PRE[0])) & (j.index < pd.Timestamp(PRE[1]))].median()
         axC.semilogy(p.index, (p / pre).rolling("2h", center=True, min_periods=4).median(),
                      color=ST_COLORS[s], lw=1.4, label=s)
-    axC.set_ylabel("5–15 Hz power /\npre-flood median", fontsize=10)
-    axC.set_xlabel("December 2025 (UTC)", fontsize=10)
+    axC.set_ylabel("5–15 Hz power /\npre-flood median", fontsize=12)
+    axC.set_xlabel("December 2025 (UTC)", fontsize=12)
+    # give vertical headroom so the legend clears the curve peaks and the
+    # recession labels sit in clear space below the curves
+    y0, y1 = axC.get_ylim()
+    axC.set_ylim(y0, y1 * 3.0)
     rec = haz["recessions"]
+    # recession labels parked low in their shaded bands, clear of the curves.
+    # AR3 label is pinned to the LEFT of the AR3 band so it never meets the
+    # braid-reorganization label that sits at the avulsion step further right.
+    REC_Y = {"AR1": 2.4, "AR3": 7.5}
+    REC_HA = {"AR1": "center", "AR3": "left"}
     for lab, (rt0, rt1) in RECESSIONS.items():
-        mid = pd.Timestamp(rt0) + (pd.Timestamp(rt1) - pd.Timestamp(rt0)) / 2
+        if lab == "AR1":
+            xpos = pd.Timestamp(rt0) + (pd.Timestamp(rt1) - pd.Timestamp(rt0)) / 2
+        else:
+            xpos = pd.Timestamp(rt0) + pd.Timedelta(hours=1)
         r = rec[lab]
         axC.axvspan(pd.Timestamp(rt0), pd.Timestamp(rt1), color="0.5",
                     alpha=0.05 if lab == "AR1" else 0.14, zorder=0)
-        axC.text(mid, axC.get_ylim()[1] * 0.55,
+        axC.text(xpos, REC_Y[lab],
                  f"{lab} fall\n{r['dqdt']:+.0f} m³/s/h\n({r['hours']:.0f} h)",
-                 ha="center", va="top", fontsize=8.5,
-                 color="#444" if lab == "AR1" else "#7a4f00", fontweight="bold")
+                 ha=REC_HA[lab], va="top", fontsize=12,
+                 color="#444" if lab == "AR1" else "#7a4f00", fontweight="semibold",
+                 bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="none",
+                           alpha=0.82), zorder=6)
     steps = haz["reorg_steps"]
     for s, t in steps.items():
         axC.axvline(pd.Timestamp(t), color="#6a3d9a", lw=1.5, ls="-", zorder=5)
-    axC.text(pd.Timestamp(list(steps.values())[0]), axC.get_ylim()[0] * 1.7,
-             " braid reorganization\n (avulsion step)", color="#6a3d9a",
-             fontsize=8.8, va="bottom", ha="left")
+    axC.text(pd.Timestamp(list(steps.values())[-1]) + pd.Timedelta(hours=3),
+             axC.get_ylim()[0] * 1.5,
+             "braid reorganization\n(avulsion step)", color="#6a3d9a",
+             fontsize=12, va="bottom", ha="left", fontweight="semibold")
     axC.set_title("(c)  Slow AR3 recession hosts the reorganization (clogging)",
-                  fontsize=11.5, loc="left", fontweight="bold")
-    axC.legend(loc="upper right", fontsize=8.5, ncol=3, framealpha=0.9,
-               columnspacing=0.9, handlelength=1.2)
+                  fontsize=14, loc="left", fontweight="semibold")
+    axC.legend(loc="upper right", fontsize=12, ncol=3, framealpha=0.92,
+               edgecolor="0.8", columnspacing=1.0, handlelength=1.4)
     axC.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
 
     out = FIGDIR / "figF6_timing.png"

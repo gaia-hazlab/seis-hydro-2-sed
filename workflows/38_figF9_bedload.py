@@ -94,8 +94,8 @@ def panel_a(ax) -> None:
     img = FIGDIR / "fig11_spectra.png"
     ax.imshow(plt.imread(str(img)))
     ax.axis("off")
-    ax.set_title("(a) Flood vs quiet spectra — bedload band (30–80 Hz) unsampled "
-                 "at 50 sps (Nyquist 25 Hz)", loc="left", fontsize=11)
+    ax.set_title("(a) Flood vs quiet ground-velocity spectra",
+                 loc="left", fontsize=14)
 
 
 def panel_b(ax_d, ax_b) -> dict:
@@ -122,30 +122,38 @@ def panel_b(ax_d, ax_b) -> dict:
         data[s]["nrm"] = P / (base if base and np.isfinite(base) else P.median())
 
     ax_d.plot(q.index, q.values, color="k", lw=1.4)
-    ax_d.set_ylabel("discharge\n(m³ s⁻¹)", fontsize=11)
-    ax_d.tick_params(labelsize=10)
+    ax_d.set_ylabel("discharge\n(m³ s⁻¹)", fontsize=13)
+    ax_d.tick_params(labelsize=12)
     ax_d.set_title("(b) 5–15 Hz bedload proxy across the December-2025 atmospheric rivers",
-                   loc="left", fontsize=11)
-    ytop = ax_d.get_ylim()[1]
-    # stagger label heights so the closely-spaced pre-AR/AR1/AR2/AR3 don't collide
-    yfrac = {"pre-AR": 1.05, "AR1": 0.78, "AR2": 1.05, "AR3": 0.78}
+                   loc="left", fontsize=14)
+    # Give the AR labels a dedicated band of headroom ABOVE all discharge data so
+    # they never sit on the peaks; stagger two heights so adjacent labels (which
+    # can be close in time) never touch each other.
+    qtop = float(np.nanmax(q.values))
+    ax_d.set_ylim(top=qtop * 1.55)  # reserve the upper third for labels
+    ylo = qtop * 1.18
+    yhi = qtop * 1.40
+    yfrac = {"pre-AR": ylo, "AR1": yhi, "AR2": ylo, "AR3": yhi}
     for (s0, pk, s1, lab) in ars:
         for a in (ax_d, ax_b):
             a.axvspan(s0, s1, color=AR_COLORS.get(lab, "#999999"), alpha=0.22, zorder=0)
-        ax_d.text(pk, ytop * yfrac.get(lab, 0.9), lab, ha="center", va="bottom",
-                  fontsize=9.5, fontweight="bold", clip_on=False)
-    ax_d.set_ylim(top=ytop * 1.28)  # headroom for the raised labels
+        ax_d.text(pk, yfrac.get(lab, ylo), lab, ha="center", va="bottom",
+                  fontsize=12, fontweight="semibold", clip_on=False)
 
     for s in stations:
         ax_b.semilogy(data[s]["nrm"].index, data[s]["nrm"].values, lw=1.3, color=col[s],
                       label=f"{s} ({data[s]['dist']:.0f} km)")
     ax_b.axhline(1.0, color="0.5", ls=":", lw=1)
     ymax = max(np.nanmax(data[s]["nrm"].values) for s in stations)
-    ax_b.set_ylim(0.5, ymax * 1.4)
-    ax_b.set_ylabel("5–15 Hz power /\npre-flood median", fontsize=11)
-    ax_b.set_xlabel("December 2025 (UTC)", fontsize=11)
-    ax_b.tick_params(labelsize=10)
-    ax_b.legend(fontsize=8, ncol=2, loc="upper left", framealpha=0.9, borderpad=0.4)
+    # extra top headroom so the legend (top-centre) clears the tallest traces
+    ax_b.set_ylim(0.5, ymax * 2.6)
+    ax_b.set_ylabel("5–15 Hz power /\npre-flood median", fontsize=13)
+    ax_b.set_xlabel("December 2025 (UTC)", fontsize=13)
+    ax_b.tick_params(labelsize=12)
+    # park the 6-station legend in the reserved top band, spread across 3 columns
+    # so it sits clear of the spiky traces below
+    ax_b.legend(fontsize=12, ncol=3, loc="upper center", framealpha=0.92,
+                borderpad=0.5, columnspacing=1.2, handlelength=1.6)
 
     # per-AR means for reporting
     per_ar = {}

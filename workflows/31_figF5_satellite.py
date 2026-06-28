@@ -64,13 +64,17 @@ def _change_map(channel_pre: np.ndarray, channel_post: np.ndarray) -> np.ndarray
     return chg
 
 
-def _stations(ax, spx: dict, fs: int = 8):
-    for name, (_r, _c, ux, uy) in spx.items():
+def _stations(ax, spx: dict, fs: int = 12):
+    # alternate the label offset above/below so neighbouring triangles whose
+    # labels would otherwise stack do not collide on the map.
+    for i, (name, (_r, _c, ux, uy)) in enumerate(sorted(spx.items())):
         ax.plot(ux, uy, "^", ms=11, mfc="yellow", mec="k", mew=1.3, zorder=6)
+        dy = 7 if i % 2 == 0 else -16
+        va = "bottom" if dy > 0 else "top"
         ax.annotate(name.split(".")[1], (ux, uy), color="white", fontsize=fs,
-                    xytext=(7, 4), textcoords="offset points", fontweight="bold",
+                    xytext=(9, dy), textcoords="offset points", va=va,
                     zorder=7,
-                    path_effects=[pe.withStroke(linewidth=2.0, foreground="black")])
+                    path_effects=[pe.withStroke(linewidth=2.6, foreground="black")])
 
 
 def main() -> int:
@@ -101,10 +105,10 @@ def main() -> int:
                    origin="upper", colors="#ff2d2d", linewidths=1.1, zorder=4)
         _stations(ax, spx)
         ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
-        ax.set_title(f"({next(panel)}) {basin} — S2 true-color + post active channel",
-                     fontsize=10.5)
+        ax.set_title(f"({next(panel)}) {basin} — S2 true-color + post channel",
+                     fontsize=13.5)
         ax.ticklabel_format(style="plain", useOffset=False)
-        ax.tick_params(labelsize=7)
+        ax.tick_params(labelsize=11)
 
         # ---- col2: active-channel change map (quantitative), faint over basemap ----
         ax = axes[ri, 1]
@@ -118,11 +122,18 @@ def main() -> int:
         ax.imshow(rgba, extent=ext, origin="upper", zorder=3, interpolation="nearest")
         _stations(ax, spx)
         ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
-        ax.set_title(f"({next(panel)}) Active-channel change (S2$\\cup$S1): "
-                     "blue persistent $\\cdot$ red newly-wet $\\cdot$ orange newly-dry",
-                     fontsize=9.3)
+        ax.set_title(f"({next(panel)}) Active-channel change (S2$\\cup$S1)",
+                     fontsize=13.5)
+        # colour key as a compact in-panel legend (was an over-long title)
+        from matplotlib.patches import Patch as _Patch
+        ax.legend(handles=[_Patch(fc=CHG_COLORS[0], label="persistent"),
+                           _Patch(fc=CHG_COLORS[1], label="newly-wet"),
+                           _Patch(fc=CHG_COLORS[2], label="newly-dry")],
+                  fontsize=11, loc="lower left", frameon=True, framealpha=0.9,
+                  handlelength=1.1, handleheight=1.0, borderpad=0.4,
+                  labelspacing=0.3).set_zorder(8)
         ax.ticklabel_format(style="plain", useOffset=False)
-        ax.tick_params(labelsize=7)
+        ax.tick_params(labelsize=11)
 
     # ---- col3 (shared, spanning both rows): predicted geometric drift ΔlogP ----
     gs = axes[0, 2].get_gridspec()
@@ -140,22 +151,26 @@ def main() -> int:
     r_e = float(json.loads((CONFIG / REGIONS[0][2]).read_text())["r_e_m"])
     obs = float(json.loads((CONFIG / REGIONS[0][2]).read_text())
                 .get("observed_baseline_drift_log10", 0.2))
-    axd.axhline(obs, ls="--", color="green", lw=1.4)
-    axd.annotate(f"observed cross-AR drift +{obs:g}", (len(names) - 1, obs),
-                 color="green", fontsize=8.5, ha="right", va="bottom")
+    axd.axhline(obs, ls="--", color="green", lw=1.6)
+    axd.annotate(f"observed cross-AR drift +{obs:g}", (0.0, obs),
+                 xytext=(4, 5), textcoords="offset points",
+                 color="green", fontsize=12, ha="left", va="bottom")
     axd.axhline(0, color="k", lw=0.8)
     axd.set_xticks(x)
     axd.set_xticklabels([n.split(".")[1] for n in names], rotation=15, ha="right")
-    axd.set_ylabel(r"predicted $\Delta\log_{10}P=\log_{10}(W_{post}/W_{pre})$")
-    axd.set_title("(c/f) Predicted geometric drift $\\Delta\\log P$", fontsize=10.5)
-    axd.text(0.5, -0.10, r"$W=\sum A\,r^{-1}e^{-r/r_e}$, "
+    axd.tick_params(labelsize=12)
+    axd.set_ylabel(r"predicted $\Delta\log_{10}P=\log_{10}(W_{post}/W_{pre})$",
+                   fontsize=13)
+    axd.set_title("(c/f) Predicted geometric drift $\\Delta\\log P$", fontsize=13.5)
+    axd.text(0.5, -0.13, r"$W=\sum A\,r^{-1}e^{-r/r_e}$, "
              + f"$r_e$={r_e:.0f} m; whiskers = MNDWI-threshold ensemble (min, max)",
-             transform=axd.transAxes, ha="center", fontsize=8, color="0.3")
-    # legend distinguishing the two basins' highlight scheme
+             transform=axd.transAxes, ha="center", fontsize=11, color="0.3")
+    # legend distinguishing the two basins' highlight scheme; placed at lower-left
+    # so it never collides with the panel title or the tall bars/whiskers on top.
     from matplotlib.patches import Patch
     axd.legend(handles=[Patch(fc="#e31a1c", label="braidplain-central / focus station"),
                         Patch(fc="#08519c", label="other co-located station")],
-               fontsize=8.5, loc="upper left", frameon=True)
+               fontsize=12, loc="upper left", frameon=True, framealpha=0.9)
 
     out = FIGDIR / "figF5_satellite.png"
     fig.savefig(out, dpi=160)

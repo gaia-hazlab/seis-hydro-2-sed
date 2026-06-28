@@ -110,47 +110,57 @@ def panel_hysteresis(ax, hyst):
         # arrow tracing the AR1->AR3 coherent positive baseline drift (cached
         # baseline_offset), drawn at the low-Q side of the band.
         offs = [a["baseline_offset"] for a in rec["per_AR"]]
-        x_arr = float(min(L["lq_up"].min() for L in loops)) + 0.05
+        x_arr = float(min(L["lq_up"].min() for L in loops)) - 0.04
         ax.annotate("", xy=(x_arr, y_band + 1.4 * offs[-1]),
                     xytext=(x_arr, y_band + 1.4 * offs[0]),
-                    arrowprops=dict(arrowstyle="-|>", color="0.35", lw=1.6))
-        hi_text.append("{}  HI: {:+.3f}/{:+.3f}/{:+.3f}".format(
+                    arrowprops=dict(arrowstyle="-|>", color="0.35", lw=2.0))
+        hi_text.append("{}  HI {:+.3f}/{:+.3f}/{:+.3f}".format(
             sid.split(".")[1], *[a["HI"] for a in rec["per_AR"]]))
 
     lq_hi = max(a.max() for a in all_lq)
     lq_lo = min(a.min() for a in all_lq)
+    # station labels in the right gutter (outside the loops, which end at lq_hi)
     for sid, (lqm, yb) in label_y.items():
-        ax.text(lq_hi + 0.04, yb, sid.split(".")[1], fontsize=10,
-                color="0.2", va="center", ha="left", fontweight="bold")
+        ax.text(lq_hi + 0.07, yb, sid.split(".")[1], fontsize=13,
+                color="0.2", va="center", ha="left")
 
-    # legend: AR colors (rising solid) once
+    # legend: AR colors (rising solid) once. Placed in the right gutter below the
+    # data so it never overlaps the loops.
     from matplotlib.lines import Line2D
-    handles = [Line2D([0], [0], color=AR_COLORS[a], lw=2, label=a)
+    handles = [Line2D([0], [0], color=AR_COLORS[a], lw=2.4, label=a)
                for a in ("AR1", "AR2", "AR3")]
     handles += [
-        Line2D([0], [0], color="0.3", lw=1.7, ls="-", label="rising limb"),
-        Line2D([0], [0], color="0.3", lw=1.4, ls="--", label="falling limb"),
-        Line2D([0], [0], color="0.35", lw=1.6, label="AR1→AR3 drift"),
+        Line2D([0], [0], color="0.3", lw=1.9, ls="-", label="rising limb"),
+        Line2D([0], [0], color="0.3", lw=1.5, ls="--", label="falling limb"),
+        Line2D([0], [0], color="0.35", lw=2.0, label="AR1→AR3 drift"),
     ]
-    ax.legend(handles=handles, fontsize=8, loc="lower right", ncol=2,
-              framealpha=0.9)
+    ax.legend(handles=handles, fontsize=12, loc="lower right", ncol=1,
+              framealpha=0.92, borderpad=0.6, labelspacing=0.35,
+              handlelength=1.6)
 
-    ax.text(0.015, 0.985,
-            "loops near-reversible (HI≈0) → geometric onset\n"
-            "+ coherent baseline drift AR1→AR3 → channel migration",
-            transform=ax.transAxes, fontsize=8, color="0.3",
-            va="top", ha="left",
-            bbox=dict(boxstyle="round", fc="white", ec="0.85", alpha=0.85))
-    # per-station HI readout (true cached HI, AR1/AR2/AR3)
-    ax.text(0.985, 0.34, "\n".join(hi_text), transform=ax.transAxes,
-            fontsize=7.5, color="0.25", va="top", ha="right", family="monospace",
-            bbox=dict(boxstyle="round", fc="white", ec="0.85", alpha=0.85))
+    # Reserve clear headroom above the loops and a strip below them so the two
+    # text boxes sit in genuinely empty regions, not on the data.
+    y_top = 6.6        # PR03 band tops out ~6.33
+    y_bot = -1.89      # PR01 band floor
+    ax.set_ylim(y_bot - 2.6, y_top + 1.9)
 
-    ax.set_xlim(lq_lo - 0.06, lq_hi + 0.34)
+    # interpretation note: in the clear headroom strip above all three bands.
+    ax.text(0.5, 0.985,
+            "loops near-reversible (HI ≈ 0) → geometric onset;\n"
+            "coherent baseline drift AR1→AR3 → channel migration",
+            transform=ax.transAxes, fontsize=12, color="0.25",
+            va="top", ha="center",
+            bbox=dict(boxstyle="round", fc="white", ec="0.8", alpha=0.92))
+    # per-station HI readout: in the clear strip below the PR01 band, lower-left.
+    ax.text(0.015, 0.015, "\n".join(hi_text), transform=ax.transAxes,
+            fontsize=12, color="0.25", va="bottom", ha="left",
+            family="monospace",
+            bbox=dict(boxstyle="round", fc="white", ec="0.8", alpha=0.92))
+
+    ax.set_xlim(lq_lo - 0.12, lq_hi + 0.30)
     ax.set_xlabel(r"$\log_{10} Q$  (m$^3$ s$^{-1}$)")
     ax.set_ylabel(r"$\log_{10} P$  (5–15 Hz, stacked per station)")
-    ax.set_title("(a) Braided P–Q hysteresis — near-reversible loops + AR baseline drift",
-                 loc="left", fontsize=11)
+    ax.set_title("(a) Braided P–Q hysteresis", loc="left", fontsize=14)
 
 
 def panel_reach(ax, att):
@@ -173,47 +183,52 @@ def panel_reach(ax, att):
     ax.plot(ff, re(np.full_like(ff, Q_tsai)), color="tab:red", ls=":", lw=1.6,
             label="Tsai  Q=20")
 
-    # band shading + labels
+    # band shading + labels (band labels sit low, in the clear lower band area)
     ax.axvspan(1, 20, color="#0072B2", alpha=0.10)
     ax.axvspan(30, 80, color="#E69F00", alpha=0.13)
-    ax.text(4.5, 8, "turbulence\n1–20 Hz", fontsize=8, ha="center", color="0.3")
-    ax.text(49, 8, "bedload\n30–80 Hz", fontsize=8, ha="center", color="0.3")
+    ax.text(4.5, 0.018, "turbulence\n1–20 Hz", fontsize=12, ha="center",
+            va="bottom", color="0.3")
+    ax.text(49, 0.018, "bedload\n30–80 Hz", fontsize=12, ha="center",
+            va="bottom", color="0.35")
     ax.axvline(25, color="0.45", ls="--", lw=0.9)
-    ax.text(25, 0.013, " 50-sps Nyquist", fontsize=7, color="0.35",
-            rotation=90, va="bottom")
+    ax.text(24, 14, "50-sps Nyquist", fontsize=11, color="0.35",
+            rotation=90, va="top", ha="right")
 
     # band center marker + the two cached r_e values
     ax.axvline(fc, color="0.4", ls="-", lw=0.7, alpha=0.6)
     ax.scatter([fc, fc], [re_pnw / 1000.0, re_tsai / 1000.0],
-               color=["k", "tab:red"], zorder=6, s=42, edgecolor="w", lw=0.8)
-    ax.annotate(rf"$r_e$≈{re_pnw:.0f} m  (PNW)", (fc, re_pnw / 1000.0),
-                xytext=(8, 6), textcoords="offset points", fontsize=8.5)
-    ax.annotate(rf"$r_e$≈{re_tsai:.0f} m  (Tsai)", (fc, re_tsai / 1000.0),
-                xytext=(8, -14), textcoords="offset points", fontsize=8.5,
+               color=["k", "tab:red"], zorder=6, s=48, edgecolor="w", lw=0.8)
+    ax.annotate(rf"$r_e\approx${re_pnw:.0f} m (PNW)", (fc, re_pnw / 1000.0),
+                xytext=(9, 9), textcoords="offset points", fontsize=12)
+    ax.annotate(rf"$r_e\approx${re_tsai:.0f} m (Tsai)", (fc, re_tsai / 1000.0),
+                xytext=(9, -16), textcoords="offset points", fontsize=12,
                 color="tab:red")
 
     # observed PR-cluster decay band: ~flat over 0.2–2 km -> weak decay,
-    # consistent with (even exceeding) the ~780 m PNW e-folding.
+    # consistent with (even exceeding) the ~780 m PNW e-folding. The PR standoff
+    # lines sit at the left edge so labels never collide with the decay box.
     dpk = att["observed_decay_per_km"]
     ax.axhspan(0.20, 1.90, xmin=0.0, xmax=1.0, color="#0072B2", alpha=0.06)
     for r_km, lab in [(0.19, "PR01"), (0.71, "PR02"), (1.90, "PR03")]:
         ax.axhline(r_km, color="0.55", ls=":", lw=0.8)
-        ax.text(1.06, r_km * 1.04, lab, fontsize=7.5, color="0.4")
-    ax.text(0.97, 0.04,
+        ax.text(1.06, r_km * 1.05, lab, fontsize=11, color="0.4",
+                va="bottom", ha="left")
+    ax.text(0.985, 0.035,
             f"observed PR-cluster decay ≈ {dpk:.3f} km$^{{-1}}$\n"
-            f"(near-flat 0.2–2 km) ⇒ $r_e$≳{re_pnw:.0f} m:\n"
+            f"(near-flat 0.2–2 km) ⇒ $r_e \\geq$ {re_pnw:.0f} m:\n"
             "cluster integrates a moving distributed source",
-            transform=ax.transAxes, ha="right", va="bottom", fontsize=8,
-            color="0.3",
-            bbox=dict(boxstyle="round", fc="white", ec="0.8", alpha=0.85))
+            transform=ax.transAxes, ha="right", va="bottom", fontsize=12,
+            color="0.25",
+            bbox=dict(boxstyle="round", fc="white", ec="0.8", alpha=0.92))
 
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlim(1, 100); ax.set_ylim(0.01, 30)
     ax.set_xlabel("frequency (Hz)")
     ax.set_ylabel(r"e-folding distance $r_e$  (km)")
-    ax.set_title(r"(b) Seismic reach  $r_e = v_c\,Q(f)\,/\,(2\pi f)$  + observed decay",
-                 loc="left", fontsize=11)
-    ax.legend(fontsize=8.5, loc="upper right")
+    ax.set_title(r"(b) Seismic reach  $r_e = v_c\,Q(f)\,/\,(2\pi f)$",
+                 loc="left", fontsize=14)
+    ax.legend(fontsize=12, loc="upper right", framealpha=0.92,
+              borderpad=0.5, labelspacing=0.35)
 
 
 def main() -> int:
@@ -221,10 +236,10 @@ def main() -> int:
     hyst = json.loads((CONFIG / "braided_hysteresis.json").read_text())
     att = json.loads((CONFIG / "attenuation_fit.json").read_text())
 
-    fig, (axA, axB) = plt.subplots(1, 2, figsize=(13, 5.5))
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(14, 6.2))
     panel_hysteresis(axA, hyst)
     panel_reach(axB, att)
-    fig.tight_layout()
+    fig.tight_layout(pad=1.2, w_pad=2.0)
 
     FIGDIR.mkdir(parents=True, exist_ok=True)
     out = FIGDIR / "figF4_braided.png"
