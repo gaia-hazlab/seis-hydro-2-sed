@@ -6,6 +6,8 @@ author:
     email: mdenolle@uw.edu
   - name: Bradley P. Lipovsky
     affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
+  - name: David Montgomery
+    affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
 date: last-modified
 abstract: |
   Glacier-fed mountain rivers carry the floods and sediment that drive downstream
@@ -32,10 +34,12 @@ abstract: |
   km downstream (a flood-wave lag we correct, implied celerity ≈2 m s⁻¹) on a far
   wider, higher braidplain where the post-flood **rain→snow supply shutoff** masks
   the geometric signal — together defining the **domain** in which source-resolved
-  river seismology is clean (a compact channel with a co-located gage). Upstream
-  seismic power also leads the downstream flood-peak stage by ~36 h, a seismic
-  early-warning capability for this lahar-hazard corridor.
-keywords: [environmental seismology, braided rivers, channel reorganization, river discharge, flood early warning, Mt. Rainier, atmospheric river]
+  river seismology is clean (a compact channel with a co-located gage). Finally, a
+  deterministic routing of the upstream discharge through the downstream rating
+  reproduces the observed downstream stage for this event — a proof-of-concept for a
+  seismic-fed flood nowcast in this gage-sparse lahar corridor, not yet a
+  skill-validated forecast.
+keywords: [braided rivers, channel reorganization, river discharge, Mt. Rainier, atmospheric river, environmental seismology]
 ---
 
 # Introduction
@@ -122,45 +126,9 @@ a bounded hypothesis — while the **event-scale timing of channel reorganizatio
 the **reach geometry that bounds when it is measurable**, and the early-warning lead
 are the robust, novel contributions.
 
-# Data and study area
 
-The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
-and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
-has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
-[@czuba2012], underscoring an active, supply-rich sediment system. The channel
-**pattern** changes systematically downstream (@fig-pattern): the glacial source
-reaches are multi-thread, **braided** gravel braidplains — compact at the Puyallup PR
-cluster (active width tens of m) and far wider on the Nisqually at UW.LON (hundreds of
-m) — that give way past CC.TRON to a **single-thread, meandering** channel on the
-lowland floodplain. This braided-to-single-thread transition frames the
-source-model problem developed in §sec-braided.
 
-![Channel pattern along the flow path. (a) Corridor locator: OPERA DSWx-S1 flood water (10 Dec 2025), NHD mainstems, seismic stations (triangles) and gages (diamonds), with the three zoom reaches boxed. (b) The Puyallup source at the PR cluster — a *compact* braided channel (tens of m; cached Sentinel active-channel raster). (c) The Nisqually at UW.LON — a *wide* braided braidplain (hundreds of m). (d) The lower Puyallup past CC.TRON — a *single-thread, meandering* channel (OPERA water with the NHD centerline). Braided source reaches give way to a single-thread lowland.](figures/fig27_channel_pattern.png){#fig-pattern width=98%}
-
-We use the Cascade Volcano Observatory (network **CC**) stations across the
-**western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
-and upper White — paired with USGS discharge gages and NRCS SNOTEL/precipitation
-stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
-network, not a single transect.
-
-**An upgrading network.** The CC stations are being upgraded from 50 sps to
-**500 sps** high-rate (CH) channels: 19 of 31 stations in the study area now list
-CH channels (Nyquist 250 Hz) in their metadata (@fig-map, marker color). However,
-these high-rate channels came online in **2026**: for the December 2025 event only
-the legacy **50-sps (BH)** waveforms are archived and retrievable (CH returns no
-data through FDSN at any 2025 date), capping the resolvable band at the **25 Hz
-Nyquist** — below the canonical 30–80 Hz bedload band. The highest-rate
-near-channel data that *do* exist for the event are the **100-sps (HH)** PNSN/UW
-broadband stations (UW.RER 0.44 km, UW.LON 0.21 km), which reach a 30–50 Hz lower
-bedload edge. The 500-sps upgrade is thus a *2026 capability*: the same event today
-would be recorded into the full bedload band — the basis for the "what-if 2026"
-scenario (§Discussion) — and it also flags that **instrument upgrades must be
-matched by high-rate data archival** to realize bedload monitoring. The event
-peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
-
-![Western-draining basins of Mt. Rainier: the CC seismic network (triangles, colored by sample rate — the network is upgrading 50→500 sps), all USGS discharge gages (cyan diamonds), and NRCS SNOTEL/met stations (blue stars), on shaded SRTM topography with USGS-NHD rivers. Blue shows surface-water/flood extent from OPERA DSWx-S1 (Sentinel-1 SAR, 10 Dec 2025; NASA Disasters).](figures/fig1_transect_map.png){#fig-map width=92%}
-
-# The December 2025 atmospheric-river floods
+## Flood driver: the December 2025 atmospheric-river floods
 
 The study event was a **historic compound atmospheric-river sequence**, among the
 strongest and longest-lasting on record for the Puget Sound region. Two back-to-back
@@ -179,7 +147,7 @@ National Park closed indefinitely after mudslides and road washouts. In our gage
 record the event built **downstream**: peak discharge of ≈323 m³/s at Puyallup
 near Electron (RM 41), ≈371 m³/s on the Carbon, ≈425 m³/s on the Nisqually, and
 **≈1257 m³/s at Puyallup at Puyallup** near the mouth — the latter ~4× the
-headwater peak (@fig-ew).
+headwater peak (@fig-vq).
 
 **A warm, rain-on-snow driver — and a cold, snow-accumulating aftermath.** What
 made these ARs flood-productive was not rainfall alone but their *warmth*. At
@@ -187,15 +155,13 @@ high-elevation SNOTEL stations near the drainage tops — Paradise (1563 m, head
 the Nisqually) and Mowich (NW Puyallup/Carbon headwaters) — the AR pulses sat
 **near or above the 0 °C freezing line**, so precipitation fell as **rain on snow**
 at altitudes that normally store winter snowpack, adding snowmelt to direct runoff
-(@fig-warmsnow a). The contrast with late December is sharp: after ~13 December the
+(@fig-map e). The contrast with late December is sharp: after ~13 December the
 high stations dropped well below freezing (Paradise to −9.6 °C) and subsequent
 storms **accumulated as snow** — Paradise snow-water-equivalent roughly tripled
-(≈8→26 cm; @fig-warmsnow b) — so comparable precipitation produced little runoff
+(≈8→26 cm; @fig-map e) — so comparable precipitation produced little runoff
 and no comparable discharge or seismic response. The flood-generating window is
 therefore *thermally* defined: it is the warm-AR interval, which sets the period
 over which the seismic–discharge coupling below is evaluated.
-
-![Warm-AR vs cold-late-December contrast from high-elevation SNOTEL near the drainage tops. (a) Air temperature at Paradise (1563 m) and Mowich; the AR pulses (shaded) sit near or above the 0 °C freezing line (rain-on-snow), while late December drops well below freezing. (b) Snow-water-equivalent (solid) and snow depth (dotted): SWE is held down through the warm ARs and then accumulates (≈8→26 cm at Paradise) once the cold, snow-dominated storms arrive.](figures/fig21_warm_ar_snow.png){#fig-warmsnow width=90%}
 
 This combination — a named, well-documented, near-record AR flood over a
 glacier-fed volcanic edifice draining toward a densely populated, lahar-hazard
@@ -203,66 +169,170 @@ lowland (Orting–Puyallup–Tacoma) — makes the event a rare natural experime
 testing seismic flood and sediment monitoring, and is the motivation for the
 network analysis that follows.
 
+![Study area, channel pattern, and flood driver. **(a)** Corridor locator on a Sentinel-2 true-color basemap: OPERA DSWx-S1 flood water (10 Dec 2025), NHD mainstems, the CC/UW seismic stations (triangles, colored by sample rate — the network is upgrading 50→500 sps), USGS discharge gages and NRCS SNOTEL/met stations, with the three zoom reaches boxed. **(b)** The Puyallup source at the PR cluster — a *compact* braided channel (tens of m; S2 basemap with the active-channel mask). **(c)** The Nisqually at UW.LON — a *wide* braided braidplain (hundreds of m). **(d)** The lower Puyallup past CC.TRON — a *single-thread, meandering* channel. **(e)** The warm-AR flood driver from high-elevation SNOTEL: Paradise (1563 m) and Mowich air temperature vs the 0 °C freezing line (rain-on-snow during the shaded AR pulses) with snow-water-equivalent (held down through the warm ARs, then accumulating ≈8→26 cm). Basemaps are illustrative; the channel masks and flood water are quantitative.](figures/figF1_studyarea.png){#fig-map width=98%}
+
+
+# Data
+
+The western flanks of Mt Rainier have recently received attention from the hazard community 
+for its recognized threat for massive debris flows and volcanic related lahars (REF). 
+Two seismig monitoring network operates and monitor the volcano-tectonic activities at Mt Rainer: 
+the Cascade Volcano Observatory (network code **CC**) and the Pacific Northwest Seismic
+Network (network code **UW**) stations that are laid out across the
+**western-draining basins of Mt. Rainier** — Puyallup, Carbon, Mowich, Nisqually,
+and upper White. We complement this geophysical monitoring with USGS discharge gages and NRCS SNOTEL/precipitation
+stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
+network, not a single transect.
+
+The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
+and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
+has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
+[@czuba2012], underscoring an active, supply-rich sediment system. The channel
+**pattern** changes systematically downstream (@fig-map): the glacial source
+reaches are multi-thread, **braided** gravel braidplains — compact at the Puyallup PR
+cluster (active width tens of m) and far wider on the Nisqually at UW.LON (hundreds of
+m) — that give way past CC.TRON to a **single-thread, meandering** channel on the
+lowland floodplain. This braided-to-single-thread transition frames the
+source-model problem developed in §sec-braided.
+
+
+The CC stations are being upgraded from 50 sps to
+**500 sps** high-rate (CH) channels: 19 of 31 stations in the study area now list
+CH channels (Nyquist 250 Hz) in their metadata (@fig-map, marker color). However,
+these high-rate channels came online in **2026**: for the December 2025 event only
+the legacy **50-sps (BH)** waveforms are archived and retrievable (CH returns no
+data through FDSN at any 2025 date), capping the resolvable band at the **25 Hz
+Nyquist** — below the canonical 30–80 Hz bedload band. The highest-rate
+near-channel data that *do* exist for the event are the **100-sps (HH)** PNSN/UW
+broadband stations (UW.RER 0.44 km, UW.LON 0.21 km), which reach a 30–50 Hz lower
+bedload edge. The 500-sps upgrade is thus a *2026 capability*: the same event today
+would be recorded into the full bedload band — the basis for the "what-if 2026"
+scenario (§Discussion) — and it also flags that **instrument upgrades must be
+matched by high-rate data archival** to realize bedload monitoring. The event
+peaked at ≈323 m³/s at Puyallup-near-Electron on 2025-12-09.
+
+The satellite images ...
+
+The snotel and gage stations.
+
 # Methods
 
-Seismic waveforms (IRIS FDSN) are processed in whole-UTC-day blocks. We remove the
-instrument response to ground velocity (strictly: a day with missing or failed
-response metadata is dropped rather than silently integrated as raw counts),
-combine the Z/N/E components as a root-sum-square, and integrate the Welch power
-spectral density over each frequency band in 10-minute windows to form a band
-power proxy $P(t)$. Earthquakes (USGS catalog, $M\ge 3.5$ within 500 km) and
-impulsive transients (STA/LTA detection, clipped within the triggered windows
-only) are removed.
+We process each analysis thread so it can be reproduced from the text below;
+parameters are pinned in `config/analysis.yaml`, and the implementing modules are
+named per thread. Peripheral threads (anthropogenic screening, virtual-discharge
+inversion, the 30–50 Hz bedload edge, and the coarse/wood-rich caveat) are described
+in full in the Supplement Texts and pointed to here.
 
-Discharge $Q(t)$ comes from USGS NWIS (instantaneous values, m³/s). We align the
-seismic and discharge series with a high-pass-detrended, sign-constrained
-constant-lag cross-correlation, which avoids the spurious large lags that arise
-when the slow storm trend dominates. For each station and band we fit the
-power law
+**Seismic band-power proxy.** Seismic waveforms (IRIS/EarthScope FDSN) are processed
+in whole-UTC-day blocks. We remove the instrument response to ground velocity
+(strictly: a day with missing or failed response metadata is dropped rather than
+silently integrated as raw counts), combine the Z/N/E components as a root-sum-square,
+and integrate the Welch power spectral density over each frequency band in 10-minute
+windows to form a band-power proxy $P(t)$. Earthquakes (USGS catalog, $M\ge 3.5$
+within 500 km) and impulsive transients (STA/LTA detection, clipped within the
+triggered windows only) are removed. We use the **2–8 Hz** (flow) and **5–15 Hz**
+(transport-proxy) bands; the **0.5–2 Hz** band is excluded because it is dominated by
+the oceanic secondary microseism rather than river flow. Implemented in
+`src/riverseis/fast_proxy.py`.
+
+**Robust $P$–$Q$ fit and hysteresis.** Discharge $Q(t)$ comes from USGS NWIS
+(instantaneous values, m³/s). We align the seismic and discharge series with a
+high-pass-detrended, sign-constrained constant-lag cross-correlation, which avoids
+the spurious large lags that arise when the slow storm trend dominates. For each
+station and band we fit the power law
 
 $$
 \log_{10} P \;=\; a \;+\; b\,\log_{10} Q
 $$ {#eq-fit}
 
-robustly (ordinary least squares and Theil–Sen, with bootstrap 95% confidence
-intervals on $b$), and quantify event hysteresis with the Lawler index. The
-0.5–2 Hz band is excluded from the turbulence baseline because it is dominated by
-the oceanic secondary microseism rather than river flow.
+robustly by both ordinary least squares and Theil–Sen, with a MAD outlier clean and
+bootstrap 95% confidence intervals on $b$, and quantify event hysteresis with the
+Lawler index $HI$ (split the series at peak $Q$ and interpolate the rising- and
+falling-limb power at $q_\text{norm}=0.5$; positive = clockwise). Implemented in
+`src/riverseis/analysis.py` (`fit_scaling`, `lawler_hysteresis_index`).
 
-**Matched-discharge baseline and the event-scale timing of channel
-reorganization.** On the braided source reaches the source position is
+**Matched-discharge baseline $c(t)$ and the event-scale timing of channel
+reorganization (spine).** On the braided source reaches the source position is
 non-stationary, so we separate channel geometry from flow as the residual of the
-rating, $r(t)=\log_{10}P(t)-(a+b\log_{10}Q)$. Because $r(t)$ still mixes geometry
-with within-event hysteresis and rating curvature (a function of $Q$ alone), we
-track it at **matched discharge**: for a set of reference discharges that the
-compound hydrograph crosses repeatedly during the event (its inter-pulse troughs
-and limbs), we sample $r$ at each crossing and reference every level to its first
-(rising-limb) crossing, so the resulting baseline $c(t)$ is a sequence of
-same-stage "snapshots" whose changes are source geometry, not discharge. We detect
-the onset of reorganization as the first sustained $2\sigma$ departure of $c(t)$
-from the rising-limb band; fit the dominant step with a logistic
-$c_0+\Delta/(1+e^{-(t-t_{50})/\tau})$ — midpoint $t_{50}$ giving the lead/lag
+rating, $r(t)=\log_{10}P(t)-(a+b\log_{10}Q)$. This residual is continuous, but it
+still mixes the geometry signal we want with within-event hysteresis and rating
+curvature — both functions of $Q$ alone — so reading timing off $r(t)$ directly would
+confound geometry with flow. We remove the flow dependence by comparing power **only at
+equal discharge**. Define a ladder of reference discharges $\{Q_k\}$ (here
+$60,70,\dots,160$ m³ s⁻¹, the band the compound hydrograph re-crosses repeatedly), and
+let $t_{k,j}$ be the $j$-th time the hydrograph crosses level $Q_k$. The
+matched-discharge baseline is the residual at those crossings, each level referenced to
+its **first (rising-limb)** crossing:
+
+$$
+c\!\left(t_{k,j}\right) \;=\; r\!\left(t_{k,j}\right) \;-\; r\!\left(t_{k,1}\right),
+\qquad Q\!\left(t_{k,j}\right)=Q_k .
+$$ {#eq-ct}
+
+By construction $c$ is therefore **not a continuous time series**: it is defined only
+at the discrete instants the hydrograph passes through a reference level, where a true
+same-stage comparison exists; between crossings the discharge differs and no
+matched-discharge value is defined. Each $c$ value is a same-stage "snapshot" whose
+change from the rising-limb reference is *source geometry, not discharge*. The sampling
+density in time is set by how often and how long the hydrograph dwells in the reference
+band, so a fast pulse yields few snapshots and a slow, sustained recession yields many
+(this is why the slow recession, where reorganization occurs, is also the best-sampled
+limb; @fig-reorg a). We detect the onset of reorganization as the first sustained
+$2\sigma$ departure of $c$ from the rising-limb band; fit the dominant step with a
+logistic $c_0+\Delta/(1+e^{-(t-t_{50})/\tau})$ — midpoint $t_{50}$ giving the lead/lag
 relative to peak $Q$, width $4\tau$ distinguishing a stepwise from a gradual
-transition, magnitude $\Delta$ its size — and bound $t_{50},\tau,\Delta$ with a
-moving bootstrap; an end-state offset that returns to zero flags a *reversible*
+transition, magnitude $\Delta$ its size — and bound $t_{50},\tau,\Delta$ with a moving
+bootstrap; an end-state offset that returns to zero flags a *reversible*
 (non-persistent) excursion rather than an irreversible reorganization.
 
-**Flood-wave lag for far-downstream gages.** Where a station's gage is not
-co-located, gage $Q$ lags the discharge actually passing the station by the
-flood-wave travel time, inflating the matched-discharge loops. We estimate a
-constant $P$–$Q$ lag per station by cross-correlating the limb-timescale (36-h
-high-passed) components of $\log_{10}P$ and $\log_{10}Q$ — the high pass removes the
-multi-day storm trend that otherwise locks the correlation onto spurious large lags
-— and apply it only where a real travel time exists (gage $\gtrsim$3 km away; a
-co-located gage returns sub-resolution noise). For the Nisqually stations (gage
-13–21 km downstream) the implied celerities are $\approx$2 m s⁻¹, physical
-flood-wave speeds that validate the correction; a *constant* lag cannot fully align
-a multi-kilometre path whose celerity varies with stage, which intrinsically limits
-matched-discharge timing at a far-gaged reach. Finally, because the post-flood
-rain→snow transition shuts off runoff and the sediment it carries — lowering $P$ at
-fixed $Q$ for a *supply*, not geometric, reason — we flag any negative
+**Flood-wave-lag correction for far-downstream gages.** Where a station's gage is not
+co-located, gage $Q$ lags the discharge actually passing the station by the flood-wave
+travel time, inflating the matched-discharge loops. We estimate a constant $P$–$Q$ lag
+per station by cross-correlating the limb-timescale (36-h high-passed) components of
+$\log_{10}P$ and $\log_{10}Q$ — the high pass removes the multi-day storm trend that
+otherwise locks the correlation onto spurious large lags — and apply it only where a
+real travel time exists (gage $\gtrsim$3 km away; a co-located gage returns
+sub-resolution noise); the celerity = distance/lag (Nisqually $\approx$2 m s⁻¹, a
+physical flood-wave-speed check). A *constant* lag cannot fully align a multi-kilometre
+path whose celerity varies with stage, which intrinsically limits matched-discharge
+timing at a far-gaged reach. Implemented in `src/riverseis/analysis.py`
+(`estimate_pq_lag`, `lag_correct`); full derivation in Text S2. Finally, because the
+post-flood rain→snow transition shuts off runoff and the sediment it carries —
+lowering $P$ at fixed $Q$ for a *supply*, not geometric, reason — we flag any negative
 matched-discharge drift that coincides with this basin-wide post-event decline as
 supply-confounded.
+
+**Two-regime broken-stick fit and transport-onset threshold.** Bedload is
+threshold-gated, so the relation should change slope above a critical discharge. We
+compare a continuous broken-stick fit to a single power law by AIC/BIC. Because
+consecutive 10-min samples are strongly autocorrelated ($\rho\approx0.9$–0.99), we
+score the comparison with an effective sample size $n_\text{eff}=n(1-\rho)/(1+\rho)$
+(lag-1 autocorrelation $\rho$) rather than the raw $n$; $\Delta\mathrm{BIC}>10$ is
+declared significant. We report the breakpoint $Q_c$ and the two exponents
+$b_{<Q_c}\!\to\!b_{>Q_c}$.
+
+**Attenuation kernel.** Power decays as $\sim r^{-1}\exp(-2\pi f r/(v_cQ))$ with
+e-folding seismic reach $r_e=v_cQ/(2\pi f)$. Rather than the fluvial default
+$Q\approx20$ (Tsai et al. 2012) we adopt a PNW/Rainier-edifice quality factor
+$Q(f)=Q_0 f^{\eta}$ ($Q_0\approx25$, $\eta\approx0.5$ → $Q\approx74$ at the band
+center 8.66 Hz; $v_c\approx578$ m s⁻¹), giving $r_e\approx781$ m here (vs ~212 m for
+$Q=20$).
+
+**Satellite channel change and attenuation-weighted illumination.** We difference
+cloud-masked MNDWI $=(\text{green}-\text{SWIR})/(\text{green}+\text{SWIR})$
+wetted-channel maps (water $>0$) between the pre-flood (Nov 2025) and post-flood
+(early Jan 2026) epochs, taking the Sentinel-2 optical $\cup$ Sentinel-1 SAR union of
+active channel, within a 500 m corridor of the NHD mainstem and in UTM 10N. We then
+propagate the resulting geometry through the manuscript's own attenuation kernel,
+summing an attenuation-weighted "wetted illumination" $W=\sum_i A_i\,r_i^{-1}\exp(-r_i/r_e)$
+over the active-channel pixels at each station, and read the predicted baseline shift
+as $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$. The water threshold is
+swept ±0.1 as an ensemble (Text S3). Sentinel-2 true-color basemaps for the figures
+are cached by `workflows/28_fetch_basemaps.py`.
+
+**Width–stage.** The SAR wetted-width proxy per epoch is compared against the
+continuous gage stage; the secant $dW/dH$ is computed separately on the rising and
+falling limbs.
 
 **Frequency sampling — an important caveat.** Turbulent flow dominates the
 seismic wavefield at ~1–20 Hz and bedload impacts at higher frequencies, with the
@@ -277,17 +347,15 @@ interpret the upper-station exponents as a *transition-band* bedload indicator a
 separately analyze the high-rate lowland stations in the 30–80 Hz band (§Results)
 to probe genuine bedload frequencies, accepting their anthropogenic-noise penalty.
 
-**Station screening.** Candidate lowland stations were screened for anthropogenic
-contamination over a pre-flood week by the weekday/daytime-vs-night cycle of
-4–12 Hz power (`workflows/04_traffic_noise.py`). The glacial-source broadband
-stations are river-dominated (traffic index ≈1.3–2.6), whereas most lowland urban
-accelerometers are traffic-polluted — UW.TEHA most severely (traffic index ≈59,
-weekday/weekend ≈21; correlation with discharge $r\approx0$) — and are excluded
-(@fig-traffic). This restricts the usable transect to the upper broadband network.
-
-
-Full parameters are in `config/analysis.yaml`; the pipeline and its 2026
-corrections are documented in the [review chapter](../REVIEW_2026.md).
+**Peripheral methods (Supplement Texts).** Candidate lowland stations are screened
+for anthropogenic contamination by the weekday/daytime-vs-night cycle of 4–12 Hz
+power, restricting the usable transect to the river-dominated broadband network
+(Text S1; `workflows/04_traffic_noise.py`). Each river-proximal station is inverted
+to a seismic virtual discharge $Q_\text{seis}=10^{(\log_{10}P-a)/b}$ and scored
+against the co-located gage by Nash–Sutcliffe efficiency (Text S4). The 30–50 Hz
+lower bedload edge from the 100-sps UW broadband stations and the Hertzian
+contact-frequency argument are in Text S5; the coarse/wood-rich band-lowering caveat
+is in Text S6.
 
 # Results
 
@@ -299,9 +367,17 @@ $b\gtrsim 1.4$ indicates a bedload contribution; HI is the event Lawler hysteres
 index (positive = clockwise). Regenerated by `workflows/02_make_figures.py`.
 :::
 
+## Seismic power tracks discharge {#sec-backbone}
+
+The robust *backbone* of the analysis is a transect of turbulent-flow seismic power
+that tracks discharge through the compound AR flood. Seismic band power follows the
+hydrograph at every clean station — faint in the low-frequency flow band, solid in
+the high-frequency transport band — with a clear AR2 maximum and downstream decay
+(@fig-scaling a).
+
 **Frequency-dependent steepening.** At the glacial-source station CC.PR03 the
 exponent rises from $b=1.59$ (2–8 Hz, $r=0.98$) to $b=1.71$ (5–15 Hz, $r=0.98$),
-above the turbulent-flow baseline (@fig-scaling, @fig-scatter) — the signature of
+above the turbulent-flow baseline (@fig-scaling b,c) — the signature of
 a bedload contribution superimposed on turbulence.
 
 **Spatial decay.** In the 5–15 Hz bedload band the exponent decays from the
@@ -314,21 +390,12 @@ confined to the near-source reach and falls to (or below) baseline downstream �
 an internal contrast indicating the response is source-specific rather than a
 generic flow artifact.
 
-![Scaling exponent $b$ versus band center frequency, with each station's fitted exponent in the legend. Near-source stations (CC.PR02, CC.PR03) rise above the turbulence baseline (shaded, $b\approx 0.9$ to $1.4$; @gimbert2014); the exponent decreases with distance from the channel and downstream (CC.SIFT, CC.PR01, CC.TRON).](figures/fig2_scaling_exponent.png){#fig-scaling width=82%}
-
-![Band power versus discharge with robust log–log fits and bootstrap confidence intervals.](figures/fig3_pq_scatter.png){#fig-scatter width=95%}
-
-![Event hysteresis loops (December 2025 flood), colored by time into the event. Clockwise loops indicate supply exhaustion or proximal sources on the rising limb; counter-clockwise indicates delayed or distal sediment delivery.](figures/fig4_hysteresis.png){#fig-hyst width=95%}
-
-![Seismic band power through the December 2025 flood, offset by station (ridgeline; source reach at bottom, downstream toward top). Each lane shows $\log_{10}$ of band power relative to that station's median (gridline); the low-frequency flow band is faint and the high-frequency bedload band solid, one color per station. Discharge (dashed) is shown behind for timing.](figures/fig5_event_timeseries.png){#fig-ts width=92%}
-
-## Where river seismology works — and where it does not
-
-Across all 13 analyzed stations (best flow band, December 2025), **6 yield a usable
-river signal** ($r\ge0.7$): the Puyallup source cluster (CC.PR01/PR02/PR03, CC.STYX)
-*and both Nisqually stations* (CC.GTWY $r=0.77$, UW.LON $r=0.91$) — so the method
-generalizes to a second basin. Two are **marginal** (CC.SIFT, CC.TRON; $r\approx0.6$),
-and **three show no signal**: CC.CARB (Carbon, 1.7 km off-channel, $r\approx-0.2$),
+**Where river seismology works — and where it does not.** Across all 13 analyzed
+stations (best flow band, December 2025), **6 yield a usable river signal**
+($r\ge0.7$): the Puyallup source cluster (CC.PR01/PR02/PR03, CC.STYX) *and both
+Nisqually stations* (CC.GTWY $r=0.77$, UW.LON $r=0.91$) — so the method generalizes
+to a second basin. Two are **marginal** (CC.SIFT, CC.TRON; $r\approx0.6$), and
+**three show no signal**: CC.CARB (Carbon, 1.7 km off-channel, $r\approx-0.2$),
 UW.RER (high on the edifice, far from its gage), and the urban UW.UPS. We plot the
 no-signal stations alongside the rest (hollow/grey) rather than hide them, and mark
 them on the map (@fig-map, hollow triangles) to document *where river seismology was
@@ -336,11 +403,13 @@ attempted and did not work* — itself a useful deployment guide. Notably, the
 steepest scaling is on the Nisqually (UW.LON $b\approx1.98$), exceeding the Puyallup
 source ($b\approx1.71$).
 
-## Transport-onset threshold and two-regime scaling
+![Seismic power tracks discharge (backbone). **(a)** Event timeseries: discharge with the 5–15 Hz power at the source stations through the December 2025 flood — the band power tracks the flood wave pulse-for-pulse, the basis of the discharge proxy. **(b)** $P$–$Q$ log–log scatter for a representative subset with robust fits (CC.PR03 $b\approx1.71$, CC.SIFT 0.77, CC.TRON 0.56, UW.LON 1.98). **(c)** Scaling exponent $b$ versus band-center frequency: near-source stations rise above the turbulence baseline (shaded, $b\approx0.9$–$1.4$; @gimbert2014) while the exponent falls with distance downstream and off-channel. The full station grid is in @fig-pqgrid.](figures/figF2_backbone.png){#fig-scaling width=98%}
+
+## Transport-onset threshold and rating geometry {#sec-threshold}
 
 Bedload is threshold-gated, so the seismic-power–discharge relation should change
 slope above a critical discharge. We compare a continuous broken-stick fit
-(@fig-thr) to a single power law by AIC/BIC. Because consecutive 10-min samples are
+(@fig-thr a) to a single power law by AIC/BIC. Because consecutive 10-min samples are
 strongly autocorrelated ($\rho\approx0.9$–0.99), we score the comparison with an
 effective sample size $n_\text{eff}=n(1-\rho)/(1+\rho)$ ($\approx$50–310) rather
 than the raw $n$, so a two-segment fit is not declared significant by sheer sample
@@ -376,10 +445,8 @@ bed-mechanical — separated by the satellite channel-change test, which finds t
 two satellite-tested breaks (CC.PR01 and the steep Nisqually UW.LON) to be
 substantially **geometric**, with the larger channel migration falling at the
 steeper break (an ordering across the two tested reaches, not a fitted relationship;
-§sec-braided, @fig-braidsat, @fig-braidsat-nis), and to be retested out-of-sample on
+§sec-braided, @fig-braidsat), and to be retested out-of-sample on
 the March-2026 event.
-
-![Transport-onset threshold: continuous broken-stick fit of $\log_{10}P$ vs $\log_{10}Q$ (5–15 Hz), with the AIC/BIC-justified breakpoint $Q_c$ (blue dashed) and the two exponents $b_{<Q_c}\!\to\!b_{>Q_c}$ in each panel title (ΔBIC on autocorrelation-corrected $n_\text{eff}$). Most stations steepen above $Q_c$; CC.STYX flattens; the clean source anchor CC.PR03 shows no significant break.](figures/fig14_threshold.png){#fig-thr width=95%}
 
 **Independent evidence from the gage ratings.** The USGS stage–discharge ratings
 record the same geometry change *hydraulically*, independent of the seismic data. The
@@ -387,19 +454,20 @@ local rating exponent $\beta(Q)=\mathrm{d}\log Q/\mathrm{d}\log(h-h_0)$ (from
 $Q=C(h-h_0)^{\beta}$) reads whether the conveying section is confining and deepening
 ($\beta$ rising) or spreading overbank ($\beta$ flat). At the confined source gages
 $\beta$ climbs steeply with discharge — from $\sim$0.1 at low flow to $\sim$2.0
-(Puyallup nr Electron) and $\sim$1.7 (Nisqually nr National) — and **the seismic
+(Puyallup nr Electron, 0.04→2.01) and $\sim$1.7 (Nisqually nr National, 0.18→1.67) — and **the seismic
 $P$–$Q$ break $Q_c$ falls within the rating-steepening band at each** (Electron
-$Q_c\approx28$ m³ s⁻¹, on the $\beta\!:\!0.4\!\to\!1.7$ ramp; @fig-ratinggeom). That an
+$Q_c\approx28$ m³ s⁻¹, on the $\beta\!:\!0.4\!\to\!1.7$ ramp; @fig-thr b). That an
 independent hydraulic-geometry transition occurs near the seismic break — at a gage
 *co-located* with the source cluster — is direct support for reading the break as
 geometric rather than bed-mechanical. The lowland Puyallup-at-Puyallup gage instead
-keeps $\beta\lesssim1.4$ even at $10^3$ m³ s⁻¹, the flat signature of **overbank**
+keeps $\beta\lesssim1.4$ (≈1.37) even at $10^3$ m³ s⁻¹, the flat signature of **overbank**
 spreading onto the floodplain — the overbank end-member named among the candidate
-mechanisms above.
+mechanisms above. A four-gage stage–discharge rating that the seismic virtual
+discharge can be mapped through is given in @fig-ratingSI.
 
-![Stage–discharge geometry at four corridor gages. **(a)** The ratings (stage above zero-flow vs discharge). **(b)** The local rating exponent $\beta(Q)$: at the confined source gages (Puyallup nr Electron, Nisqually nr National) $\beta$ rises steeply with discharge (channel confining/deepening) and the seismic break $Q_c$ (dotted) falls within the steepening band — independent hydraulic evidence of a geometry transition near the break; the lowland Puyallup-at-Puyallup gage keeps $\beta$ low (overbank spreading).](figures/fig26_rating_geometry.png){#fig-ratinggeom width=98%}
+![Transport-onset threshold and rating geometry. **(a)** Continuous broken-stick fit of $\log_{10}P$ vs $\log_{10}Q$ (5–15 Hz) with the AIC/BIC-justified breakpoint $Q_c$ and the two exponents $b_{<Q_c}\!\to\!b_{>Q_c}$ (ΔBIC on autocorrelation-corrected $n_\text{eff}$): the confined source gages steepen (Nisqually-nr-National/UW.LON $Q_c\approx109$ m³/s; Puyallup-nr-Electron/CC.PR01 $Q_c\approx28$ m³/s), CC.STYX flattens, and the clean anchor CC.PR03 shows no break. **(b)** Gage rating geometry $\beta(Q)$: at confined source gages $\beta$ steepens (Electron 0.04→2.01, National 0.18→1.67) and the seismic $Q_c$ lands in the steepening band, while the lowland Puyallup-at-Puyallup gage stays flat (≈1.37, overbank). **(c)** Station skill $r$ from source to downstream (5 usable, 2 marginal).](figures/figF3_threshold.png){#fig-thr width=98%}
 
-## The braided-reach problem: a distributed, non-stationary source {#sec-braided}
+## The braided source: a distributed, non-stationary signal {#sec-braided}
 
 The single most consequential geomorphic caveat to everything above is hiding in
 plain sight: the Puyallup source cluster (CC.PR01/PR02/PR03, within $\sim$1.5 km of
@@ -423,7 +491,7 @@ regime that deserves its own treatment.
 
 **Why braiding changes the physics.** (i) The source is *spatially distributed*
 across multiple simultaneously active anabranches spread over a valley floor that
-can exceed the e-folding attenuation length ($r_e\approx780$ m at band center). The
+can exceed the e-folding attenuation length ($r_e\approx781$ m at band center). The
 station therefore senses an attenuation-weighted sum dominated by whichever thread
 is momentarily closest, not by the total discharge. (ii) Discharge *partitioning*
 among threads is strongly nonlinear in stage: as stage rises, threads widen,
@@ -437,7 +505,7 @@ $b\approx0.79$ against $b\approx1.7$–$1.8$ at the confined near-channel statio
 (CC.PR02/PR03; @fig-scaling), the direction braided hydraulic geometry expects when
 flow partitions into wide, shallow threads [@ashmore2013]. We present it as
 *consistent*, not diagnostic, because the same off-channel station also sits farther
-from the active threads, and distance independently lowers $b$ (§"Spatial decay") —
+from the active threads, and distance independently lowers $b$ (§sec-backbone) —
 the two effects are not separable from $b$ alone. (iv) Braided threads
 **avulse and migrate** between and during floods, so the dominant source relocates —
 imposing a non-stationary distance $r$ and resetting the calibration constant. These
@@ -453,7 +521,7 @@ turbulence baseline), the lowest correlation ($r=0.69$ vs 0.96–0.98), and one
 of the sharpest broken-stick breaks in the network** ($b:-0.12\!\to\!1.59$ at
 $Q_c\approx28$ m³/s, $\Delta\mathrm{BIC}\approx154$; @fig-thr).
 Read naively, that break is the cleanest "bedload onset" we have. But a
-rising-vs-falling-limb diagnostic (@fig-braid) complicates that reading: the per-AR
+rising-vs-falling-limb diagnostic (@fig-braid a) complicates that reading: the per-AR
 $P$–$Q$ loops are **reversible (Lawler hysteresis index $|HI|\le0.06$, no clockwise
 sense)** and the in-window **peak power does not decline across successive ARs**.
 Reversibility and the absence of decline rule out a **supply-exhaustion**
@@ -463,13 +531,13 @@ is sediment-*rich* (the deglaciating headwaters oversupply it; @anderson2026), a
 supply-unlimited bedload onset would likewise be reversible and non-declining, so
 hysteresis alone cannot exclude it. The positive case for a **geometric wetted-front
 onset** — at $Q_c$ a broad, close, active flow front switches on, not the bed —
-rests instead on the independent satellite channel-change (below) and on the
+rests instead on the independent satellite channel-change (§sec-satellite) and on the
 $H^{7/3}$ flow-partitioning argument above; and in a supply-rich basin a discrete
 bed-mechanical *threshold* is the less expected behavior to begin with.
 
 What *is* present is a coherent **baseline drift across the AR sequence**:
 at matched discharge the 5–15 Hz power rises by $\sim$0.2–0.3 log units ($\approx$2×)
-from AR1 to the AR2–AR3 plateau at all three stations simultaneously (@fig-braid). A whole-cluster
+from AR1 to the AR2–AR3 plateau at all three stations simultaneously (@fig-braid a). A whole-cluster
 shift at fixed $Q$ is the signature of the active thread **migrating toward the
 stations** over the event sequence — i.e. avulsion/lateral reworking of the
 braidplain, exactly the instability proglacial braided systems are known for
@@ -490,7 +558,16 @@ non-stationary, attenuation-weighted sum — and must treat braided-reach expone
 thresholds, and ratings as **reach-geometry-dependent and event-specific** rather
 than universal grain-mechanical constants.
 
-![Braided-reach onset diagnostic for the three co-located Puyallup stations. Solid = rising limb, dashed = falling limb of each AR's $P$–$Q$ loop; the Lawler hysteresis index (HI) is annotated. Loops are reversible (HI$\approx$0, not clockwise) and peak power does not decay across ARs — arguing against a supply-limited transport onset — while a coherent positive baseline shift from AR1 to AR3 indicates the active channel migrated toward the cluster.](figures/fig16_braided_hysteresis.png){#fig-braid width=98%}
+**Seismic reach and weak observed decay.** A first-order test on the same-source PR
+cluster (PR03/PR01/PR02 at 0.19/0.71/1.9 km) finds the 5–15 Hz power *nearly
+distance-independent over 0.2–2 km* — an observed decay of $\approx$0.005 km⁻¹, far
+weaker than the PNW prediction ($r_e\approx781$ m vs the Tsai 212 m;
+@fig-braid b) — implying the band retains less-attenuated lower-frequency
+(turbulence) energy and that the cluster integrates a moving, distributed source.
+
+![The braided source as a distributed, non-stationary signal. **(a)** Per-AR $P$–$Q$ hysteresis loops at CC.PR01/PR02/PR03 (rising solid, falling dashed): the loops are near-reversible ($|HI|\lesssim0.06$, not clockwise) and peak power does not decay across ARs — arguing against a supply-limited transport onset — while a coherent positive AR1→AR3 baseline drift indicates the active channel migrated toward the cluster. **(b)** Seismic reach $r_e(f)=v_cQ/(2\pi f)$: the PNW value $r_e\approx781$ m vs the Tsai 212 m, with the observed near-flat decay ($\approx$0.005 km⁻¹) over the 0.2–2 km cluster — the cluster integrates a moving distributed source rather than a single fixed line channel.](figures/figF4_braided.png){#fig-braid width=98%}
+
+## Satellite corroboration of thread migration, two basins {#sec-satellite}
 
 **Satellite test of the avulsion prediction.** The avulsion reading makes a
 falsifiable, geometric prediction: if the cross-AR baseline drift is the active
@@ -504,14 +581,14 @@ and VV-backscatter water masks between the two epochs within a 500 m corridor of
 the NHD mainstem (@fig-braidsat a,b). We then propagate the resulting channel
 geometry through the manuscript's own attenuation kernel, summing an
 attenuation-weighted "wetted illumination" $W=\sum_i A_i\,r_i^{-1}\exp(-r_i/r_e)$
-over the active-channel pixels at each station ($r_e\approx780$ m, §Discussion),
+over the active-channel pixels at each station ($r_e\approx781$ m, §Methods),
 and read the predicted baseline shift as $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$.
 
 The result corroborates the avulsion interpretation *in sign and in spatial
 order, but not yet in absolute magnitude*. The active channel reorganized
 markedly across the event; CC.PR01's nearest active thread moved $\approx$50 m
-**closer** (264→214 m), and CC.PR01 shows the **largest** predicted geometric
-drift of the three stations (median $\Delta\log_{10}P\approx+0.28$, vs $+0.07$ at
+**closer** (264→214 m, $\Delta r_\text{near}\approx-50$ m), and CC.PR01 shows the **largest** predicted geometric
+drift of the three stations (median $\Delta\log_{10}P\approx+0.28$; CC.PR02 $+0.22$, vs $+0.07$ at
 the on-channel anchor CC.PR03), the same rank order and the same positive sign as
 the observed $+0.2$-log cross-AR drift (@fig-braidsat c). That the flattest-exponent,
 lowest-correlation station is also the one the imagery says was most geometrically
@@ -519,7 +596,7 @@ reworked is independent support that CC.PR01's anomaly — and the shared baseli
 drift — is a moving-source effect, not a bed-mechanical one. The magnitude,
 however, is not robust: because turbid braided water sits near MNDWI$\approx$0,
 sweeping the water threshold spreads the predicted drift across roughly
-$[-0.6,+1.0]$ log units (error bars, @fig-braidsat c), and part of the larger
+$[-0.6,+1.0]$ log units (whiskers, @fig-braidsat c), and part of the larger
 post-flood wetted area is seasonal winter baseflow rather than avulsion. At the
 10 m resolution of Sentinel the test therefore confirms the *direction and
 localization* of the channel-migration effect while leaving its calibrated
@@ -528,8 +605,6 @@ distance — for higher-resolution (≈3 m) imagery. The qualitative verdict sta
 on a braided reach the seismic virtual-discharge rating is reach-geometry-dependent
 and can drift between events as the channel moves, exactly the caution §sec-braided
 raises.
-
-![Satellite test of the braided-source avulsion prediction. (a) Pre-flood (Nov 2025) Sentinel-2 MNDWI with the post-flood (early Jan 2026) active-channel outline (red); yellow triangles are the three co-located stations. (b) Active-channel change within the NHD mainstem corridor (Sentinel-2 optical $\cup$ Sentinel-1 SAR): blue = persistent water, red = newly wet, orange = newly dry. (c) Predicted geometric baseline drift $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$ per station from the attenuation-weighted wetted illumination $W=\sum A\,r^{-1}e^{-r/r_e}$ ($r_e\approx780$ m); bars are the median over a MNDWI-threshold ensemble and whiskers its range. CC.PR01 (red) shows the largest drift, matching the observed $+0.2$-log cross-AR shift (green dashed) in sign and rank; the threshold spread shows the magnitude is not yet robust at 10 m resolution.](figures/fig19_braid_change.png){#fig-braidsat width=98%}
 
 A time-resolved corollary, limited to the cloud-penetrating Sentinel-1 record
 (optical is cloud-blind through the flood — zero clear Sentinel-2 scenes 1–20 Dec),
@@ -541,31 +616,34 @@ shallow braided water at 10 m leaves the inter-epoch trend noisy and the net
 permanent migration better measured by the Nov→Jan bracket above. We treat this as
 supporting, not primary, evidence.
 
-
 **The geometric mechanism generalizes to a second basin — and scales with the
 break.** The same satellite test, run on the Nisqually reach at UW.LON
-(@fig-braidsat-nis), finds a *much larger* reorganization: the active channel
+(@fig-braidsat, bottom row), finds a *much larger* reorganization: the active channel
 migrated **$\approx$240 m toward the station** between November and January
 (robustly inward across all water thresholds; the nearest active thread reaches
-the station footprint by January), versus $\approx$50 m at the Puyallup CC.PR01.
+the station footprint by January, $\Delta r_\text{near}\approx-240$ m), versus $\approx$50 m at the Puyallup CC.PR01.
 This matters because UW.LON has the **steepest $P$–$Q$ break in the network**
-($b\!:\!1.1\!\to\!5.0$, §threshold) — far steeper than CC.PR01's
+($b\!:\!1.1\!\to\!5.0$, §sec-threshold) — far steeper than CC.PR01's
 ($-0.12\!\to\!1.59$). The two satellite-tested reaches are, then, *consistent* with
 larger channel migration at the steeper break (CC.PR01: $\Delta r\approx-50$ m,
 $\Delta b\approx+1.7$; UW.LON: $\Delta r\approx-240$ m, $\Delta b\approx+4.0$) — the
 direction expected if these breaks are **geometric channel-reorganization signatures
-rather than bed-mechanical transport onsets**. With only two reaches this is a
+rather than bed-mechanical transport onsets**, with the predicted drift rising across
+stations (CC.PR03 $+0.07$, CC.PR02 $+0.22$, CC.PR01 $+0.28$, UW.LON $+0.52$). With only two reaches this is a
 suggestive ordering, not an established scaling; testing it requires more
 satellite-instrumented braided breaks. The Nisqually's large
 migration partly reflects post-flood (early-January) seasonal wetting and the
 magnitude is threshold-sensitive, as on the Puyallup; but the *inward sense* and
 its order across basins are robust, and they extend the braided-source
 interpretation — and the caution it implies for virtual-discharge ratings — beyond
-the Puyallup to a second, independent glacial-river network.
+the Puyallup to a second, independent glacial-river network. The compact, incised
+Puyallup channel (active width $\sim$17–44 m) and the far wider, unconfined Nisqually
+braidplain ($\sim$190–620 m) thus reorganize by the same physics on very different
+geometric scales, the geomorphic contrast behind the domain law in §sec-domain.
 
-![Satellite braided-source test extended to the Nisqually at UW.LON (panels as in @fig-braidsat). (a) Pre-flood MNDWI with the post-flood active-channel outline (red) over a visibly multi-thread reach; (b) active-channel change (S2$\cup$S1) — extensive newly-wet braids; (c) predicted geometric baseline drift. The active channel migrated $\approx$240 m toward UW.LON (Nov→Jan), the largest in the satellite-tested set and consistent with this station's extreme $P$–$Q$ steepening ($b\!:\!1.1\!\to\!5.0$) being substantially geometric.](figures/fig19_braid_change_nisqually.png){#fig-braidsat-nis width=98%}
+![Satellite corroboration of thread migration in two basins (top: Puyallup; bottom: Nisqually). **(a/c)** Sentinel-2 true-color basemap with the post-flood active-channel outline and the co-located stations. **(b/d)** Active-channel change (Sentinel-2 optical $\cup$ Sentinel-1 SAR): persistent water, newly-wet, and newly-dry pixels within the NHD mainstem corridor. **(e/f, shared)** Predicted geometric baseline drift $\Delta\log_{10}P=\log_{10}(W_\text{post}/W_\text{pre})$ per station from the attenuation-weighted wetted illumination $W=\sum A\,r^{-1}e^{-r/r_e}$ ($r_e\approx781$ m): CC.PR03 $+0.07$, CC.PR01 $+0.28$, CC.PR02 $+0.22$, UW.LON $+0.52$ (whiskers span the MNDWI-threshold ensemble), matching the observed $+0.2$ cross-AR drift in sign and rank. The nearest active thread moved $\Delta r_\text{near}\approx-50$ m at CC.PR01 and $-240$ m at UW.LON (active thread migrating toward each station). An exploratory SAR time series is in @fig-braidsat-ts; the offline two-region change maps are in @fig-braidsat-ts.](figures/figF5_satellite.png){#fig-braidsat width=98%}
 
-### The event-scale *timing* of reorganization {#sec-reorg}
+## Event-scale timing of reorganization and the recession-deposition mechanism {#sec-reorg}
 
 The cross-AR baseline drift establishes *that* the braid reorganizes; the
 continuous, sub-daily seismic record additionally resolves *when* — a question
@@ -575,10 +653,12 @@ residual $r(t)=\log_{10}P-(a+b\log_{10}Q)$ about the pooled $P$–$Q$ rating, an
 track it at **matched discharge**: sampling $r$ each time the compound hydrograph
 crosses a set of reference levels and referencing each level to its first
 (rising-limb) crossing, so the surviving change is source geometry, not flow
-(@fig-reorg). At the co-located Puyallup cluster the matched-discharge baseline is
+(@fig-reorg a). At the co-located Puyallup cluster the matched-discharge baseline is
 flat through the rising limb and peak and then **steps up on the falling limb of
 the main pulse** — onset $\sim$13–20 h *after* peak discharge — with the dominant,
-persistent shift completing on the final recession a few days later. The transition
+persistent shift completing on the final recession a few days later (dominant step
+$t_{50}\approx+70$ h, CC.PR02 $\Delta+0.29$, $R^2$ 0.66; $\approx+74$ h, CC.PR03
+$\Delta+0.50$, $R^2$ 0.72). The transition
 is **stepwise** (narrower than a day) rather than a gradual ramp, and it is
 **persistent** at the two near-channel stations (CC.PR02/PR03, $+0.2$–$0.3$ log)
 while CC.PR01 — the most braidplain-central — shows a large but *reversible*
@@ -603,14 +683,12 @@ precise mid-transition time is pulled toward the largest (final-recession)
 increment, so the **onset** ($\sim+13$ h) is the more robust "when it starts" and
 the dominant step ($\sim+70$ h) the "when it is mostly done."
 
-![Event-scale timing of braided-channel reorganization at the co-located Puyallup cluster. Top: discharge with the three AR pulses shaded and the peak marked. Lower panels: the matched-discharge source baseline $c(t)$ (grey points) and a logistic step fit (blue) per station, with onset (dashed) and the fitted step midpoint (green, with bootstrap CI). The baseline is flat through the rising limb and peak and steps up on the recession — lagging peak discharge — in a stepwise transition that is persistent at CC.PR02/PR03 and reversible at CC.PR01.](figures/fig22_braided_reorg_timing.png){#fig-reorg width=98%}
-
 **The falling limb carries information a threshold cannot.** A binary entrainment
 threshold $Q_c$ is, at these source stations, exceeded throughout the multi-day flood
 recession ($Q_c\approx13$–28 m³ s⁻¹, far below the recession discharges; @fig-thr): it
 labels the entire falling limb "transport-on" and says nothing about how the bed
 evolves as stage drops. The continuous seismic record does carry that evolution, and —
-as the rapid AR1 versus sustained AR3 recessions show (@fig-hazard b) — it is the
+as the rapid AR1 versus sustained AR3 recessions show (@fig-reorg c) — it is the
 *shape* of the recession, not a threshold crossing, that distinguishes a falling limb
 which merely drains from one slow enough to deposit and reorganize. (Consistent with
 this being a geometric/transport rather than a strong supply-exhaustion signal, the
@@ -628,10 +706,11 @@ aggradation/superelevation route to avulsion [@slingerland2004; @jerolmack2007;
 @mohrig2000], here driven by recession rather than long-term aggradation. The mechanism
 predicts that reorganization should concentrate on **slow, sustained** recessions
 (long residence at moderate stage → more deposition) rather than rapid ones — and that
-is what the data show (@fig-hazard b): the Dec-9 (AR1) falling limb is fast
-(−11.4 m³ s⁻¹ h⁻¹; 323→88 m³ s⁻¹ in 20 h) and hosts no persistent step, whereas the
-sustained Dec-11→13 (AR3) recession is ~40% slower (−6.6 m³ s⁻¹ h⁻¹; 33 h) and is
-exactly where the persistent reorganization step lands. The satellite change map is
+is what the data show (@fig-reorg c): the Dec-9 (AR1) falling limb is fast
+(−11.4 m³ s⁻¹ h⁻¹, 20 h; 323→88 m³ s⁻¹) and hosts no persistent step, whereas the
+sustained Dec-11→13 (AR3) recession is ~40% slower (−6.6 m³ s⁻¹ h⁻¹, 33 h) and is
+exactly where the persistent reorganization step lands (CC.PR02 12-12 01:31, CC.PR03
+12-12 05:06). The satellite change map is
 consistent — CC.PR01's pre-flood thread is among the newly-*dry* (abandoned) pixels by
 January (@fig-braidsat b). We present this as the *parsimonious* mechanism, not a
 unique one: the stepwise seismic signature is equally compatible with the other
@@ -651,7 +730,7 @@ is the highest-value future constraint on this mechanism.
 **Width–stage hysteresis corroborates the reorganization.** An independent,
 non-seismic line of evidence — the wetted active-channel width from the SAR epoch
 series against the continuous gage stage — shows the same asymmetry as an *at-a-station*
-width–stage relation (@fig-width). On the rising limb the source braidplain widens
+width–stage relation (@fig-reorg b). On the rising limb the source braidplain widens
 steeply (the SAR width proxy at CC.PR01 grows to **2.7× its pre-flood value** as Electron
 stage climbs 5.0→7.9 ft; CC.PR02 to 1.7×). On the falling limb it does **not** retrace
 that path: at equal stage the recession width sits below the rising-limb width
@@ -667,24 +746,9 @@ simply rose and fell. (Resolution caveat: five SAR epochs, an area-ratio proxy r
 than metric width, and epoch-averaged stage; a $\ge$3 m repeat width series would sharpen
 $dW/dH$, but the rise–fall asymmetry and the PR01 net narrowing are already clear.)
 
-![At-a-station width–stage relation on the rising vs falling limb (Puyallup source, M4). **(a)** The SAR wetted active-channel width proxy (active area ÷ CC.PR03, ÷ the Nov pre-flood baseline) against epoch-mean Electron stage, traced in time (arrows): both source stations widen sharply on the rise to the AR peak, then the recession does *not* retrace the path — CC.PR01 ends *below* its pre-flood width (the abandoned thread), CC.PR02 returns to ~baseline. Whiskers span the epoch stage min–max. **(b)** Secant $dW/dH$ is steeper on the rising than the falling limb at both stations — width is shed more slowly than it was gained, leaving a reorganized channel.](figures/fig28_width_stage.png){#fig-width width=92%}
+![Event-scale timing of braided-channel reorganization (full page; co-located Puyallup cluster). **(a)** The matched-discharge source baseline $c(t)$ (grey points; @eq-ct) and a logistic step fit (blue) per station — onset $+13$–$20$ h after peak $Q$, dominant step $t_{50}\approx+70$ h (CC.PR02 $\Delta+0.29$, $R^2$ 0.66) / $+74$ h (CC.PR03 $\Delta+0.50$, $R^2$ 0.72), CC.PR01 reversible — over the discharge with the three AR pulses shaded. $c(t)$ is defined only at reference-discharge crossings, so the snapshots are sparse on the fast AR2 pulse (which transits the reference band quickly) and dense on the slow AR3 recession — the limb where reorganization occurs and is therefore best sampled, not a gap in coverage. **(b)** At-a-station width–stage hysteresis: CC.PR01 width peaks at 2.7× then ends 0.6× pre-flood (abandoned thread), CC.PR02 1.7×→~baseline; the falling limb does not retrace the rise. **(c)** Recession-rate clogging: the fast AR1 fall (−11.4 m³ s⁻¹ h⁻¹, 20 h) hosts no step, while the slow AR3 fall (−6.6 m³ s⁻¹ h⁻¹, 33 h) is where the reorganization step lands (CC.PR02 12-12 01:31, CC.PR03 12-12 05:06) — recession deposition clogging the active thread and forcing an avulsion.](figures/figF6_timing.png){#fig-reorg width=100%}
 
-**A source-reach hazard lead.** The same continuous record carries an early-warning
-signal: at the source cluster the 5–15 Hz transport-band power rises **~5–7 h before
-peak discharge** (and before peak stage, which here coincides with peak Q), flagging the
-ramp-up of near-channel transport on the rising limb (@fig-hazard a). The onset itself
-*propagates downstream* across the upper transect — from CC.SIFT (15 km from the summit,
-onset 19:45 UTC) through the Electron cluster (22–23 km, 21:05–22:00) to CC.STYX
-(27 km, 23:40), a ~4 h sweep — so upstream stations register transport initiation before
-downstream ones. This source-reach lead is modest on its own but compounds with the
-~36 h upstream-to-downstream flood-peak lead (§"Local sensing and downstream early
-warning") — together a basis for using the seismic network not only to *track* the flood
-but to *anticipate* both the bed-mobilizing transport and the downstream stage in this
-lahar-hazard corridor.
-
-![Hazard timing and the slow-recession clogging mechanism (Puyallup cluster). **(a)** Discharge (black) and stage (blue) through the event; peak Q and stage coincide. The 5–15 Hz transport-band power onset (stars) leads the peak by ~5–7 h (shaded warning window) — transport ramps up on the rising limb. **(b)** 5–15 Hz power (per-station, ÷pre-flood median): the rapid AR1 falling limb (−11.4 m³ s⁻¹ h⁻¹, 20 h) hosts no persistent step, while the slow, sustained AR3 recession (−6.6 m³ s⁻¹ h⁻¹, 33 h) is where the braid-reorganization step lands (purple) — consistent with recession deposition clogging the active thread and forcing an avulsion.](figures/fig25_hazard_clogging.png){#fig-hazard width=98%}
-
-### Why the timing is clean at the Puyallup and confounded at the Nisqually — a domain of applicability {#sec-domain}
+## Domain of applicability {#sec-domain}
 
 The same diagnostic on the Nisqually (CC.GTWY, UW.LON) does *not* return a clean
 geometric step, and tracing why yields a general statement about where
@@ -695,15 +759,15 @@ UW.LON/GTWY, so gage $Q$ lags the discharge passing the station by the flood-wav
 travel time. We estimate that lag by limb-timescale cross-correlation and correct
 it; the implied celerities ($\approx$2 m s⁻¹) are physical flood-wave speeds, and
 the correction collapses much of the apparent Nisqually hysteresis — confirming it
-was largely a $P$–$Q$ *alignment* artifact (@fig-hyst). A constant lag cannot fully
+was largely a $P$–$Q$ *alignment* artifact (Text S2). A constant lag cannot fully
 align a 20-km path whose celerity varies with stage, so a far-downstream gage
 *intrinsically* limits matched-discharge timing there. **Reach geometry** comes
 second: the Puyallup PR cluster occupies a compact, incised channel (active width
 $\sim$17–44 m), whereas UW.LON sits on a far wider, unconfined braidplain
-($\sim$190–620 m; @fig-tworeg) where the source is distributed over hundreds of
+($\sim$190–620 m; @fig-braidsat) where the source is distributed over hundreds of
 metres of shifting anabranches and the line-source idealization fails harder.
 **Sediment supply** comes third: as the warm AR gives way to cold snow accumulation
-(@fig-warmsnow), precipitation falls and stays as snow, drainage-wide runoff — and
+(@fig-map), precipitation falls and stays as snow, drainage-wide runoff — and
 the sediment it mobilizes — collapses, and at matched discharge the bed goes quiet
 for a *supply* reason, not a geometric one. This **rain→snow supply shutoff**
 confounds the *negative*-going Nisqually drift but is harmless to the Puyallup
@@ -714,42 +778,16 @@ it; the higher, snow-dominated Nisqually feels it most. The net is a domain law
 far-gaged** reach — even though the physical reorganization there is *larger*, not
 smaller (UW.LON's active thread migrated $\sim$240 m toward the station, vs
 $\sim$50 m at CC.PR01). Stating that boundary is itself a contribution the
-braided-reach seismology literature has not made.
+braided-reach seismology literature has not made. The standalone Nisqually
+reorganization-timing diagnostic, which carries this confounding directly, is in
+@fig-reorgnis.
 
-![Domain of applicability for source-resolved river seismology. (a) The two dominant, measured controls — station→gage distance and active-channel width — with the "readable" domain (co-located gage *and* compact channel) shaded; the Puyallup cluster falls inside it, UW.LON outside on both axes. (b) Normalised confounding factors (gage distance, channel width, elevation→snow fraction, scaling exponent $b$; darker = worse) per station, with the reorganization-timing verdict. The Nisqually reach is the more dramatic braided site yet the harder one to read seismically.](figures/fig23_domain.png){#fig-domain width=98%}
+![Domain of applicability for source-resolved river seismology. **(a)** The two dominant, measured controls — station→gage distance and active-channel width — with the "readable" domain (co-located gage *and* compact channel: gage $<$3 km and width $<$100 m) shaded; the Puyallup cluster falls inside it, while the Nisqually reaches are confounded (UW.LON gage 20.9 km, GTWY 12.8 km downstream, plus the rain→snow supply shutoff and flood-wave lag). **(b)** Normalised confounding heatmap (gage distance, channel width, elevation→snow fraction, scaling exponent $b$; darker = worse) per station, with the reorganization-timing verdict per reach. The Nisqually reach is the more dramatic braided site yet the harder one to read seismically.](figures/figF7_domain.png){#fig-domain width=98%}
 
-![Two-region active-channel change (Nov 2025→Jan 2026, Sentinel-2 $\cup$ Sentinel-1), built offline from the cached satellite artefacts. The Puyallup PR cluster sits on a compact, incised channel (tens of metres wide) where the seismic source is near-stationary and the gage is co-located; the Nisqually UW.LON sits on a wide, unconfined braidplain (hundreds of metres) gauged far downstream — the geomorphic contrast behind the domain law in @fig-domain.](figures/fig24_braid_two_region.png){#fig-tworeg width=98%}
-
-## Time-dependent bedload across the atmospheric rivers
-
-The compound event delivered a weak pre-AR (06 Dec ≈54 m³/s) followed by three
-strong pulses (AR1 peak 09 Dec ≈323 m³/s, AR2 10 Dec ≈309 m³/s, AR3 11 Dec
-≈317 m³/s; @fig-bltime). Using the 5–15 Hz power as a bedload proxy normalized to
-each station's pre-flood median, the bed barely moves in the pre-AR (1–4×
-background), then **bedload peaks in AR2 at every station (≈110–180× background near
-the source), ~3× larger than in AR1 or AR3** — even though AR2's discharge peak was
-*not* the largest (@fig-blAR). That a later, slightly-smaller pulse mobilizes the
-most bedload — after a priming pre-AR and AR1 — is consistent with progressive bed
-loosening/de-armoring raising transport efficiency, a cross-pulse supply effect
-rather than a purely hydraulic response. A time-resolved fit of the exponent
-confirms this: $b(t)$ rises above the turbulent-flow baseline during AR1–AR2 and
-relaxes afterward (@fig-bt). The per-AR averages also fall steeply downstream
-(source ≈180× → CC.TRON ≈7×), mirroring the scaling-exponent decay.
-
-
-![Bedload-band (5–15 Hz) power normalized to each station's pre-flood median through the event; the three AR pulses are shaded. Bedload activation tracks — but is not maximized at — the largest discharge peak.](figures/fig6_bedload_time.png){#fig-bltime width=92%}
-
-
-A multidisciplinary animation that ties SNOTEL precipitation, gage discharge, and
-per-station bedload strength together (and shows the traffic-contaminated UW.TEHA
-*not* lighting up — bedload is localized to river-proximal clean stations) is in
-the repository (`paper/figures/bedload_animation.gif`); the single animation
-embedded here is the distributed-discharge field (@fig-vq, Discussion).
-
-## Turbulence or bedload? The frequency evidence
+## Bedload as a bounded hypothesis: the frequency evidence {#sec-bedload}
 
 Whether the signal above is bedload or turbulent flow hinges on frequency. Median
-flood-vs-quiet velocity spectra (@fig-spec) are unambiguous: at the 50-sps source
+flood-vs-quiet velocity spectra (@fig-spec a) are unambiguous: at the 50-sps source
 station the flood lifts power **broadband from ~1 Hz to the 25 Hz Nyquist** — the
 turbulent-flow band — with no access to the canonical bedload band (30–80 Hz;
 Tsai et al. 2012; @bakker2020). At the only high-rate (200 sps) downstream station
@@ -759,68 +797,89 @@ bedload band and senses the river.** Grain physics agrees: a 1 m boulder's conta
 corner is ~200–300 Hz, so intrinsic impacts do not radiate into 1–15 Hz; only
 attenuation-shifted, non-unique energy could, degenerate with the 5–7 Hz turbulence
 peak. We therefore interpret the resolvable signal as turbulent-flow noise and
-treat bedload as a frequency-bounded hypothesis (see Limitations).
+treat bedload as a frequency-bounded hypothesis (see §Limitations). The best
+available probe of the bedload edge — the 100-sps UW broadband stations at the
+30–50 Hz lower edge, where UW.LON shows a tentative transport signal — and the
+Hertzian contact-frequency argument are detailed in Text S5.
 
-![Median ground-velocity PSD, flood (10 Dec) vs quiet (03 Dec), for a 50-sps source station (CC.PR03) and a 200-sps lowland station (UW.UPS). The flood raises broadband power to the 25 Hz Nyquist at the source; the bedload band (30–80 Hz) is unsampled there and shows no flood signal at the distant high-rate station.](figures/fig11_spectra.png){#fig-spec width=82%}
+**Time-dependent bedload across the atmospheric rivers.** The compound event
+delivered a weak pre-AR (06 Dec ≈54 m³/s) followed by three strong pulses (AR1 peak
+09 Dec ≈323 m³/s, AR2 10 Dec ≈309 m³/s, AR3 11 Dec ≈317 m³/s). Using the 5–15 Hz
+power as a bedload proxy normalized to each station's pre-flood median, the bed
+barely moves in the pre-AR (1–4× background), then **bedload peaks in AR2 at every
+station (≈110–180× background near the source), ~3× larger than in AR1 or AR3**
+(@fig-spec b) — even though AR2's discharge peak was *not* the largest. That a later,
+slightly-smaller pulse mobilizes the most bedload — after a priming pre-AR and AR1 —
+is consistent with progressive bed loosening/de-armoring raising transport
+efficiency, a cross-pulse supply effect rather than a purely hydraulic response. A
+time-resolved fit of the exponent $b(t)$ confirms this (@fig-bt). The per-AR
+averages also fall steeply downstream (source ≈180× → CC.TRON ≈7×; @fig-blAR),
+mirroring the scaling-exponent decay. A coarser, wood-rich source can lower the
+coarse-transport band into the resolvable window (a grain-size– and
+process-conditional caveat); we keep this bounded, not isolated, in Text S6.
 
-The best available probe of the bedload edge is the 100-sps UW broadband stations
-(Nyquist 50 Hz): at UW.LON (Nisqually, 0.21 km) the 30–50 Hz power scales with
-discharge ($b\approx1.4$), a tentative high-frequency transport signal, whereas
-UW.RER (far from its gage) is noise (@fig-edge). A clean 30–80 Hz test awaits the
-2026 high-rate (CH) archive. Grain size, moreover, is encoded in *amplitude*
-($\propto D^3$), not in the band: even a 2 m boulder's Hertzian contact corner is
-~140 Hz, so within ≤50 Hz boulders and cobbles share a flat spectral shape — a low
-band is a coarse-transport *amplitude* proxy, not a grain-size discriminator. The
-genuinely low-frequency coarse signatures (debris-flow/lahar boulder fronts to
-~2 Hz; possible large-wood tremor) are a separate, underexplored target.
+![Bedload as a bounded hypothesis: the frequency evidence. **(a)** Median ground-velocity power spectral density on a flood day (10 Dec, solid) versus a quiet pre-flood day (03 Dec, dotted), for a 50-sps glacial-source station (CC.PR03, blue) and a 200-sps lowland station (UW.UPS, orange); dashed vertical lines mark each station's Nyquist frequency and the shaded bands are the turbulence (1–20 Hz) and canonical bedload (30–80 Hz) windows (PSD axis clipped to −175 to −100 dB to focus on the signal). The flood lifts power broadly across the turbulence band, but where the river is actually sensed — the 50-sps source station, Nyquist 25 Hz — the canonical 30–80 Hz bedload band is *physically unsampled*; the 200-sps lowland station reaches the bedload band but is downstream of the glacial source and carries no flood excess there. This is why our 5–15 Hz "bedload" proxy is a *transition-band* indicator, not a measurement of canonical bedload. **(b)** The 5–15 Hz proxy through the event (÷ each station's pre-flood median), with discharge on top and the four AR windows shaded; the per-station key is below panel (a). The proxy peaks on **AR2** at every station and decays strongly downstream (source ≈180× → CC.TRON ≈7×, ~35 km), mirroring the scaling-exponent decay. Per-AR means and the time-resolved exponent are in @fig-blAR and @fig-bt; the 30–50 Hz lower-edge analysis from the 100-sps stations is in Text S5.](figures/figF9_bedload.png){#fig-spec width=98%}
 
+## Distributed sensing and a path to downstream nowcasting {#sec-ew}
 
-**A coarser, wood-rich source lowers the band (a grain-size– and process-conditional
-caveat).** The canonical 30–80 Hz "bedload band" is a convention built on *clean-gravel
-saltation* — where discrete Hertzian grain impacts radiate — and, as above, even metre
-boulders keep that impact corner above ~140 Hz, so individual-grain impacts cannot by
-themselves explain the 5–15 Hz steepening. But glacier-fed Cascade outwash rivers are
-not clean-saltation systems. Their coarse-transport regime is dominated by (i) boulders
-moving by **rolling and sliding** and grain–grain collision rather than ballistic
-saltation, (ii) abundant **large wood** — logs and log jams delivered by the forested
-catchment — and (iii) frequent **hyperconcentrated and debris-flow surges** (Tahoma,
-Kautz, Nisqually, and the upper Puyallup are among Mount Rainier's most debris-flow-prone
-valleys; USGS). All three radiate *lower* frequencies than gravel saltation: debris-flow
-and lahar boulder fronts generate energy down to ~2 Hz, and large, low-stiffness wood is
-an intrinsically long-contact, low-frequency impactor. The coarse-transport seismic band
-in such systems therefore extends **downward**, into the few-Hz–to–tens-of-Hz range that
-overlaps our resolvable 1–15 Hz window — so the 50-sps stations may in fact carry genuine
-coarse-clast and large-wood signatures, not turbulence alone. This is double-edged: the
-same band is spectrally degenerate with turbulence (and with the immobile-boulder
-turbulence of @nativ2025), so the coarse-transport contribution remains *bounded*, not
-isolated. The lesson is that the detectability cutoff is **grain-size– and
-process-conditional**: in coarse, wood-rich proglacial reaches like the braided Puyallup
-source, part of the coarse-transport signal lives *below* 25 Hz and is, in principle,
-sampled — one more reason this reach is a distinct interpretive regime rather than a clean
-line-channel bedload source (§sec-braided).
+**A source-reach transport *diagnostic*, not a forecast.** The continuous record flags
+when the bed begins to move: at the source cluster the 5–15 Hz transport-band power
+rises **~5–7 h before peak discharge** (CC.PR01 +6.6, CC.PR02 +5.0, CC.PR03 +6.1 h;
+and before peak stage, which here coincides with peak $Q$), and the onset *propagates
+downstream* across the upper transect — CC.SIFT (15 km, 19:45 UTC) → Electron cluster
+(22–23 km, 21:05–22:00) → CC.STYX (27 km, 23:40), a ~4 h sweep (@fig-vq b). We are
+careful about what this is: a lead of the *transport* onset over the *local* peak $Q$
+is a **diagnostic that the bed is mobilizing on the rising limb** — information a gage
+cannot provide, because a stage record alone does not say whether the bed is in motion
+— rather than a forecast of a downstream quantity. At the same station the rising limb
+of $Q$ is already visible, so the operational content of this lead is "transport is now
+active here," not "the flood will be larger there."
 
-## Local sensing and downstream early warning
+**Local sensing explains a flat-upstream / rising-downstream contrast.** The seismic
+signal senses *local* hydraulics, which explains an otherwise puzzling feature of the
+compound event: the **upstream gage and seismic stay flat** across successive ARs
+(Electron 323→309→317 m³/s; CC.PR03 power peaking in AR2), while the
+**basin-integrating downstream gage rises monotonically** (Puyallup 1017→1158→1257
+m³/s). The small, steep glacial headwater received similar forcing each pulse and the
+near-channel station only senses its own ~km reach; the downstream peak instead grows
+through cumulative basin-scale processes — soil saturation, a rising freezing level
+feeding the large White River sub-basin, and superposition of lagged tributary waves.
+The upstream seismic thus follows local, not integrated, discharge — independent
+support for the turbulent-flow interpretation, and a caution that an upstream
+*amplitude* does not translate into a downstream amplitude without a basin model.
 
-The seismic signal senses *local* hydraulics, which explains an otherwise puzzling
-contrast across the compound event: the **upstream gage and seismic stay flat**
-across successive ARs (Electron 323→309→317 m³/s; CC.PR03 power peaking in AR2),
-while the **basin-integrating downstream gage rises monotonically** (Puyallup
-1017→1158→1257 m³/s). The small, steep glacial headwater received similar forcing
-each pulse, and the near-channel station only senses its own ~km reach; the
-downstream peak instead grows through cumulative basin-scale processes — soil
-saturation, a rising freezing level feeding the large White River sub-basin, and
-superposition of lagged tributary waves. The upstream seismic thus follows local,
-not integrated, discharge — independent support for the turbulent-flow interpretation.
+**Does any of this amount to forecast skill? A routing proof-of-concept.** A bare
+timing lead is *not* forecast skill — a gage at the same upstream point would provide
+the identical lead, and more directly; the seismic's distinct value is that it covers
+*ungauged* reaches and senses *bed transport* a stage record cannot. Genuine skill
+means predicting the downstream **stage or discharge magnitude**, validated
+out-of-sample against a baseline — which requires an upstream→downstream transfer
+(flood routing with celerity, attenuation, and lateral inflow) that we cannot *train*
+or *validate* from a single event. What we *can* show is that the physical ingredients
+are in place: a deterministic routing of the upstream Electron discharge — a constant
+flood-wave lag plus gain, passed through the downstream stage–discharge rating —
+reproduces the observed downstream (Puyallup) stage for this event (@fig-vq c). We
+present this as a **proof of concept, not demonstrated skill**: it is one event, with
+no learning, no uncertainty quantification, and no out-of-sample test. It establishes
+the path — a continuous, distributed upstream observable feeding a routed stage nowcast
+for the undammed, gage-sparse, lahar-hazard corridor (Orting, Puyallup) — and the
+first out-of-sample test is the March-2026 flood (§Limitations; development log).
 
-Because the upstream signal precedes the downstream peak, it carries early-warning
-value: the upstream seismic power leads the downstream (Puyallup) stage peak by
-~36 h, and the headwater gage leads it by longer (@fig-ew). For an undammed,
-gage-sparse, lahar-hazard corridor (Orting, Puyallup), a continuous upstream
-seismic proxy could extend warning lead time; predicting the downstream peak
-*amplitude* (here 4× the headwater) would require a trained, multi-event model
-(see Limitations and the development log).
+**Seismic virtual discharge.** Each river-proximal station can be calibrated as a
+rating $\log_{10}P=a+b\log_{10}Q$ and inverted to a **seismic virtual discharge**
+$Q_{\text{seis}}=10^{(\log_{10}P-a)/b}$ (Text S4). At clean near-channel stations
+this tracks the co-located gage well (CC.PR03 NSE 0.95, CC.PR02 0.92; CC.STYX 0.75;
+@fig-vq a), while off-channel/distant stations (CC.SIFT, CC.TRON) are poor —
+consistent with the turbulence/attenuation picture. Combining the gages with these
+virtual gages yields a **space–time discharge field** across the western Rainier
+drainages (animation, HTML edition; @fig-vq-anim), i.e. a distributed streamflow
+nowcast from a seismic network.
 
-![Early warning. (top) The flood peak propagates downstream — the Puyallup (RM~10) peak lags Electron (RM~41) by tens of hours. (bottom) Upstream seismic power (CC.PR03, 5–15 Hz) leads the downstream discharge peak by ~36 h.](figures/fig10_early_warning.png){#fig-ew width=88%}
+![Distributed sensing, virtual gage, and a routing proof-of-concept. **(a)** Seismic virtual discharge vs the co-located gage, all three river-proximal stations on one axis (capped 1–500 m³/s; CC.PR03 NSE 0.95, CC.PR02 0.92, CC.STYX 0.75) — near-channel source stations reproduce the hydrograph. **(b)** Bed-transport *diagnostic*: the 5–15 Hz transport-band onset leads peak $Q$ by ~5–7 h (CC.PR01 +6.6, CC.PR02 +5.0, CC.PR03 +6.1 h), flagging that the bed is mobilizing on the rising limb — not a downstream forecast. **(c)** Routing proof-of-concept: the upstream Electron discharge, routed by a constant flood-wave lag (≈8 h, implied celerity ≈1.7 m s⁻¹) and gain and passed through the downstream stage–discharge rating, reproduces the observed Puyallup stage ($r\approx0.89$) for this event. It is a *concept, not validated skill* — one event, no learning, no out-of-sample test (the constant gain over-predicts the second peak; NSE 0.48); the first out-of-sample test is the March-2026 flood.](figures/figF8_virtualq.png){#fig-vq width=98%}
+
+::: {.content-visible when-format="html"}
+![Space–time discharge field across the western Mt. Rainier drainages through the December-2025 atmospheric rivers (HTML edition; a public-facing rendering over a Sentinel-2 true-color basemap). USGS river gauges (diamonds, measured) and seismic *virtual* gauges (triangles, $Q$ inverted from the calibrated $P\propto Q^{b}$ rating; hollow = sensor present but no usable signal) are colored on one discharge scale and grow/brighten as discharge rises; the rivers swell with flow, the downstream at-risk communities (Orting, Sumner, Puyallup) are marked, and a live clock and atmospheric-river chip track the event over the gauge-hydrograph ticker below. The seismic gauges fill the long ungauged reaches between USGS stations — the distributed observable underlying the routing nowcast of @fig-vq c.](figures/virtual_q_animation.gif){#fig-vq-anim width=78%}
+:::
 
 # Discussion
 
@@ -860,12 +919,12 @@ e-folding distance $r_e=v_cQ/(2\pi f)$. Rather than the fluvial default $Q\appro
 (Tsai et al. 2012), we adopt a PNW/Rainier-edifice value $Q(f)=Q_0 f^{\eta}$,
 $Q_0\approx25$, $\eta\approx0.5$ (from Cascade coda-/Lg-Q and Mt. St. Helens
 edifice studies; @gimbert2014 and refs in the literature chapter), giving
-$Q\approx74$ at the 5–15 Hz band center — so $r_e\approx780$ m here (vs ~210 m for
-$Q=20$) but still only tens of metres at 50 Hz (@fig-atten a). Bedload is thus
+$Q\approx74$ at the 5–15 Hz band center — so $r_e\approx781$ m here (vs ~212 m for
+$Q=20$) but still only tens of metres at 50 Hz. Bedload is thus
 recoverable only within ≲1 km of the channel, and CC.TRON (5.2 km) lies well
 beyond reach. A first-order test on the same-source PR cluster (PR03/PR01/PR02 at
 0.19/0.71/1.9 km) finds the 5–15 Hz power *nearly distance-independent over
-0.2–2 km* — weaker decay than even the PNW prediction (@fig-atten b) — implying the
+0.2–2 km* — weaker decay than even the PNW prediction (@fig-braid) — implying the
 band retains less-attenuated lower-frequency (turbulence) energy, and that site
 response and crude channel distances preclude a data-driven $Q$ from this small
 array. We therefore restrict bedload claims to near-channel stations and treat
@@ -874,12 +933,10 @@ a clean correction would require active-source Green's-function calibration
 [@bakker2020; @lagarde2021] or amplitude-decay source location across a denser
 array (`eseis`; @dietze2018).
 
-![First-order distance attenuation. (a) Seismic reach $r_e(f)=v_cQ/(2\pi f)$ for $Q=10$–40, with the turbulence (1–10 Hz) and bedload (30–80 Hz) bands and our station standoffs; bedload frequencies reach only tens–hundreds of metres. (b) Observed AR2 5–15 Hz power vs distance for the same-source PR cluster (blue) decays far more weakly than the $Q=20$ prediction (red).](figures/fig9_attenuation.png){#fig-atten width=98%}
-
 Three alternative explanations must be addressed. First, @nativ2025 show that
 stationary boulders can raise high-frequency seismic power through turbulence
 rather than transport; we argue against a static-bed origin here because the
-high-frequency response tracks the flood hydrograph in time (@fig-ts) and is
+high-frequency response tracks the flood hydrograph in time (@fig-scaling) and is
 confined to the near-source reach (decaying downstream), rather than being a
 fixed spectral feature.
 Second, @roth2017 caution that channel-roughness change competes with bedload as
@@ -900,34 +957,18 @@ a limitation — is here the asset: a station is a virtual gage for its reach, s
 array becomes distributed, gap-tolerant hydrologic monitoring of an ungaged,
 hazard-prone basin.
 
-## Seismic virtual discharge
-
-Each river-proximal station can be calibrated as a rating $\log_{10}P=a+b\log_{10}Q$
-and inverted to a **seismic virtual discharge** $Q_{\text{seis}}=10^{(\log_{10}P-a)/b}$.
-The single-station virtual-gauge concept is established — seismic-noise power has been
-inverted to discharge for ungauged mountainous basins [@shakti2021] and jointly with
-bedload flux and flow depth by waveform inversion [@dietze2019]; our contribution here
-is to operate it as a *distributed, multi-station field* and to delimit where it fails
-(braided, far-gaged reaches; @sec-domain). At clean near-channel stations this tracks
-the co-located gage well (CC.PR03/PR02
-$r=0.97/0.96$, Nash–Sutcliffe of $\log Q$ = 0.95/0.92; CC.STYX 0.75),
-while off-channel/distant stations (CC.SIFT, CC.TRON) are poor — consistent with
-the turbulence/attenuation picture. The fitted exponents cluster at $b\approx1.4$–1.8,
-near the Gimbert (2014) turbulent-flow prediction, and are roughly steady in time,
-so the rating is stable rather than carrying additional time-varying information.
-The braidplain station CC.PR01 is the weakest of the source cluster ($r=0.69$, NSE
-$\approx0$) and shows the cross-event baseline drift documented in @sec-braided — a
+**Virtual discharge as a distributed field.** The single-station virtual-gauge
+concept is established — seismic-noise power has been inverted to discharge for
+ungauged mountainous basins [@shakti2021] and jointly with bedload flux and flow
+depth by waveform inversion [@dietze2019]; our contribution here is to operate it as
+a *distributed, multi-station field* (@fig-vq) and to delimit where it fails (braided,
+far-gaged reaches; §sec-domain). The fitted exponents cluster at $b\approx1.4$–1.8,
+near the Gimbert (2014) turbulent-flow prediction, and are roughly steady in time, so
+the rating is stable rather than carrying additional time-varying information. The
+braidplain station CC.PR01 is the weakest of the source cluster ($r=0.69$, NSE
+$\approx0$) and shows the cross-event baseline drift documented in §sec-braided — a
 caution that virtual-discharge ratings on braided reaches may need re-calibration
 after channel-reworking events rather than transferring unchanged.
-Combining the gages with these virtual gages yields a **space–time discharge field**
-across the western Rainier drainages (animation, HTML edition), i.e. a distributed
-streamflow nowcast from a seismic network.
-
-![Seismic virtual discharge (orange) versus the co-located USGS gage (black) at each river-proximal station, from the turbulence-band rating $P\propto Q^{b}$. Near-channel source stations reproduce the hydrograph; off-channel/distant stations degrade.](figures/fig12_virtual_q.png){#fig-vqval width=95%}
-
-::: {.content-visible when-format="html"}
-![Space–time virtual-discharge animation (the single embedded animation): USGS gages (diamonds) and seismic virtual gages (filled triangles, $Q$ inverted from $P\propto Q^{b}$; hollow = no usable signal), colored on one discharge scale, through the Dec-2025 ARs. Rivers swell with discharge; the panel below shows gage hydrographs with a time cursor.](figures/virtual_q_animation.gif){#fig-vq width=70%}
-:::
 
 ## From discharge to stage: the rating curve
 
@@ -937,32 +978,16 @@ site-specific **stage–discharge rating**, $Q = C\,(h-h_0)^{\beta}$, where $h_0
 the stage of zero flow and $\beta$ the rating exponent; stage is measured
 continuously and converted to discharge via this curve, calibrated by periodic
 direct measurements. Fitting the December-2025 stage and discharge at the corridor
-gages (@fig-rating) gives $\beta\approx1.6$ near the mouth (Puyallup at Puyallup),
+gages (@fig-ratingSI) gives $\beta\approx1.6$ near the mouth (Puyallup at Puyallup),
 $\beta\approx2$ on the Nisqually, and a much steeper $\beta\approx5$ in the
 confined upper Puyallup (Electron) — coarser, narrower channels are more stage-sensitive.
-The practical consequence is that a **seismic virtual discharge can be mapped to a
-stage nowcast** through the local rating ($h = h_0 + (Q_{\text{seis}}/C)^{1/\beta}$),
-turning the upstream early-warning lead (≈36 h) into a forecast of the
-flood-relevant variable downstream — without a co-located stage sensor.
+The practical consequence is that a **seismic virtual discharge can be mapped to
+stage** through the local rating ($h = h_0 + (Q_{\text{seis}}/C)^{1/\beta}$) — the
+basis of the routing proof-of-concept in §"Distributed sensing" (@fig-vq c), and a
+concrete path toward a downstream stage nowcast that does not need a co-located stage
+sensor, once skill is established out-of-sample.
 
-![Stage–discharge rating $Q=C(h-h_0)^\beta$ at four corridor gages (Dec 2025 instantaneous stage vs discharge, with power-law fits). The rating converts between the seismic-estimated discharge and the flood-hazard stage.](figures/fig15_rating.png){#fig-rating width=70%}
-
-## New capabilities and a 2026 "what-if"
-
-The network that recorded this event is mid-upgrade from 50 to 500 sps (@fig-map),
-which reframes what is observable. **Had the identical AR sequence struck in 2026**,
-with the 500-sps CH channels live at the near-channel source stations (CC.PR03,
-SIFT, STYX, CARB), we could (i) compute the **30–80 Hz bedload band directly** and
-test for a *measured* (not merely bounded) bedload signal at the glacial source;
-(ii) run the **virtual-discharge field in real time** as a distributed nowcast that
-fills the long ungaged reaches between USGS gages; and (iii) operate the
-**~36 h upstream-to-downstream lead** as an early-warning product for the
-Orting–Puyallup lahar corridor, fused with SNOTEL precipitation and OPERA SAR
-flood maps. The same compound event would thus move from a turbulence-and-discharge
-study to an integrated, multi-sensor flood-and-sediment observation — the central
-forward-looking capability this work demonstrates and recommends.
-
-# Limitations
+## Limitations
 
 - **Canonical bedload band unsampled; coarse/wood transport partly is (a grain-size–
   conditional limit).** For December 2025 only the 50-sps (BH) CC waveforms are archived
@@ -972,10 +997,10 @@ forward-looking capability this work demonstrates and recommends.
   process-conditional: coarse boulder rolling/sliding, large wood, and debris-flow surges
   radiate below 25 Hz (to ~2 Hz), so part of the *coarse*-transport signal is in principle
   sampled — but it is spectrally degenerate with turbulence and cannot be isolated here
-  (§Results, frequency evidence). The 500-sps (CH) upgrade came online in 2026 and its
+  (§sec-bedload; Text S6). The 500-sps (CH) upgrade came online in 2026 and its
   high-rate data are not yet retrievable through FDSN; obtaining them from CVO/PNSN is the
   route to a direct 30–80 Hz test. For the 2025 event the best available probe is the
-  100-sps UW broadband stations (RER, LON) at the 30–50 Hz lower bedload edge.
+  100-sps UW broadband stations (RER, LON) at the 30–50 Hz lower bedload edge (Text S5).
 - **No absolute flux inversion.** We report a band-power proxy and scaling
   exponents, not calibrated bedload flux. Absolute inversion requires
   grain-size and impact assumptions [@tsai2012; @bakker2020] not constrained here.
@@ -1055,31 +1080,30 @@ hours. The environment is pinned byte-for-byte with `pixi.lock`, and a `Dockerfi
 provides a containerized build for full isolation
 (`docker build -t seis-hydro . && docker run --rm seis-hydro pixi run make figures-from-cache`).
 The complete pipeline is a numbered sequence of standalone scripts under
-`workflows/`, each writing a figure and/or a `config/*.json` it consumes downstream:
+`workflows/`, each writing a figure and/or a `config/*.json` it consumes downstream.
+The composite main figures (F1–F9) and supplement figures (S1–S11) are assembled from
+these workflow outputs:
 
-| Step | Script | Produces |
+| Composite | Built from workflow | Produces |
 |---|---|---|
-| discovery | `00_discover_stations.py` | station↔gage transect (river-km) |
-| discharge | `01_fetch_discharge.py` | USGS-NWIS discharge/stage for all corridor gages (authoritative; complete to event end) |
-| proxy + fit | `scripts/run_river_rumble_batch.py` | per-station `results/*_timeseries.csv`, fits |
-| core figs | `02_make_figures.py` | @fig-scaling, @fig-scatter, @fig-hyst, @fig-ts + scaling table |
-| map | `03_make_map.py` | @fig-map (PyGMT DEM + gages + SNOTEL + OPERA + status) |
-| controls | `04_traffic_noise.py` | @fig-traffic |
-| bedload time | `05_bedload_time.py`, `07_fetch_aux_data.py`, `08_b_of_time.py` | @fig-bltime, @fig-blAR, @fig-bt |
-| GIFs | `06_bedload_gif.py`, `13_virtual_q_gif.py` | `bedload_animation.gif`, @fig-vq |
-| attenuation | `09_attenuation.py` | @fig-atten (PNW Q) |
-| early warning | `10_early_warning.py` | @fig-ew |
-| frequency | `11_spectra.py`, `14_bedload_ch.py` | @fig-spec, @fig-edge |
-| virtual Q | `12_virtual_q.py` | @fig-vqval + ratings |
-| threshold | `15_threshold.py` | @fig-thr ($Q_c$) |
-| classification | `16_classify_stations.py` | `station_status.json` (drives hollow markers) |
-| rating | `17_rating.py` | @fig-rating (stage–discharge) |
-| braided source | `18_braided_hysteresis.py` | @fig-braid (geometric-vs-transport diagnostic) |
-| braid satellite | `19_braid_optical_change.py` | @fig-braidsat (Sentinel-2/-1 channel change + geometric drift); `--from-cache` rebuilds offline from committed derived rasters |
-| warm-AR snow | `20_warm_ar_snotel.py` | @fig-warmsnow (SNOTEL temperature/SWE: warm rain-on-snow vs cold late-Dec) |
-| reorg timing | `21_braided_reorg_timing.py --basin puyallup\|nisqually` | @fig-reorg (matched-discharge timing, logistic step, flood-wave lag correction) |
-| domain panel | `22_domain_panel.py` | @fig-domain (gage distance × channel width × elevation → clean/confounded) |
-| two-region braid | `23_braid_two_region.py` | @fig-tworeg (Puyallup vs Nisqually change maps, offline from cache) |
+| @fig-map (F1) | `03_make_map.py`, `27_channel_pattern.py`, `20_warm_ar_snotel.py`, `28_fetch_basemaps.py` | study area + channel pattern + flood driver |
+| @fig-scaling (F2) | `02_make_figures.py` | event timeseries + P–Q scatter + exponent vs frequency |
+| @fig-thr (F3) | `15_threshold.py`, `26_rating_geometry.py`, `16_classify_stations.py` | threshold $Q_c$ + rating geometry $\beta(Q)$ + station skill |
+| @fig-braid (F4) | `18_braided_hysteresis.py`, `09_attenuation.py` | braided hysteresis + seismic-reach attenuation |
+| @fig-braidsat (F5) | `19_braid_optical_change.py` (Puyallup + Nisqually) | two-basin satellite channel change + geometric drift |
+| @fig-reorg (F6) | `21_braided_reorg_timing.py`, `28_width_stage.py`, `25_hazard_clogging.py` | matched-discharge timing + width–stage + recession clogging |
+| @fig-domain (F7) | `22_domain_panel.py` | gage distance × width × elevation → clean/confounded |
+| @fig-vq (F8) | `12_virtual_q.py`, `10_early_warning.py`, `25_hazard_clogging.py` | virtual gage + warning window + downstream lead |
+| @fig-spec (F9) | `11_spectra.py`, `05_bedload_time.py` | flood-vs-quiet PSD + per-AR bedload proxy |
+| @fig-traffic (S1) | `04_traffic_noise.py` | anthropogenic-noise screening |
+| @fig-pqgrid (S2) | `02_make_figures.py` | full P–Q scatter grid |
+| @fig-hystall (S3) | `02_make_figures.py` | all-station hysteresis loops |
+| @fig-blAR (S4) | `05_bedload_time.py` | per-AR bedload, source→downstream |
+| @fig-bt (S5) | `08_b_of_time.py` | time-resolved exponent $b(t)$ |
+| @fig-edge (S6) | `14_bedload_ch.py` | 30–50 Hz lower bedload edge |
+| @fig-ratingSI (S7) | `17_rating.py` | stage–discharge rating, 4 gages |
+| @fig-braidsat-ts (S8) | `19_braid_optical_change.py`, `23_braid_two_region.py` | SAR wetted-illumination time series + two-region maps |
+| @fig-reorgnis (S9) | `21_braided_reorg_timing.py --basin nisqually` | Nisqually reorg-timing (confounded) |
 
 Run order and parameters are documented in `workflows/README.md`; the single source
 of analysis parameters is `config/analysis.yaml`. Every figure — including the
