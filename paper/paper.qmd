@@ -6,37 +6,33 @@ author:
     email: mdenolle@uw.edu
   - name: Bradley P. Lipovsky
     affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
-  - name: David Montgomery
-    affiliations: [{name: University of Washington, department: Earth and Space Sciences}]
 date: last-modified
 abstract: |
   Glacier-fed mountain rivers carry the floods and sediment that drive downstream
   hazard, yet they are sparsely gaged and their braided source reaches *reorganize
-  during the very floods we most need to observe* — a process normally seen only as
+  during the very floods we most need to observe*, a process normally seen only as
   before/after snapshots. We use near-channel seismic stations along the Puyallup
   and Nisqually Rivers draining Mt. Rainier, Washington, paired with USGS gages, to
   monitor the December 2025 Pacific Northwest atmospheric-river (AR) floods.
   Band-limited seismic power tracks turbulent flow and hence discharge
-  ($P\propto Q^{b}$, $b\approx1$–2.5 in the resolvable 1–15 Hz band); flood-vs-quiet
-  spectra confirm the resolvable band is turbulent-flow noise and the canonical
-  bedload band (30–80 Hz) is *unsampled* at the 50-sps source stations, so bedload
-  is treated as a frequency-bounded hypothesis. The central result is dynamical: on
-  the braided Puyallup outwash plain a statistically significant steepening of the
-  $P$–$Q$ scaling is a **fluvial regime transition — geometric channel
+  ($P\propto Q^{b}$, $b\approx1$–2.5 in the resolvable 1–15 Hz band). The central result is
+  a statistically significant steepening of the
+  $P$–$Q$ scaling is a **fluvial regime transition of geometric channel
   reorganization, not a bedload onset** (reversible hysteresis, no supply decay),
   and the *continuous* seismic record resolves its **event-scale timing** — at
   matched discharge the source baseline steps up **on the falling limb of the main
   pulse, lagging peak discharge by ~half a day (onset) to a few days, in a stepwise
-  reorganization** rather than a gradual one. This timing, which gages and satellite
+  reorganization** of the braided Puyallup outwash plain rather than a gradual one. 
+  This timing, which gages and satellite
   snapshots cannot give, is independently corroborated by Sentinel-2/-1 imagery (the
   active thread migrated toward the most anomalous station). A second basin
   (Nisqually) shows the same physics is *larger but confounded*: its gage sits 13–21
-  km downstream (a flood-wave lag we correct, implied celerity ≈2 m s⁻¹) on a far
+  km downstream on a far
   wider, higher braidplain where the post-flood **rain→snow supply shutoff** masks
   the geometric signal — together defining the **domain** in which source-resolved
   river seismology is clean (a compact channel with a co-located gage). Finally, a
   deterministic routing of the upstream discharge through the downstream rating
-  reproduces the observed downstream stage for this event — a proof-of-concept for a
+  reproduces the observed downstream stage for this event and serves as a proof-of-concept for a
   seismic-fed flood nowcast in this gage-sparse lahar corridor, not yet a
   skill-validated forecast.
 keywords: [braided rivers, channel reorganization, river discharge, Mt. Rainier, atmospheric river, environmental seismology]
