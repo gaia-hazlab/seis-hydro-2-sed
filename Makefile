@@ -50,6 +50,8 @@ figures-from-cache:  ## REPRO PATH A — all offline figures from committed cach
 	$(PY) workflows/26_channel_pattern.py
 	@echo ">>> 27_width_stage (fig28; width-stage hysteresis, rising vs falling limb)"
 	$(PY) workflows/27_width_stage.py
+	@echo ">>> 29_rating_hysteresis (fig29; linear stage-Q ratings, hysteresis/aggradation drift)"
+	$(PY) workflows/29_rating_hysteresis.py
 	@echo ">>> --- JGR-ES restructure composites (F1-F9; read the same caches) ---"
 	@echo ">>> 30_figF1_studyarea (F1; study area + channel pattern + flood driver, S2 basemap)"
 	$(PY) workflows/30_figF1_studyarea.py
