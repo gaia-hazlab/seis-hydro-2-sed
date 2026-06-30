@@ -45,7 +45,7 @@ floods that matter most for downstream hazard. As discharge rises, braided threa
 widen, switch, and avulse across the valley floor, redistributing the sediment that
 aggrades channels, undermines bridges and levees, and charges lahar-prone corridors
 [@czuba2012; @hoblitt1998]. Yet we almost never observe this reorganization *as it
-happens*: stream gages record discharge at a point, and satellites give only
+happens*: stream gages record discharge at a point downstream of the source, and satellites give only
 before/after snapshots through cloud, so *how and when* a braided channel rearranges
 during a flood — the event-scale dynamics — remains largely unobserved. Passive
 seismic monitoring of the high-frequency ground motion that rivers radiate offers a
@@ -54,11 +54,18 @@ continuous, non-contact alternative [@burtin2008; @tsai2012; @gimbert2014;
 sediment transport — that drive channel change, and recorded at the 10-minute cadence
 neither gages nor imagery provide for *channel position*.
 
-Two sources dominate the near-channel high-frequency wavefield, and — because we
-observe discharge $Q$, not the underlying hydraulics — we cast both as scalings in
-$Q$. Turbulent flow over the bed radiates seismic power that is, to first order,
-**linear in discharge**,
 
+Dynamic braiding in pro-glacial rivers.
+
+
+Geophysical sensing in mountain areas provide an opportunity to observe their dynamics 
+and characterize them with process based approaches.
+
+
+
+Two sources dominate the near-channel high-frequency wavefield. 
+Turbulent flow over the bed radiates seismic power that is, to first order,
+**linear in discharge**,
 $$
 P_{\text{water}} \;\propto\; Q^{\,b_t}, \qquad b_t \approx 0.9\text{–}1.4 ,
 $$ {#eq-water}
@@ -981,7 +988,16 @@ The practical consequence is that a **seismic virtual discharge can be mapped to
 stage** through the local rating ($h = h_0 + (Q_{\text{seis}}/C)^{1/\beta}$) — the
 basis of the routing proof-of-concept in §"Distributed sensing" (@fig-vq c), and a
 concrete path toward a downstream stage nowcast that does not need a co-located stage
-sensor, once skill is established out-of-sample.
+sensor, once skill is established out-of-sample. These ratings are not perfectly
+stationary, however: on linear axes (@fig-rathyst) the corridor gages show
+within-event stage–discharge hysteresis (dominantly an unsteady-flow looped-rating
+effect rather than a bed signal) and, at the unconfined alluvial gages
+(Puyallup nr Orting and at Puyallup), a net rise in stage at fixed discharge through
+the December AR sequence ($\rho_t\approx0.7$) — most simply read as net channel
+**aggradation** (deposition), though stage–discharge data alone cannot separate it
+from roughness or backwater change — whereas the confined source gages remain
+single-valued. A virtual-discharge-to-stage mapping therefore inherits the same
+event-specific, reach-geometry-dependent caveat as the rating itself (§sec-braided).
 
 ## Limitations
 
@@ -997,6 +1013,29 @@ sensor, once skill is established out-of-sample.
   high-rate data are not yet retrievable through FDSN; obtaining them from CVO/PNSN is the
   route to a direct 30–80 Hz test. For the 2025 event the best available probe is the
   100-sps UW broadband stations (RER, LON) at the 30–50 Hz lower bedload edge (Text S5).
+- **Source ambiguity: bed vs air–water interface, tested with colocated infrasound.**
+  Even where the river signal is clear, the seismic spectrum is degenerate — turbulent
+  flow over the bed and bedload impacts on the bed radiate into overlapping bands
+  (@fig-specgram), so seismic data alone cannot say whether the power originates at the
+  *bed* (bedload, in-water turbulence) or at the *air–water interface* (free-surface
+  turbulence, rapids). A colocated **infrasound** (microbarometer) sensor partitions
+  this: bedload and in-water turbulence couple to the ground but barely to the air,
+  whereas air–water-interface processes radiate infrasound and air-coupled ground motion,
+  so seismic–infrasound coherence isolates the surface source [@schmandt2013]. We carry
+  out this test: the USGS Cascades Volcano Observatory (network CC) operates BDF
+  microbarometer arrays colocated with broadband seismometers along the upper-Puyallup
+  corridor, including at our on-channel anchor CC.PR03 (on USGS gage 12092000). Across
+  AR2 the colocated seismic–infrasound coherence stays at the noise floor ($\gamma^2 <
+  0.01$; < 1% shared variance) over 0.5–20 Hz at both CC.PR03 and CC.PR04, even at the
+  discharge peak — yet two elements of the CC.PR04 infrasound array are mutually coherent
+  ($\gamma^2 \approx 0.2$), confirming a real, coherent acoustic field is present
+  (@fig-coh). The seismic river band is thus *not* phase-locked to the acoustic
+  field, bounding the air-coupled fraction of the seismic signal as small and supporting
+  a dominantly ground-radiated (bed/in-water-turbulence) origin over coherent
+  air–water-interface radiation. The bound is one-sided — point coherence is also lowered
+  by spatially incoherent free-surface turbulence and by wind contamination of the
+  infrasound, which is why infrasound *power* is not itself a clean flow proxy
+  (@fig-infra) — so it constrains rather than excludes the surface contribution.
 - **No absolute flux inversion.** We report a band-power proxy and scaling
   exponents, not calibrated bedload flux. Absolute inversion requires
   grain-size and impact assumptions [@tsai2012; @bakker2020] not constrained here.
@@ -1098,6 +1137,10 @@ these workflow outputs:
 | @fig-bt (S5) | `08_b_of_time.py` | time-resolved exponent $b(t)$ |
 | @fig-edge (S6) | `14_bedload_ch.py` | 30–50 Hz lower bedload edge |
 | @fig-ratingSI (S7) | `17_rating.py` | stage–discharge rating, 4 gages |
+| @fig-rathyst (S10) | `29_rating_hysteresis.py` | linear rating + hysteresis/aggradation diagnostic |
+| @fig-specgram (S11) | `39_spectrogram_seismic.py` | flood seismic spectrogram at UW.LON |
+| @fig-infra (S12) | `40_infrasound_psd.py` | colocated CC BDF infrasound spectrograms (PR03/PR04/STYX) |
+| @fig-coh (S13) | `41_seis_infrasound_coherence.py` | seismic–infrasound coherence discriminant at PR03/PR04 |
 | @fig-braidsat-ts (S8) | `19_braid_optical_change.py`, `23_braid_two_region.py` | SAR wetted-illumination time series + two-region maps |
 | @fig-reorgnis (S9) | `21_braided_reorg_timing.py --basin nisqually` | Nisqually reorg-timing (confounded) |
 

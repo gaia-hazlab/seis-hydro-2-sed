@@ -54,7 +54,109 @@ is not, and awaits ≈3 m imagery (main text §sec-braided).
 
 ![Lower bedload edge (30–50 Hz) from the 100-sps UW broadband stations: flood-vs-quiet spectra and 30–50 Hz vs discharge scaling. UW.LON (Nisqually) shows a tentative high-frequency transport signal; UW.RER (far from its gage) is noise.](figures/fig13_bedload_ch.png){#fig-edge width=95%}
 
+**Spectrogram, and the colocated-infrasound discriminant.** A single flood-vs-quiet
+spectrum (@fig-spec) shows *where* in frequency the river signal sits; a continuous
+**spectrogram** (@fig-specgram) shows how that band structure evolves through the
+event — the view @schmandt2013 used in the Grand Canyon to assign different parts of
+the spectrum to different fluvial processes. At the 100-sps Nisqually source station
+UW.LON the seismic power across the turbulence band (~1–20 Hz) and the lower bedload
+edge (~30–50 Hz) rises and falls with the AR2 hydrograph, and the canonical
+clean-gravel bedload band (30–80 Hz) is only partly captured below the 50 Hz Nyquist —
+the same coverage limit discussed in the main text. Critically, **the seismic record
+alone is spectrally degenerate**: turbulent water flow over the bed and bedload
+impacts on the bed radiate into overlapping bands, so a bright band does not by itself
+locate the *source* — at the bed, or at the air–water interface. This is the central
+ambiguity behind treating our 1–15 Hz signal as turbulence-dominated and fine-gravel
+bedload as an upper bound (main text §sec-bedload). Colocated **infrasound** resolves
+it on physical grounds: bedload — grains striking the bed — radiates elastic waves into
+the ground (seismic) but couples poorly to the atmosphere, whereas free-surface
+turbulence (breaking waves, hydraulic jumps, splashing in rapids) at the **air–water
+interface** radiates strongly into the air (infrasound) and into air-coupled ground
+motion. The fraction of seismic power *coherent with a colocated microbarometer* is
+therefore attributable to surface/air–water sources, and the incoherent remainder is
+the candidate **bed/in-water** source [@schmandt2013].
+
+**This network does carry infrasound, and we run the test.** Contrary to the earlier
+framing that the Cascades stations had no microbarometer, the USGS Cascades Volcano
+Observatory (network **CC**) operates **BDF** infrasound arrays colocated with broadband
+seismometers along the upper-Puyallup lahar corridor — including at this study's
+on-channel anchor **CC.PR03**, which sits on USGS gage 12092000 (Puyallup nr Electron)
+and carries colocated 50-sps seismic (BHZ) and 50-sps infrasound (BDF). We use the three
+stations with continuous BDF through AR2 — CC.PR03 (1 element), CC.PR04 and CC.STYX
+(3-element arrays, a few km up-corridor; CC.PR01/PR02 carried BDF only in 2018–2020).
+@fig-infra shows the infrasound is a genuine, energetic field but is **heavily
+wind-contaminated**, and its band-integrated 1–20 Hz power does *not* track discharge
+consistently (Spearman $r$ from $-0.36$ at PR03 to $+0.56$ at STYX) — so raw infrasound
+power is not a clean flow proxy and the discriminant must be coherence, not power.
+
+@fig-coh is that discriminant. Across AR2 the colocated seismic–infrasound coherence
+$\gamma^2(f)$ stays at the **noise floor** ($\gamma^2<0.01$, < 1% shared variance) over
+0.5–20 Hz at both CC.PR03 and CC.PR04, even at the discharge peak. This is not a dead
+sensor: as a positive control, two elements of the CC.PR04 infrasound array are mutually
+coherent ($\gamma^2\approx0.2$ at 2–8 Hz), so a real coherent acoustic field is present —
+the seismic river band simply is not phase-locked to it. The colocated infrasound
+therefore **bounds the air-coupled fraction of the seismic river signal as small**,
+supporting a dominantly ground-radiated (bed / in-water-turbulence) origin over coherent
+air–water-interface radiation — consistent with treating the 1–15 Hz signal as
+turbulence-over-the-bed with bedload as an upper bound (main text §sec-bedload). The
+bound is one-sided: spatially-incoherent free-surface turbulence and wind contamination
+also lower point coherence, so the result constrains rather than excludes a surface
+contribution. The canonical bedload band (30–80 Hz) lies above the 25 Hz infrasound
+Nyquist, itself consistent with bedload not radiating into the air.
+
+![Vertical ground-velocity spectrogram at the Nisqually source station UW.LON (100 sps, 50 Hz Nyquist) through the AR2 pulse (7–14 Dec 2025), with the co-located Nisqually-nr-National discharge (USGS 12082500) overlaid (green). Seismic power across the turbulence band (~1–20 Hz) and the lower bedload edge (~30–50 Hz) tracks the two discharge pulses; the canonical bedload band (30–80 Hz) is only partly sampled below Nyquist. Power is relative (raw counts in dB; the broadband response is approximately flat in velocity over this band). The figure underscores that **seismic data alone cannot place the source at the bed (bedload) versus the air–water interface (free-surface turbulence)** — the discrimination the colocated infrasound test (@fig-coh) provides [@schmandt2013].](figures/fig30_spectrogram_seismic.png){#fig-specgram width=98%}
+
+![Colocated CC microbarometer (BDF) infrasound spectrograms through AR2 at three upper-Puyallup stations — CC.PR03 (anchor, on USGS gage 12092000, single element), CC.PR04 and CC.STYX (3-element arrays, elements power-averaged), with the Puyallup-nr-Electron discharge overlaid (green). BDF is 50 sps → 25 Hz Nyquist, so the canonical bedload band (30–80 Hz) is above the infrasound passband entirely. The infrasound is a real, energetic field but is dominated by broadband wind/weather bursts (vertical streaks); band-integrated 1–20 Hz power tracks discharge only weakly and inconsistently across sites (Spearman $r=-0.36$, $+0.36$, $+0.56$ for PR03/PR04/STYX). Raw infrasound power is therefore not a clean river-flow proxy — motivating the response-independent coherence discriminant in @fig-coh.](figures/fig31_infrasound_psd.png){#fig-infra width=98%}
+
+![Colocated seismic–infrasound coherence at the upper-Puyallup arrays — the turbulence-vs-bed discriminant. **(top)** Time-resolved magnitude-squared coherence $\gamma^2(f,t)$ between CC.PR03 colocated seismic (BHZ) and infrasound (BDF) in 1-h windows through AR2, with discharge (pink); coherence stays at the noise floor while discharge spikes. **(bottom)** Flood-peak-averaged $\gamma^2(f)$: both colocated seismic–infrasound pairs (PR03, PR04) hug zero (< 1% shared variance), whereas two elements of the CC.PR04 infrasound array (orange) are mutually coherent ($\gamma^2\approx0.35$ at 2–4 Hz), proving a real coherent acoustic field exists. Coherence is normalised by the auto-spectra, hence independent of instrument response. The seismic river band is not phase-locked to the acoustic field — bounding the air-coupled fraction as small and supporting a ground-radiated (bed/in-water-turbulence) origin [@schmandt2013].](figures/fig32_seis_infrasound_coherence.png){#fig-coh width=98%}
+
 ![*(Exploratory.)* Sentinel-1 (SAR) channel-migration series through the December-2025 ARs: each off-channel station's attenuation-weighted wetted illumination relative to the on-channel anchor CC.PR03 (normalised to mid-November), a ratio that cancels per-epoch scene-count and overall-wetness biases. CC.PR01 (braidplain-central) is preferentially illuminated during the flood peak (shaded) — the geometric flow-front response — then relaxes. SAR under-detects shallow braided water at 10 m, so absolute wetted area is not used; only the between-station ratio.](figures/fig20_braid_timeseries.png){#fig-braidsat-ts width=80%}
+
+![Stage–discharge rating curves at the four corridor gages from the December-2025 instantaneous data: discharge $Q$ (log) vs gage height / stage $h$ (linear), with the fitted power law $Q=C\,(h-h_0)^{\beta}$ per gage ($h_0$ = stage of zero flow). The exponent steepens with confinement — $\beta\approx1.6$ at the lowland Puyallup-at-Puyallup mouth and $\approx2.0$ on the Nisqually, up to $\beta\approx5$–7 in the confined, coarse upper-Puyallup reaches (Electron, Orting) where narrow channels are far more stage-sensitive. This is the rating through which a seismic virtual discharge is mapped to stage, $h=h_0+(Q_\text{seis}/C)^{1/\beta}$ (main text §"From discharge to stage"); the linear-axis companion with its time-coloured hysteresis/aggradation diagnostic is @fig-rathyst.](figures/fig15_rating.png){#fig-ratingSI width=85%}
+
+**Stage–discharge hysteresis and what it can (and cannot) say about aggradation.** A
+linear stage–discharge view (@fig-rathyst) makes the *non-stationarity* of the gage
+ratings legible. Two physically distinct effects open a single-valued rating into a
+loop, and only one is even a candidate bed-change diagnostic. (i) *Within-event* loops
+(the rising limb tracing a different curve from the falling limb at the same $Q$) are
+**dominantly an unsteady-flow / looped-rating (Jones) effect**: the flood-wave
+water-surface slope is steeper while the wave is rising, so a given stage conveys more
+discharge (equivalently, lower stage at a given $Q$ on the rising limb). Because a
+sediment scour-and-fill cycle produces a loop of the *same* sense, the within-event
+loop direction by itself cannot distinguish bed scour from deposition
+[@williams1989]. (ii) The candidate bed signal is instead the **net drift of the
+rating through the AR sequence**: a sustained *rise* in stage at a fixed discharge
+means the channel now conveys the same flow at a higher water level. We quantify both
+per gage at elevated flow ($Q>$ median): the within-event loop amplitude
+(rising−falling stage residual about the mean rating, in $\log_{10}$ units, "dex") and
+the net cross-event drift (late−early median shift, and the Spearman $\rho$ of the
+stage residual with time). The confined source gages (Puyallup nr Electron, Nisqually
+nr National) are essentially single-valued ($\rho\approx0$, drift $\lesssim$ 0.03 dex)
+— stable hydraulic controls (a fixed coarse, confined control section). The unconfined
+**mid Puyallup-nr-Orting** and **lowland Puyallup-at-Puyallup** gages instead drift
+monotonically to higher stage at fixed $Q$ through December ($\rho\approx0.7$; +0.16
+and +0.10 dex, i.e. $\sim$25–45 % higher stage at matched discharge by month's end).
+
+We read this drift as **most simply explained by net aggradation** (deposition raising
+the bed/control section) in these depositional reaches — but stage–discharge data
+*alone* cannot prove it: a rating shift of this sense is also produced by increased
+hydraulic roughness, by changing downstream backwater (bar growth, large-wood or debris
+jams), by control-section reorganization that is not net bed-raising, or by USGS
+rating-shift artifacts [@walling1977], and a seismic/turbidity proxy can likewise
+confound a boundary-roughness change with a transport change [@roth2016; @roth2017]. A
+strict aggradation claim requires consistency with a sediment-flux divergence (the
+Exner balance) and independent bed-elevation evidence, which a point gage does not
+provide. What lends the aggradation reading weight here is its **convergence with
+independent observations in the same reaches** — the satellite active-channel change
+and thread-migration drift (§sec-braided, §sec-reorg; the $+0.2$ cross-AR seismic
+baseline drift) and the documented Holocene-to-modern aggradational, supply-rich
+sediment regime of the lower Puyallup and Rainier's proglacial basins
+[@czuba2011; @beason2022]. The hysteresis is thus the time-domain counterpart of the
+reach-geometry-dependent, event-specific ratings documented for the braided reaches,
+and reinforces that a virtual-discharge-to-stage mapping inherits the same
+event-specific caveat.
+
+![Stage–discharge ratings on **linear** axes ($h-h_0$ vs $Q$; companion to the log–log @fig-ratingSI), one panel per corridor gage, with every USGS 15-min measurement coloured by time (dark purple = early Dec → yellow = late Dec) and arrows marking the direction of the time-ordered path. A single-valued rating collapses to one curve; departures are hysteresis. **Within-event loops** (rising vs falling limb at matched $Q$) are dominantly an unsteady-flow flood-wave (looped-rating) effect of fixed sense, so loop direction alone cannot separate bed scour from deposition [@williams1989]. The **net rating drift through the AR sequence** is the candidate bed-change signal: a rise in stage at fixed $Q$ is consistent with net **aggradation** (deposition raising the bed/control section); a fall, with net degradation. Inset per panel: within-event loop amplitude, late−early drift, and Spearman $\rho$ of the stage residual with time at elevated flow ($Q>$ median), in $\log_{10}$ units (dex). The confined source gages (Electron, National) are single-valued (stable hydraulic control); the alluvial mid (Orting) and lowland (Puyallup) gages drift to higher stage at fixed $Q$ ($\rho\approx0.7$), most simply read as net aggradation in these depositional reaches — though roughness, backwater, and control-section change cannot be excluded from stage–discharge data alone (text below).](figures/fig29_rating_hysteresis_linear.png){#fig-rathyst width=95%}
 
 ::: {.content-visible when-format="html"}
 **Supplementary animations.** Two animations accompany the HTML edition: the

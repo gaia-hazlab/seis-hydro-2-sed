@@ -1,0 +1,30 @@
+{
+  "12092000": {
+    "name": "Puyallup nr Electron (confined source)",
+    "loop_dex": 0.003,
+    "drift_dex": 0.006,
+    "rho_t": -0.17,
+    "verdict": "stable (single-valued)"
+  },
+  "12082500": {
+    "name": "Nisqually nr National (source)",
+    "loop_dex": -0.017,
+    "drift_dex": 0.033,
+    "rho_t": 0.12,
+    "verdict": "stable (single-valued)"
+  },
+  "12093500": {
+    "name": "Puyallup nr Orting (mid)",
+    "loop_dex": -0.116,
+    "drift_dex": 0.164,
+    "rho_t": 0.71,
+    "verdict": "drift up (~aggradation)"
+  },
+  "12101500": {
+    "name": "Puyallup at Puyallup (lowland, overbank)",
+    "loop_dex": -0.012,
+    "drift_dex": 0.102,
+    "rho_t": 0.73,
+    "verdict": "drift up (~aggradation)"
+  }
+}
