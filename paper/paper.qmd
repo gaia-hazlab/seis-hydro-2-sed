@@ -383,8 +383,9 @@ the high-frequency transport band — with a clear AR2 maximum and downstream de
 
 **Frequency-dependent steepening.** At the glacial-source station CC.PR03 the
 exponent rises from $b=1.59$ (2–8 Hz, $r=0.98$) to $b=1.71$ (5–15 Hz, $r=0.98$),
-above the turbulent-flow baseline (@fig-scaling b,c) — the signature of
-a bedload contribution superimposed on turbulence.
+above the turbulent-flow baseline (@fig-scaling b,c) — a *candidate*
+bedload contribution superimposed on turbulence (bounded as a frequency-limited
+hypothesis in §sec-bedload).
 
 **Spatial decay.** In the 5–15 Hz bedload band the exponent decays from the
 glacial source downstream and away from the channel: $b=1.71$–$1.80$ at the
