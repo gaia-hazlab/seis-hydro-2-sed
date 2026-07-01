@@ -111,6 +111,58 @@ def load_from_rasters(pre_path, post_path, half, ndwi_thresh):
     return xs, ys, rgb, pre_mask, post_mask, (cx, cy)
 
 
+def fetch_naip(half):
+    """Download a NAIP (USGS aerial, ~1 m, public domain) 4-band clip over the PR01
+    window from the public ImageServer (no auth). Cached, gitignored."""
+    import requests
+    dest = CACHE / "naip_pr01.tif"                   # braid_cache (public domain; committed)
+    if dest.exists() and dest.stat().st_size > 0:
+        return dest
+    cx, cy = PR01_UTM
+    H = half + 50
+    px = int(2 * H)                                  # ~1 m pixels
+    url = ("https://imagery.nationalmap.gov/arcgis/rest/services/"
+           "USGSNAIPImagery/ImageServer/exportImage")
+    r = requests.get(url, params=dict(bbox=f"{cx-H},{cy-H},{cx+H},{cy+H}", bboxSR=32610,
+                     imageSR=32610, size=f"{px},{px}", format="tiff", pixelType="U8",
+                     f="image"), timeout=180)
+    r.raise_for_status()
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(r.content)
+    print(f"   cached NAIP clip -> {dest} ({dest.stat().st_size//1024} KB)")
+    return dest
+
+
+def _nearest_idx(axis, vals):
+    """Nearest-neighbour index of each val into axis (which may be ascending or not)."""
+    order = np.argsort(axis)
+    a = axis[order]
+    j = np.clip(np.searchsorted(a, vals), 1, len(a) - 1)
+    j = np.where(np.abs(vals - a[j - 1]) <= np.abs(vals - a[j]), j - 1, j)
+    return order[j]
+
+
+def load_naip(half):
+    """NAIP ~1-m RGB basemap (structure) + the 10-m Sentinel-2 pre/post change resampled
+    onto the NAIP grid. Best free, no-approval high-res option while PlanetScope E&R
+    entitlement is pending."""
+    import rioxarray as rxr
+    cx, cy = PR01_UTM
+    da = rxr.open_rasterio(fetch_naip(half), masked=True).rio.reproject("EPSG:32610")
+    da = da.rio.clip_box(cx - half, cy - half, cx + half, cy + half)
+    xs, ys = da.x.values, da.y.values
+    b = da.values.astype(float)                      # NAIP band order: R,G,B,NIR
+    rgb = (np.dstack([_stretch(b[0]), _stretch(b[1]), _stretch(b[2])]) * 255).astype("uint8")
+    rgb = np.nan_to_num(rgb).astype("uint8")
+    ras = np.load(CACHE / "puyallup_rasters.npz")
+    bx = np.load(CACHE / "puyallup_basemap.npz")
+    ixm = _nearest_idx(bx["x"], xs)
+    iym = _nearest_idx(bx["y"], ys)
+    pre = (ras["channel_pre"] > 0)[np.ix_(iym, ixm)]
+    post = (ras["channel_post"] > 0)[np.ix_(iym, ixm)]
+    return xs, ys, rgb, pre, post, (cx, cy)
+
+
 def _scalebar(ax, ext):
     x0 = ext[0] + 0.06 * (ext[1] - ext[0])
     y0 = ext[2] + 0.08 * (ext[3] - ext[2])
@@ -120,7 +172,7 @@ def _scalebar(ax, ext):
             color="white", fontsize=8, ha="center", va="bottom", fontweight="bold", zorder=7)
 
 
-def render(xs, ys, rgb, pre, post, station_xy, *, res_m, source, placeholder):
+def render(xs, ys, rgb, pre, post, station_xy, *, res_m, source, placeholder, tag=None):
     paper_style()
     cx, cy = station_xy
     ext = [xs.min(), xs.max(), ys.min(), ys.max()]
@@ -163,8 +215,9 @@ def render(xs, ys, rgb, pre, post, station_xy, *, res_m, source, placeholder):
                loc="lower right", fontsize=8, framealpha=0.9)
     axb.set_xticks([]); axb.set_yticks([]); axb.set_xlim(ext[0], ext[1]); axb.set_ylim(ext[2], ext[3])
 
-    tag = (f"PLACEHOLDER: {source} — threads sub-pixel; ≈3 m / lidar-DoD needed to trace threads & banks"
-           if placeholder else f"{source} (~{res_m:g} m) — © Planet Labs PBC")
+    if tag is None:
+        tag = (f"PLACEHOLDER: {source} — threads sub-pixel; ≈3 m / lidar-DoD needed to trace threads & banks"
+               if placeholder else f"{source} (~{res_m:g} m) — © Planet Labs PBC")
     fig.suptitle("CC.PR01 braided source reach (upper Puyallup) — thread-switching & bank erosion in a "
                  f"net-erosional\nsource reach [Anderson 2026].  {tag}", fontsize=10.5, x=0.5, y=0.99)
     fig.subplots_adjust(left=0.02, right=0.98, top=0.88, bottom=0.03, wspace=0.06)
@@ -178,11 +231,19 @@ def render(xs, ys, rgb, pre, post, station_xy, *, res_m, source, placeholder):
 
 def main() -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--naip", action="store_true",
+                    help="NAIP ~1 m basemap (free, no auth) + Sentinel-2 change overlay")
     ap.add_argument("--pre-raster", type=Path, help="pre-flood 4-band SR GeoTIFF (PlanetScope)")
     ap.add_argument("--post-raster", type=Path, help="post-flood 4-band SR GeoTIFF (PlanetScope)")
     ap.add_argument("--half", type=float, default=550.0, help="half-window (m) around PR01")
     ap.add_argument("--ndwi-thresh", type=float, default=-0.02, help="NDWI water threshold (hi-res path)")
     args = ap.parse_args()
+
+    if args.naip:
+        xs, ys, rgb, pre, post, st = load_naip(args.half)
+        return render(xs, ys, rgb, pre, post, st, res_m=1, source="NAIP", placeholder=False,
+                      tag="NAIP 1 m aerial (USGS, public domain) — structure; Sentinel-2 10 m — "
+                          "Dec-2025 change. PlanetScope/lidar event-timed upgrade pending Planet E&R approval")
 
     if args.pre_raster and args.post_raster:
         xs, ys, rgb, pre, post, st = load_from_rasters(

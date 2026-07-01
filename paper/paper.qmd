@@ -656,13 +656,13 @@ channel widens and threads are captured and abandoned around the station. Read t
 @anderson2026 — which shows this *upper*-Puyallup reach to be a net-erosional sediment
 *source* (bank erosion, persistent reorganization) that feeds the aggrading lowland
 downstream — the pattern is one of lateral thread-switching and bank erosion, not local
-vertical accretion. We show it at 10-m Sentinel-2 resolution, the best zoom currently in
-hand; at that resolution the pre-flood threads are near-pixel-scale, so a $\approx$3-m
-(PlanetScope) or repeat-lidar DEM-of-Difference [@anderson2025] rendering — which would
-also resolve the vegetated *bank* lines — is the natural upgrade this placeholder stands
-in for.
+vertical accretion. The basemap is 1-m NAIP aerial imagery (USGS, public domain), which
+resolves the braided gravel threads and vegetated banks; the December-2025 pre→post
+active-channel change is bracketed by 10-m Sentinel-2. An *event-timed* high-resolution
+version — $\approx$3-m PlanetScope, or a repeat-lidar DEM-of-Difference [@anderson2025] —
+would resolve the reorganized threads at the flood itself and is the planned upgrade.
 
-![Close-up of the CC.PR01 braided source reach (upper Puyallup) — a 10-m Sentinel-2 placeholder for a higher-resolution hero figure. **(left)** true-color basemap with the active-channel outline traced pre-flood (cyan; Nov 16–30) and post/peak (orange; Dec–Jan): the wetted active channel widens and shifts. **(right)** reorganization classes — persistent, newly-wet, and newly-dry (abandoned) — showing thread capture and abandonment; CC.PR01 sits on the braidplain margin $\sim$200 m from the November active thread, consistent with a migrating source. Per @anderson2026 this upper reach is a net-erosional sediment *source*, so the change reflects lateral thread-switching and bank erosion (feeding downstream lowland aggradation), not vertical accretion. At 10 m the individual braided threads and vegetated banks are near-/sub-pixel; tracing them (per the geomorphology review) needs $\approx$3-m imagery (PlanetScope) or a repeat-lidar DoD [@anderson2025].](figures/fig33_pr01_braid_zoom.png){#fig-pr01zoom width=95%}
+![Close-up of the CC.PR01 braided source reach (upper Puyallup). Basemap: 1-m NAIP aerial imagery (USGS, public domain), which resolves the braided gravel threads and vegetated banks; overlaid are the Sentinel-2 (10 m) active-channel outlines. **(left)** pre-flood (cyan; Nov 16–30) vs post/peak (orange; Dec–Jan) outlines — the active channel widens and shifts. **(right)** reorganization classes — persistent, newly-wet, and newly-dry (abandoned) — showing thread capture and abandonment. CC.PR01 sits on the braidplain margin $\sim$200 m from the November active thread, consistent with a migrating source. Per @anderson2026 this upper reach is a net-erosional sediment *source*, so the change reflects lateral thread-switching and bank erosion (feeding downstream lowland aggradation), not vertical accretion. The NAIP frame is a recent summer aerial (its threads predate the flood); the change bracket is 10-m Sentinel-2. An *event-timed* high-resolution version — $\approx$3-m PlanetScope or a repeat-lidar DoD [@anderson2025] — is the planned upgrade.](figures/fig33_pr01_braid_zoom.png){#fig-pr01zoom width=95%}
 
 ## Event-scale timing of reorganization and the recession-deposition mechanism {#sec-reorg}
 
@@ -1146,7 +1146,7 @@ these workflow outputs:
 | @fig-thr (F3) | `15_threshold.py`, `26_rating_geometry.py`, `16_classify_stations.py` | threshold $Q_c$ + rating geometry $\beta(Q)$ + station skill |
 | @fig-braid (F4) | `18_braided_hysteresis.py`, `09_attenuation.py` | braided hysteresis + seismic-reach attenuation |
 | @fig-braidsat (F5) | `19_braid_optical_change.py` (Puyallup + Nisqually) | two-basin satellite channel change + geometric drift |
-| @fig-pr01zoom (F5b) | `42_pr01_braid_zoom.py` | PR01 braidplain zoom, traced active-channel change (10 m placeholder) |
+| @fig-pr01zoom (F5b) | `42_pr01_braid_zoom.py --naip` | PR01 braidplain zoom: NAIP 1 m basemap + Sentinel-2 active-channel change |
 | @fig-reorg (F6) | `21_braided_reorg_timing.py`, `28_width_stage.py`, `25_hazard_clogging.py` | matched-discharge timing + width–stage + recession clogging |
 | @fig-domain (F7) | `22_domain_panel.py` | gage distance × width × elevation → clean/confounded |
 | @fig-vq (F8) | `12_virtual_q.py`, `10_early_warning.py`, `25_hazard_clogging.py` | virtual gage + warning window + downstream lead |

@@ -38,7 +38,6 @@ from pyproj import Transformer
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "notebooks" / "data" / "planet_cache"
 DATA_URL = "https://api.planet.com/data/v1/quick-search"
-ORDERS_URL = "https://api.planet.com/compute/ops/orders/v2"
 
 # CC.PR01 (UTM 10N 573289, 5195623) -> lon/lat; AOI = ~2 km box around it.
 _LON, _LAT = Transformer.from_crs("EPSG:32610", "EPSG:4326", always_xy=True).transform(
@@ -77,45 +76,41 @@ def search(sess, t0, t1, cloud_max):
     return feats
 
 
-def order_and_download(sess, item_id, bundle, dest: Path):
-    payload = {
-        "name": dest.name,
-        "products": [{"item_ids": [item_id], "item_type": "PSScene",
-                      "product_bundle": bundle}],
-        "tools": [{"clip": {"aoi": AOI}}],
-    }
-    r = sess.post(ORDERS_URL, json=payload, timeout=60)
-    if r.status_code >= 400:
-        print(f"   order failed ({r.status_code}): {r.text[:300]}")
-        return False
-    order = r.json()
-    self_url = order["_links"]["_self"]
-    print(f"   order {order['id']} placed; polling…")
-    for _ in range(120):                          # up to ~20 min
-        time.sleep(10)
-        o = sess.get(self_url, timeout=60).json()
-        state = o["state"]
-        if state == "success":
-            break
-        if state in ("failed", "partial"):
-            print(f"   order ended in state={state}")
-            if state == "failed":
-                return False
-            break
-        print(f"   … {state}")
+ASSET_PREF = ("ortho_analytic_4b_sr", "ortho_analytic_8b_sr",
+              "ortho_analytic_4b", "ortho_visual")
+
+
+def download_asset(sess, item_id, dest: Path):
+    """Data-API asset download (no Orders/clip permission needed): activate the best
+    available 4-band SR asset, poll until active, stream the full-scene GeoTIFF.
+    workflow 42 crops to the PR01 window locally."""
+    assets_url = f"https://api.planet.com/data/v1/item-types/PSScene/items/{item_id}/assets"
+    assets = sess.get(assets_url, timeout=60).json()
+    akey = next((a for a in ASSET_PREF if a in assets), None)
+    if akey is None:
+        print(f"   no SR/analytic asset; available: {list(assets)}")
+        return None
+    asset = assets[akey]
+    if asset["status"] != "active":
+        sess.get(asset["_links"]["activate"], timeout=60)      # trigger activation
+        for _ in range(60):                                    # up to ~10 min
+            time.sleep(10)
+            asset = sess.get(assets_url, timeout=60).json()[akey]
+            if asset["status"] == "active":
+                break
+            print(f"   activating {akey}: {asset['status']}")
+    if asset["status"] != "active":
+        print(f"   {akey} did not activate in time")
+        return None
     dest.mkdir(parents=True, exist_ok=True)
-    results = o["_links"].get("results", [])
-    tifs = 0
-    for res in results:
-        name = res["name"].split("/")[-1]
-        if not name.lower().endswith((".tif", ".tiff")):
-            continue
-        loc = res["location"]
-        blob = sess.get(loc, timeout=300)
-        (dest / name).write_bytes(blob.content)
-        print(f"   downloaded {name} ({len(blob.content)//1024} KB)")
-        tifs += 1
-    return tifs > 0
+    out = dest / f"{item_id}_{akey}.tif"
+    with sess.get(asset["location"], stream=True, timeout=900) as r:
+        r.raise_for_status()
+        with open(out, "wb") as fh:
+            for chunk in r.iter_content(1 << 20):
+                fh.write(chunk)
+    print(f"   downloaded {out.name} ({out.stat().st_size // (1 << 20)} MB, asset {akey})")
+    return out
 
 
 def main() -> int:
@@ -123,8 +118,6 @@ def main() -> int:
     ap.add_argument("--windows", default="pre,post",
                     help="comma list of: pre, peak, post (default pre,post)")
     ap.add_argument("--cloud-max", type=float, default=0.2)
-    ap.add_argument("--bundle", default="analytic_sr_udm2",
-                    help="Planet product bundle (analytic_sr_udm2 = 4-band SR incl. NIR)")
     args = ap.parse_args()
 
     key = os.environ.get("PL_API_KEY")
@@ -148,7 +141,7 @@ def main() -> int:
         print(f"   {len(feats)} scenes; best {best['id']} "
               f"cloud={best['properties'].get('cloud_cover'):.2f} "
               f"acq={best['properties'].get('acquired','')[:10]}")
-        if order_and_download(sess, best["id"], args.bundle, OUT / w):
+        if download_asset(sess, best["id"], OUT / w):
             ok += 1
     print(f"\nDone: {ok} window(s) downloaded to {OUT}")
     print("Next: pixi run python workflows/42_pr01_braid_zoom.py "
