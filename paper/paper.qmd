@@ -1039,9 +1039,9 @@ event-specific, reach-geometry-dependent caveat as the rating itself (§sec-brai
   (@fig-specgram), so seismic data alone cannot say whether the power originates at the
   *bed* (bedload, in-water turbulence) or at the *air–water interface* (free-surface
   turbulence, rapids). A colocated **infrasound** (microbarometer) sensor partitions
-  this: bedload and in-water turbulence couple to the ground but barely to the air,
-  whereas air–water-interface processes radiate infrasound and air-coupled ground motion,
-  so seismic–infrasound coherence isolates the surface source [@schmandt2013]. We carry
+  this: bedload and in-water turbulence over the bed [@gimbert2014] couple to the ground but
+  barely to the air, whereas air–water-interface processes radiate infrasound and air-coupled
+  ground motion, so seismic–infrasound coherence isolates the surface source [@schmandt2013]. We carry
   out this test: the USGS Cascades Volcano Observatory (network CC) operates BDF
   microbarometer arrays colocated with broadband seismometers along the upper-Puyallup
   corridor, including at our on-channel anchor CC.PR03 (on USGS gage 12092000). Across

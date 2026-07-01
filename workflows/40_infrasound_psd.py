@@ -24,8 +24,8 @@ December-2025 AR2 pulse (Dec 7–14):
 (CC.PR01 / CC.PR02 carried BDF only in 2018–2020 and are unavailable for this event;
 the colocated arrays nearest the Nisqually source, e.g. CC.KAUT ~4 km from UW.LON, lack
 the AR2 onset.) BDF is 50 sps → **25 Hz Nyquist**, so the canonical bedload band
-(30–80 Hz) is *above* the infrasound passband entirely — consistent with bedload not
-radiating into the air. Array elements are averaged in power (incoherent stack) to
+(30–80 Hz) is *above* the 25 Hz sampling Nyquist and simply not recorded here — an
+instrumental limit. Array elements are averaged in power (incoherent stack) to
 suppress wind/self-noise. Power is relative (raw counts in dB).
 
 The honest caveat this figure makes visible: infrasound is **heavily wind/weather

@@ -27,7 +27,8 @@ seismic being dominated by ground-radiating sources (in-water turbulence over th
 and bedload) rather than coherent air–water-interface acoustic radiation. (It does not
 by itself exclude spatially-incoherent free-surface turbulence, which would also produce
 low point coherence.) The canonical bedload band (30–80 Hz) lies above the 25 Hz
-infrasound Nyquist — itself consistent with bedload not radiating into the air.
+sampling Nyquist of the microbarometers, so it is not recorded here at all — an
+instrumental limit, not a statement about acoustic coupling.
 
 CC.PR03 is the study's on-channel anchor (USGS gage 12092000, Puyallup nr Electron) and
 carries colocated 50-sps broadband seismic (BHZ) and 50-sps microbarometer infrasound
