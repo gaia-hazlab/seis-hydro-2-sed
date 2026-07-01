@@ -42,6 +42,8 @@ figures-from-cache:  ## REPRO PATH A — all offline figures from committed cach
 	$(PY) workflows/19_braid_optical_change.py --region nisqually --from-cache
 	@echo ">>> 23_braid_two_region (fig24; from the satellite cache)"
 	$(PY) workflows/23_braid_two_region.py
+	@echo ">>> 42_pr01_braid_zoom (fig33; PR01 braidplain zoom, from the satellite cache)"
+	$(PY) workflows/42_pr01_braid_zoom.py
 	@echo ">>> 24_hazard_timing_clogging (fig25; gage stage+Q + proxy + reorg JSON)"
 	$(PY) workflows/24_hazard_timing_clogging.py
 	@echo ">>> 25_rating_geometry (fig26; stage-discharge geometry vs seismic Qc)"
