@@ -724,16 +724,20 @@ entrainment: as a falling limb drops the bed shear stress below the competence f
 coarse load, gravel drops out *in* the active thread, aggrades and superelevates it,
 and the flow eventually **avulses** to a lower, steeper path. This is the classic
 aggradation/superelevation route to avulsion [@slingerland2004; @jerolmack2007;
-@mohrig2000], here driven by recession rather than long-term aggradation. The mechanism
+@mohrig2000], here driven by recession rather than long-term aggradation — a *local*,
+thread-scale deposition fully compatible with this upper reach being a net-erosional
+sediment source at the decadal scale (§sec-braided; @anderson2026). The mechanism
 predicts that reorganization should concentrate on **slow, sustained** recessions
 (long residence at moderate stage → more deposition) rather than rapid ones — and that
 is what the data show (@fig-reorg c): the Dec-9 (AR1) falling limb is fast
 (−11.4 m³ s⁻¹ h⁻¹, 20 h; 323→88 m³ s⁻¹) and hosts no persistent step, whereas the
 sustained Dec-11→13 (AR3) recession is ~40% slower (−6.6 m³ s⁻¹ h⁻¹, 33 h) and is
 exactly where the persistent reorganization step lands (CC.PR02 12-12 01:31, CC.PR03
-12-12 05:06). The satellite change map is
-consistent — CC.PR01's pre-flood thread is among the newly-*dry* (abandoned) pixels by
-January (@fig-braidsat b). We present this as the *parsimonious* mechanism, not a
+12-12 05:06). The satellite change map is consistent — and quantitative: within 300 m
+of CC.PR01 there are **no persistent-water pixels** between November and January
+(0 persistent, 71 newly-wet, 20 newly-dry; @fig-braidsat b, @fig-pr01zoom) — the wetted
+active thread relocated *completely*, its abandoned pre-flood course the newly-*dry*
+signature the deposition-driven avulsion predicts. We present this as the *parsimonious* mechanism, not a
 unique one: the stepwise seismic signature is equally compatible with the other
 geometric routes to braid change — discrete thread abandonment, bar dissection, or
 chute cutoff [@ashmore1991] — and rests on a single compound event. Whether the
