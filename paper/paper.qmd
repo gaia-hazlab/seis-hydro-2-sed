@@ -409,7 +409,7 @@ attempted and did not work* — itself a useful deployment guide. Notably, the
 steepest scaling is on the Nisqually (UW.LON $b\approx1.98$), exceeding the Puyallup
 source ($b\approx1.71$).
 
-![Seismic power tracks discharge (backbone). **(a)** Event timeseries: discharge with the 5–15 Hz power at the source stations through the December 2025 flood — the band power tracks the flood wave pulse-for-pulse, the basis of the discharge proxy. **(b)** $P$–$Q$ log–log scatter for a representative subset with robust fits (CC.PR03 $b\approx1.71$, CC.SIFT 0.77, CC.TRON 0.56, UW.LON 1.98). **(c)** Scaling exponent $b$ versus band-center frequency: near-source stations rise above the turbulence baseline (shaded, $b\approx0.9$–$1.4$; @gimbert2014) while the exponent falls with distance downstream and off-channel.](figures/figF2_backbone.png){#fig-scaling width=98%}
+![Seismic power tracks discharge (backbone). **(a)** Event timeseries: discharge with the 5–15 Hz power at the source stations through the December 2025 flood — the band power tracks the flood wave pulse-for-pulse, the basis of the discharge proxy. **(b)** $P$–$Q$ log–log scatter for a representative subset with robust fits (CC.PR03 $b\approx1.71$, CC.SIFT 0.77, CC.TRON 0.56, UW.LON 1.98). **(c)** Scaling exponent $b$ versus band-center frequency: near-source stations rise above the turbulence baseline (shaded, $b\approx0.9$–$1.4$; @gimbert2014) while the exponent falls with distance downstream and off-channel. The full station grid is in @fig-pqgrid.](figures/figF2_backbone.png){#fig-scaling width=98%}
 
 ## Transport-onset threshold and rating geometry {#sec-threshold}
 
@@ -803,7 +803,9 @@ it; the higher, snow-dominated Nisqually feels it most. The net is a domain law
 far-gaged** reach — even though the physical reorganization there is *larger*, not
 smaller (UW.LON's active thread migrated $\sim$240 m toward the station, vs
 $\sim$50 m at CC.PR01). Stating that boundary is itself a contribution the
-braided-reach seismology literature has not made.
+braided-reach seismology literature has not made. The standalone Nisqually
+reorganization-timing diagnostic, which carries this confounding directly, is in
+@fig-reorgnis.
 
 ![Domain of applicability for source-resolved river seismology. **(a)** The two dominant, measured controls — station→gage distance and active-channel width — with the "readable" domain (co-located gage *and* compact channel: gage $<$3 km and width $<$100 m) shaded; the Puyallup cluster falls inside it, while the Nisqually reaches are confounded (UW.LON gage 20.9 km, GTWY 12.8 km downstream, plus the rain→snow supply shutoff and flood-wave lag). **(b)** Normalised confounding heatmap (gage distance, channel width, elevation→snow fraction, scaling exponent $b$; darker = worse) per station, with the reorganization-timing verdict per reach. The Nisqually reach is the more dramatic braided site yet the harder one to read seismically.](figures/figF7_domain.png){#fig-domain width=98%}
 
@@ -1156,6 +1158,8 @@ these workflow outputs:
 | @fig-vq (F8) | `12_virtual_q.py`, `10_early_warning.py`, `25_hazard_clogging.py` | virtual gage + warning window + downstream lead |
 | @fig-spec (F9) | `11_spectra.py`, `05_bedload_time.py` | flood-vs-quiet PSD + per-AR bedload proxy |
 | @fig-traffic (S1) | `04_traffic_noise.py` | anthropogenic-noise screening |
+| @fig-pqgrid (S2) | `02_make_figures.py` | full P–Q scatter grid, all stations |
+| @fig-hystall (S3) | `02_make_figures.py` | all-station event hysteresis loops |
 | @fig-blAR (S4) | `05_bedload_time.py` | per-AR bedload, source→downstream |
 | @fig-bt (S5) | `08_b_of_time.py` | time-resolved exponent $b(t)$ |
 | @fig-edge (S6) | `14_bedload_ch.py` | 30–50 Hz lower bedload edge |
@@ -1165,6 +1169,7 @@ these workflow outputs:
 | @fig-infra (S12) | `40_infrasound_psd.py` | colocated CC BDF infrasound spectrograms (PR03/PR04/STYX) |
 | @fig-coh (S13) | `41_seis_infrasound_coherence.py` | seismic–infrasound coherence discriminant at PR03/PR04 |
 | @fig-braidsat-ts (S8) | `19_braid_optical_change.py`, `23_braid_two_region.py` | SAR wetted-illumination time series + two-region maps |
+| @fig-reorgnis (S9) | `21_braided_reorg_timing.py --basin nisqually` | Nisqually reorg-timing (confounded) |
 
 Run order and parameters are documented in `workflows/README.md`; the single source
 of analysis parameters is `config/analysis.yaml`. Every figure — including the
