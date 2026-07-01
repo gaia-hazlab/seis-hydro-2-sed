@@ -151,12 +151,34 @@ independent observations in the same reaches** — the satellite active-channel 
 and thread-migration drift (§sec-braided, §sec-reorg; the $+0.2$ cross-AR seismic
 baseline drift) and the documented Holocene-to-modern aggradational, supply-rich
 sediment regime of the lower Puyallup and Rainier's proglacial basins
-[@czuba2011; @beason2022]. The hysteresis is thus the time-domain counterpart of the
+[@czuba2011; @beason2022; @anderson2026]. The hysteresis is thus the time-domain counterpart of the
 reach-geometry-dependent, event-specific ratings documented for the braided reaches,
 and reinforces that a virtual-discharge-to-stage mapping inherits the same
 event-specific caveat.
 
-![Stage–discharge ratings on **linear** axes ($h-h_0$ vs $Q$; companion to the log–log @fig-ratingSI), one panel per corridor gage, with every USGS 15-min measurement coloured by time (dark purple = early Dec → yellow = late Dec) and arrows marking the direction of the time-ordered path. A single-valued rating collapses to one curve; departures are hysteresis. **Within-event loops** (rising vs falling limb at matched $Q$) are dominantly an unsteady-flow flood-wave (looped-rating) effect of fixed sense, so loop direction alone cannot separate bed scour from deposition [@williams1989]. The **net rating drift through the AR sequence** is the candidate bed-change signal: a rise in stage at fixed $Q$ is consistent with net **aggradation** (deposition raising the bed/control section); a fall, with net degradation. Inset per panel: within-event loop amplitude, late−early drift, and Spearman $\rho$ of the stage residual with time at elevated flow ($Q>$ median), in $\log_{10}$ units (dex). The confined source gages (Electron, National) are single-valued (stable hydraulic control); the alluvial mid (Orting) and lowland (Puyallup) gages drift to higher stage at fixed $Q$ ($\rho\approx0.7$), most simply read as net aggradation in these depositional reaches — though roughness, backwater, and control-section change cannot be excluded from stage–discharge data alone (text below).](figures/fig29_rating_hysteresis_linear.png){#fig-rathyst width=95%}
+**Ground truth from repeat lidar.** A watershed-scale sediment budget built from
+2002–2022 aerial-lidar differencing [@anderson2026; @anderson2025] both supports and
+sharpens this reading. It confirms that the **lowland** Puyallup (the lower $\sim$20
+valley miles, spanning the Puyallup-at-Puyallup gage) is genuinely aggrading —
+$\sim$1.0$\times$10$^6$ m³ of sand-and-gravel deposition over 2004–2020
+($\sim$60{,}000 m³ yr⁻¹, continuing a trend back to at least the 1970s) — and
+attributes it to a **downstream decrease in channel slope** driving a sediment-flux
+divergence (the Exner condition) under an abundant coarse supply. Our lowland rating
+drift is thus consistent with an independently documented, ongoing aggradational phase.
+The same budget, however, finds the **upper** reaches (near Orting and Electron — our
+confined source gages) to be net sediment *sources* whose long-term (60–100 yr)
+stage–discharge relations show incision or no trend, and it revises an earlier, larger
+1984–2009 upper-reach aggradation estimate downward as a survey-extent artifact. We
+therefore read the drift at the upper Puyallup-nr-Orting gage as a **transient,
+within-event** rating shift (scour/fill, roughness, backwater), *not* long-term
+aggradation, and confine the aggradation interpretation to the lowland reach where the
+lidar record independently supports it. Notably, @anderson2026's own bedload proxy — an
+empirical bedload–discharge power law applied to these same gages — rises $\sim$40 % in
+transport *capacity* over 2004–2020 yet is explicitly cast as capacity, not deposition;
+that capacity-vs-delivered-load distinction bounds our seismic proxy in exactly the same
+way.
+
+![Stage–discharge ratings on **linear** axes ($h-h_0$ vs $Q$; companion to the log–log @fig-ratingSI), one panel per corridor gage, with every USGS 15-min measurement coloured by time (dark purple = early Dec → yellow = late Dec) and arrows marking the direction of the time-ordered path. A single-valued rating collapses to one curve; departures are hysteresis. **Within-event loops** (rising vs falling limb at matched $Q$) are dominantly an unsteady-flow flood-wave (looped-rating) effect of fixed sense, so loop direction alone cannot separate bed scour from deposition [@williams1989]. The **net rating drift through the AR sequence** is the candidate bed-change signal: a rise in stage at fixed $Q$ is consistent with net **aggradation** (deposition raising the bed/control section); a fall, with net degradation. Inset per panel: within-event loop amplitude, late−early drift, and Spearman $\rho$ of the stage residual with time at elevated flow ($Q>$ median), in $\log_{10}$ units (dex). The confined source gages (Electron, National) are single-valued (stable hydraulic control); the mid (Orting) and lowland (Puyallup) gages drift to higher stage at fixed $Q$ ($\rho\approx0.7$). Only the **lowland** (Puyallup) drift is read as net aggradation — where repeat-lidar differencing independently documents ongoing deposition [@anderson2026]; the upper Orting drift is more likely a transient event-scale shift, since the same study finds the upper reaches to be net-erosional sediment sources over decadal-to-century timescales. Roughness, backwater, and control-section change cannot be excluded from stage–discharge data alone (text below).](figures/fig29_rating_hysteresis_linear.png){#fig-rathyst width=95%}
 
 ::: {.content-visible when-format="html"}
 **Supplementary animations.** Two animations accompany the HTML edition: the

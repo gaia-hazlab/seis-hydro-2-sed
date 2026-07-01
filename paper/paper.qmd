@@ -188,9 +188,12 @@ stations (@fig-map). This is a dense (~30-station), multi-basin, multi-sensor
 network, not a single transect.
 
 The Puyallup River system drains the west flank of Mt. Rainier (Puyallup, Tahoma,
-and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. The channel
-has aggraded by up to 2.3 m (1984–2009) where it leaves its confined upper reach
-[@czuba2012], underscoring an active, supply-rich sediment system. The channel
+and Carbon Glaciers) roughly 54 km to Commencement Bay, Puget Sound. Its lowland
+floodway is an active sediment sink — repeat aerial-lidar differencing records
+$\sim$1.0$\times$10$^6$ m³ of sand-and-gravel deposition over 2004–2020
+($\sim$60{,}000 m³ yr⁻¹), fed by net erosion of the glacially-charged upper reaches
+[@anderson2026] — an active, supply-rich sediment system routing sediment from
+eroding source reaches to a depositional lowland. The channel
 **pattern** changes systematically downstream (@fig-map): the glacial source
 reaches are multi-thread, **braided** gravel braidplains — compact at the Puyallup PR
 cluster (active width tens of m) and far wider on the Nisqually at UW.LON (hundreds of
@@ -474,13 +477,14 @@ discharge can be mapped through is given in @fig-ratingSI.
 
 The single most consequential geomorphic caveat to everything above is hiding in
 plain sight: the Puyallup source cluster (CC.PR01/PR02/PR03, within $\sim$1.5 km of
-one another) sits on an **aggrading glacial-outwash braidplain**, not the single,
+one another) sits on a **mobile, sediment-charged glacial-outwash braidplain**, not the single,
 fixed channel that the governing models assume. This is not an assumption: two
 decades of repeat aerial-lidar differencing (2002–2022) document persistent
-sediment accumulation and channel reorganization along the Puyallup valley reaches,
-fed by net erosion of the deglaciating headwaters [@anderson2025; @anderson2026;
-@czuba2012] — the braidplain is demonstrably mobile and aggrading on the timescale
-between events. Its bed is **poorly-sorted, coarse glacial outwash** — sand through
+channel reorganization and bank erosion along these upper Puyallup valley reaches,
+which act as net sediment *sources* — feeding the documented aggradation of the
+lowland floodway downstream — as the deglaciating headwaters shed sediment
+[@anderson2025; @anderson2026; @czuba2012]; the braidplain is demonstrably mobile
+and supply-charged on the timescale between events. Its bed is **poorly-sorted, coarse glacial outwash** — sand through
 boulders, delivered by debris flows and meltwater from the deglaciating headwall — so
 the reach is **supply-rich rather than supply-limited**: coarse sediment is effectively
 always available, and a discharge-threshold "transport onset" is not the expected
@@ -726,7 +730,7 @@ slow-recession clogging hypothesis is the geomorphically motivated reading that 
 recession-rate contrast supports and that those future events can test. The decisive
 *independent* test would be a topographic difference (DEM-of-Difference) spanning the
 flood, imaging the deposition directly: the existing 2002–2022 repeat-lidar record
-confirms the aggrading, reorganizing *regime* [@anderson2026] but no airborne survey
+confirms a mobile, actively reorganizing braidplain in this reach [@anderson2026] but no airborne survey
 yet brackets December 2025, so a post-event lidar acquisition over the Electron reach
 is the highest-value future constraint on this mechanism.
 
@@ -989,12 +993,16 @@ concrete path toward a downstream stage nowcast that does not need a co-located 
 sensor, once skill is established out-of-sample. These ratings are not perfectly
 stationary, however: on linear axes (@fig-rathyst) the corridor gages show
 within-event stage–discharge hysteresis (dominantly an unsteady-flow looped-rating
-effect rather than a bed signal) and, at the unconfined alluvial gages
-(Puyallup nr Orting and at Puyallup), a net rise in stage at fixed discharge through
-the December AR sequence ($\rho_t\approx0.7$) — most simply read as net channel
-**aggradation** (deposition), though stage–discharge data alone cannot separate it
-from roughness or backwater change — whereas the confined source gages remain
-single-valued. A virtual-discharge-to-stage mapping therefore inherits the same
+effect rather than a bed signal) and, at the unconfined Puyallup-nr-Orting and
+lowland at-Puyallup gages, a net rise in stage at fixed discharge through
+the December AR sequence ($\rho_t\approx0.7$) — whereas the confined source gages
+remain single-valued. In the **lowland** reach this drift is most simply read as net
+channel **aggradation** (deposition), consistent with repeat-lidar differencing that
+independently documents ongoing lowland deposition [@anderson2026]; at the upper
+Orting gage — which @anderson2026 finds to be net-erosional over decadal timescales —
+the within-event drift is better read as a transient rating shift than long-term
+aggradation, and stage–discharge data alone cannot separate either from roughness or
+backwater change. A virtual-discharge-to-stage mapping therefore inherits the same
 event-specific, reach-geometry-dependent caveat as the rating itself (§sec-braided).
 
 ## Limitations
