@@ -835,15 +835,19 @@ barely moves in the pre-AR (1–4× background), then **bedload peaks in AR2 at 
 station (≈110–180× background near the source), ~3× larger than in AR1 or AR3**
 (@fig-spec b) — even though AR2's discharge peak was *not* the largest. That a later,
 slightly-smaller pulse mobilizes the most bedload — after a priming pre-AR and AR1 —
-is consistent with progressive bed loosening/de-armoring raising transport
-efficiency, a cross-pulse supply effect rather than a purely hydraulic response. A
+is consistent with **progressive conditioning of the bed surface**: antecedent loosening
+and/or delivery of finer material that raises gravel mobility through the nonlinear
+sand-content effect [@wilcockcrowe2003], and/or an **upstream sediment-delivery pulse**
+arriving by AR2 — a supply/mixture effect rather than a purely hydraulic response. This is
+a poorly-sorted, supply-rich outwash corridor, not a statically paved gravel bed that would
+build and then break an armor layer [@parkerklingeman1982; @anderson2026]. A
 time-resolved fit of the exponent $b(t)$ confirms this (@fig-bt). The per-AR
 averages also fall steeply downstream (source ≈180× → CC.TRON ≈7×; @fig-blAR),
 mirroring the scaling-exponent decay. A coarser, wood-rich source can lower the
 coarse-transport band into the resolvable window (a grain-size– and
 process-conditional caveat); we keep this bounded, not isolated, in Text S6.
 
-![Bedload as a bounded hypothesis: the frequency evidence. **(a)** Median ground-velocity power spectral density on a flood day (10 Dec, solid) versus a quiet pre-flood day (03 Dec, dotted), for a 50-sps glacial-source station (CC.PR03, blue) and a 200-sps lowland station (UW.UPS, orange); dashed vertical lines mark each station's Nyquist frequency and the shaded bands are the turbulence (1–20 Hz) and canonical bedload (30–80 Hz) windows (PSD axis clipped to −175 to −100 dB to focus on the signal). The flood lifts power broadly across the turbulence band, but where the river is actually sensed — the 50-sps source station, Nyquist 25 Hz — the canonical 30–80 Hz bedload band is *physically unsampled*; the 200-sps lowland station reaches the bedload band but is downstream of the glacial source and carries no flood excess there. This is why our 5–15 Hz "bedload" proxy is a *transition-band* indicator, not a measurement of canonical bedload. **(b)** The 5–15 Hz proxy through the event (÷ each station's pre-flood median), with discharge on top and the four AR windows shaded; the per-station key is below panel (a). The proxy peaks on **AR2** at every station and decays strongly downstream (source ≈180× → CC.TRON ≈7×, ~35 km), mirroring the scaling-exponent decay. Per-AR means and the time-resolved exponent are in @fig-blAR and @fig-bt; the 30–50 Hz lower-edge analysis from the 100-sps stations is in Text S5.](figures/figF9_bedload.png){#fig-spec width=98%}
+![Bedload as a bounded hypothesis: the frequency evidence. **(a)** Median ground-velocity power spectral density on a flood day (10 Dec, solid) versus a quiet pre-flood day (03 Dec, dotted), for a 50-sps glacial-source station (CC.PR03, blue) and a 200-sps lowland station (UW.UPS, orange); dashed vertical lines mark each station's Nyquist frequency and the shaded bands are the turbulence (1–20 Hz) and canonical bedload (30–80 Hz) windows (PSD axis clipped to −175 to −100 dB to focus on the signal). The flood lifts power broadly across the turbulence band, but where the river is actually sensed — the 50-sps source station, Nyquist 25 Hz — the canonical 30–80 Hz bedload band is *not sampled* — it lies above the 25 Hz Nyquist of the 50-sps stations (an instrumental limit); the 200-sps lowland station reaches the bedload band but is downstream of the glacial source and carries no flood excess there. This is why our 5–15 Hz "bedload" proxy is a *transition-band* indicator, not a measurement of canonical bedload. **(b)** The 5–15 Hz proxy through the event (÷ each station's pre-flood median), with discharge on top and the four AR windows shaded; the per-station key is below panel (a). The proxy peaks on **AR2** at every station and decays strongly downstream (source ≈180× → CC.TRON ≈7×, ~35 km), mirroring the scaling-exponent decay. Per-AR means and the time-resolved exponent are in @fig-blAR and @fig-bt; the 30–50 Hz lower-edge analysis from the 100-sps stations is in Text S5.](figures/figF9_bedload.png){#fig-spec width=98%}
 
 ## Distributed sensing and a path to downstream nowcasting {#sec-ew}
 
